@@ -197,6 +197,13 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     }
 
     # check which modalities should I use
+
+    if (length(categorical_classes) > 1){
+        # I have more classifications
+    } else {
+        # I am just looking at all genes together
+    }
+
     colors_vec <- categorical_classes$colors
     colors.spe <- colors_vec[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
 
