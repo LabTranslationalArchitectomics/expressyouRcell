@@ -1,0 +1,28 @@
+Package: expressyouRcell
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Imports:
+	data.table (>= 1.13.6),
+	ggplot2 (>= 3.3.3),
+	rsvg (>= 2.1),
+	grImport2 (>= 0.2),
+	org.Mm.eg.db (>= 3.12.0),
+	clusterProfiler (>= 3.18.0),
+	DOSE (>= 3.16.0),
+	magick (>= 2.5.2),
+	ggpubr (>= 0.4.0),
+	multtest (>= 2.46.0),
+	IRanges (>= 2.24.1)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
