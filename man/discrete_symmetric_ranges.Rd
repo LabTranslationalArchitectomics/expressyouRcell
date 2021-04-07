@@ -9,7 +9,7 @@ discrete_symmetric_ranges(
   plot_data,
   gene_loc_table,
   col_name,
-  grouping_vars = NULL,
+  grouping_vars,
   colors,
   coloring_mode,
   together = FALSE

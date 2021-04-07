@@ -223,7 +223,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
                                       plot_data,
                                       gene_loc_table,
                                       col_name,
-                                      grouping_vars=NULL,
+                                      grouping_vars,
                                       colors,
                                       coloring_mode,
                                       together=FALSE){
@@ -231,21 +231,30 @@ discrete_symmetric_ranges <- function(timepoint_list,
   if (together){
     groupedval <-  c()
     for (tp in names(timepoint_list)){
-      tmp <- data.table(gene_symbol=character(),
-                        gene_id=character(),
-                        logFC=numeric(),
-                        pvalue=numeric(),
-                        class=character(),
-                        time=character())
-      for (c in grouping_vars){
-        genes <- timepoint_list[[tp]][class == c]
-        tmp <- funion(tmp, genes)
+
+      if (!is.null(grouping_vars)){
+
+        tmp <- data.table::data.table(gene_symbol=character(),
+                                      gene_id=character(),
+                                      logFC=numeric(),
+                                      pvalue=numeric(),
+                                      class=character(),
+                                      Stime=character())
+
+        for (c in grouping_vars){
+          genes <- timepoint_list[[tp]][class == c]
+          tmp <- funion(tmp, genes)
+        }
+      } else {
+        genes <- timepoint_list[[tp]]
       }
+
 
       groupedval <- c(groupedval,
                      groupval_byloc(genes = genes,
                                    plot_data,
                                    gene_loc_table,
+                                   col_name,
                                    coloring_mode))
     }
 
@@ -321,10 +330,10 @@ discrete_symmetric_ranges <- function(timepoint_list,
   }
 
   if (together){
-    dtlist$`-` <- dtlist$`-`[, end := -end
-                             ][, start := -start
-                               ][, lab := paste("<", .SD[, round(start, 2)]), by=values
-                                 ][order(start)]
+    dtlist[["-"]] <- dtlist[["-"]][, end := -end
+                                   ][, start := -start
+                                     ][, lab := paste("<", .SD[, round(start, 2)]), by=values
+                                       ][order(start)]
 
     dt_together <- rbind(dtlist$`-`, dtlist$`+`)
 
@@ -337,15 +346,30 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
 }
 
+#' Compute mean or median of values associated to genes for each cellular compartment
+#'
+#' @param genes A \code{data.table} of gene names with associated log fold change values. Columns must be named "gene_symbol" and "logFC".
+#' @param plot_data A \code{data.table} with the polygon coordinates to be
+#'   plotted.
+#' @param gene_loc_table A \code{data.table} with information for mapping genes
+#'   to subcellular localizations.
+#' @param col_name A character string with the name of the column on which the user wants
+#' to base the color of cellular localizations when "median" or "mean" are the chosen coloring method.
+#' @param coloring_mode Either "mean" or "median". Default is "mean".
+#'
+#' A name of a numerical columns must also be provided as \code{col_name} parameter.
+#' This method computes the mean (or median) of values specified in the \code{col_name} column.
+#'
+#'
+#' @import data.table
+#'
 groupval_byloc <- function(genes, plot_data, gene_loc_table, col_name, coloring_mode="mean"){
 
   gene_loc_table <- gene_loc_table[Description %in% unique(plot_data$subcell_struct)]
 
   genes_sel <- merge.data.table(genes,
                                 gene_loc_table[, c("gene_symbol", "Description")],
-                                all.y = TRUE,
-                                by.x = "gene_symbol",
-                                by.y = "gene_symbol")
+                                by = "gene_symbol")
 
   if (coloring_mode == "mean"){
     localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]
@@ -365,6 +389,13 @@ groupval_byloc <- function(genes, plot_data, gene_loc_table, col_name, coloring_
 
 }
 
+
+#' Sample random colors
+#'
+#' @param n An integer specifying the number of random color to sample
+#'
+#' @import RColorBrewer
+#'
 sample_colors <- function(n){
   qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
   col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
@@ -419,12 +450,12 @@ color_cell <- function(timepoint_list,
       cat("ERROR: col_name parameter is missing")
     } else {
 
-      if (!all(lapply(timepoint_list, function(x) col_name %in% colnames(x)))){
+      if (!all(unlist(lapply(timepoint_list, function(x) col_name %in% colnames(x))))){
         cat("check that every list contains a column named as specified in col_name param")
       } else {
         if (!is.null(group_by)){
         # we are grouping by class of DEGs
-          if (!all(lapply(timepoint_list, function(x) group_by %in% colnames(x)))) {
+          if (!all(unlist(lapply(timepoint_list, function(x) group_by %in% colnames(x))))) {
             cat("check that every list contains a column named as specified in group_by param")
           } else {
             if (is.null(colors)){
@@ -444,6 +475,7 @@ color_cell <- function(timepoint_list,
         } else {
           # not grouping by any categorical variable
           colors = c("white", "darkblue")
+
         }
 
         tp_out <- list()
@@ -454,7 +486,7 @@ color_cell <- function(timepoint_list,
           if (!is.null(group_by)){
           # create a separate plot for each category
             if (is.null(grouping_vars)) {
-              # all the categories are plotted independently
+              # all the categories are plotted
               grouping_vars <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
             }
 
@@ -485,12 +517,13 @@ color_cell <- function(timepoint_list,
           } else {
             # create a plot regardless the classification
             if (!is.null(grouping_vars)) {
-              # only specified categories are plotted, but genes are averaged regardless any classification
+              # only specified categories are plotted, and genes are averaged regardless any classification
               for (v in grouping_vars){
                 genes <- timepoint_list[[tp]][get(group_by) == v]
                 tmp <- funion(tmp, genes)
               }
             } else {
+              # genes belonging to all categories are plotted
               genes <- timepoint_list[[tp]]
             }
 
@@ -509,10 +542,6 @@ color_cell <- function(timepoint_list,
                                                   gene_loc_table,
                                                   categorical_classes = fixed_ranges_f_together$together,
                                                   coloring_mode)
-
-
-
-
           }
         }
         return(tp_out)

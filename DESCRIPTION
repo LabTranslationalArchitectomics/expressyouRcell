@@ -23,6 +23,7 @@ Imports:
 	magick (>= 2.5.2),
 	ggpubr (>= 0.4.0),
 	multtest (>= 2.46.0),
-	IRanges (>= 2.24.1)
+	IRanges (>= 2.24.1),
+	RColorBrewer (>= 1.1-2)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
