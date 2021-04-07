@@ -146,16 +146,14 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     }
 
     if (!together){
-        class = names(categorical_classes)[1]
 
         f <- function(vec) {
-            if(length(.x <- which(vec > x$start & vec <= x$end))) .x else NA
+            if(length(.categorical_classes <- which(abs(vec) > categorical_classes$start & abs(vec) <= categorical_classes$end))) .categorical_classes else NA
         }
 
-        x <- categorical_classes[[class]]
 
-        localization_values$value <- x$values[mapply(f, localization_values[, get(coloring_mode)])]
-        localization_values$color_grad <- x$colors[mapply(f, localization_values[, get(coloring_mode)])]
+        localization_values$value <- categorical_classes$values[mapply(f, localization_values[, get(coloring_mode)])]
+        localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
 
 
 
@@ -165,16 +163,15 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         #                                                                                         (get(coloring_mode)) <= abs(categorical_classes[[class]][, end]), colors]), by=Description]
 
     } else {
-        class = names(categorical_classes)[1]
-        localization_values <- localization_values[get(coloring_mode) < 0, `:=` ("value"=categorical_classes[get(coloring_mode) <= categorical_classes[[class]]$start &
-                                                                                                        get(coloring_mode) > categorical_classes[[class]]$end, values],
-                                                                        "color_grad"=categorical_classes[get(coloring_mode) <= categorical_classes[[class]]$start &
-                                                                                                             get(coloring_mode) > categorical_classes[[class]]$end, colors]), by=Description]
+        localization_values <- localization_values[get(coloring_mode) < 0, `:=` ("value"=categorical_classes[get(coloring_mode) <= categorical_classes$start &
+                                                                                                        get(coloring_mode) > categorical_classes$end, values],
+                                                                        "color_grad"=categorical_classes[get(coloring_mode) <= categorical_classes$start &
+                                                                                                             get(coloring_mode) > categorical_classes$end, colors]), by=Description]
 
-        localization_values <- localization_values[(get(coloring_mode)>=0),  `:=` ("value"=categorical_classes[get(coloring_mode) > categorical_classes[[class]]$start &
-                                                                                                          get(coloring_mode) <= categorical_classes[[class]]$end, values],
-                                                                          "color_grad"=categorical_classes[get(coloring_mode) > categorical_classes[[class]]$start &
-                                                                                                               get(coloring_mode) <= categorical_classes[[class]]$end, colors]), by=Description]
+        localization_values <- localization_values[(get(coloring_mode)>=0),  `:=` ("value"=categorical_classes[get(coloring_mode) > categorical_classes$start &
+                                                                                                          get(coloring_mode) <= categorical_classes$end, values],
+                                                                          "color_grad"=categorical_classes[get(coloring_mode) > categorical_classes$start &
+                                                                                                               get(coloring_mode) <= categorical_classes$end, colors]), by=Description]
     }
 
 
@@ -198,11 +195,6 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     # check which modalities should I use
 
-    if (length(categorical_classes) > 1){
-        # I have more classifications
-    } else {
-        # I am just looking at all genes together
-    }
 
     colors_vec <- categorical_classes$colors
     colors.spe <- colors_vec[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
@@ -210,17 +202,16 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     lab <- as.expression(sapply(categorical_classes$lab, function(x) x))
     lab.spe <- lab[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
 
-    final_dt[is.na(value), value := as.factor(max(final_dt$value)+1)
+    final_dt[is.na(value), value := max(as.numeric(final_dt$value))+1
              ][is.na(color_grad), color_grad := "grey90"]
 
     if (length(levels(final_dt$value)) > length(colors.spe)){
         colors.spe <- c(colors.spe,  "grey90")
     }
 
+
     nogreysquares <- copy(final_dt[color_grad != "grey90"])
     nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
-
-
 
     p <- ggplot(final_dt, aes(x, y, color=color_grad, fill=value)) +
         scale_fill_manual(values = colors.spe,
@@ -243,8 +234,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     p
 
-    return(list("final_dt"=final_dt,
-                "localization_values"=localization_values,
+    return(list("localization_values"=localization_values,
                 "plot"=p))
 }
 

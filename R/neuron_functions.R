@@ -306,7 +306,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
   dtlist <- list()
   for (c in grouping_vars){
-    cat(c)
+    #cat(c)
     colfunc <- colorRampPalette(colors[[c]])
 
     fixed_ranges_dt <- copy(fixed_ranges_dt)
@@ -446,7 +446,11 @@ color_cell <- function(timepoint_list,
           colors = c("white", "darkblue")
         }
 
+        tp_out <- list()
         for (tp in names(timepoint_list)){
+
+          cat(paste0("Creating cell pictogram for stage: ", tp, "\n"))
+
           if (!is.null(group_by)){
           # create a separate plot for each category
             if (is.null(grouping_vars)) {
@@ -454,6 +458,7 @@ color_cell <- function(timepoint_list,
               grouping_vars <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
             }
 
+            grouped_out <- list()
             for (v in grouping_vars){
               genes <- timepoint_list[[tp]][get(group_by) == v]
 
@@ -464,14 +469,19 @@ color_cell <- function(timepoint_list,
                                                            grouping_vars,
                                                            colors,
                                                            coloring_mode)
-              res <- assign_color_by_value(genes = genes,
-                                           plot_data,
-                                           gene_loc_table,
-                                           col_name,
-                                           categorical_classes = fixed_ranges_f,
-                                           coloring_mode)
-              return(res)
+
+              grouped_out[[v]] <- assign_color_by_value(genes = genes,
+                                                        plot_data,
+                                                        gene_loc_table,
+                                                        col_name,
+                                                        categorical_classes = fixed_ranges_f[[v]],
+                                                        coloring_mode)
+
+
             }
+
+            tp_out[[tp]] <- grouped_out
+
           } else {
             # create a plot regardless the classification
             if (!is.null(grouping_vars)) {
@@ -494,15 +504,18 @@ color_cell <- function(timepoint_list,
                                                                  together=TRUE)
 
 
-            res <- assign_color_by_value(genes = genes,
-                                         plot_data,
-                                         gene_loc_table,
-                                         categorical_classes = fixed_ranges_f_together$together,
-                                         coloring_mode)
+            tp_out[[tp]] <- assign_color_by_value(genes = genes,
+                                                  plot_data,
+                                                  gene_loc_table,
+                                                  categorical_classes = fixed_ranges_f_together$together,
+                                                  coloring_mode)
 
-            return(res)
+
+
+
           }
         }
+        return(tp_out)
       }
     }
   } else {
