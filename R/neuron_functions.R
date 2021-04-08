@@ -234,15 +234,17 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
       if (!is.null(grouping_vars)){
 
-        tmp <- data.table::data.table(gene_symbol=character(),
-                                      gene_id=character(),
-                                      logFC=numeric(),
-                                      pvalue=numeric(),
-                                      class=character(),
-                                      Stime=character())
 
-        for (c in grouping_vars){
-          genes <- timepoint_list[[tp]][class == c]
+        tmp <- data.table::data.table(gene_symbol=character(),
+                                      x=character(),
+                                      y=numeric())
+
+        setnames(tmp, old=c("x", "y"), new = c(names(grouping_vars), col_name))
+
+        for (c in unlist(grouping_vars)){
+          genes <- timepoint_list[[tp]][get(names(grouping_vars)) == c,
+                                        c("gene_symbol", names(grouping_vars), col_name),
+                                        with=FALSE]
           tmp <- funion(tmp, genes)
         }
       } else {
@@ -264,7 +266,6 @@ discrete_symmetric_ranges <- function(timepoint_list,
     width <- abs(sup - inf)
 
     if (width <= 8){
-
       fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
                                     end = seq(inf, sup)[-1])
 
@@ -279,14 +280,21 @@ discrete_symmetric_ranges <- function(timepoint_list,
       inf <- unlist(min_v[max_range_width])
       sup <- width + inf
 
-
       fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = binsize), -1),
                                     end = seq(inf, sup, by = binsize)[-1])
 
     }
+
+    colfunc <- colorRampPalette(colors)
+    colors_vector <- colfunc(n = (nrow(fixed_ranges_dt)-1)*3+1)
+    colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(fixed_ranges_dt))]
+    fixed_ranges_dt <- fixed_ranges_dt[, colors := colors_vector]
+    fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
+                    ][, lab := paste("<", .SD[, round(end, 2)]), by=values]
+
   } else {
     max_v <- min_v <- widths <- c()
-    for (c in grouping_vars){
+    for (c in unlist(grouping_vars)){
       groupedval <-  c()
       for (tp in names(timepoint_list)){
 
@@ -335,20 +343,6 @@ discrete_symmetric_ranges <- function(timepoint_list,
   }
 
   dtlist <- list()
-  for (c in grouping_vars){
-    #cat(c)
-    colfunc <- colorRampPalette(colors[[c]])
-
-    fixed_ranges_dt <- copy(fixed_ranges_dt)
-    fixed_ranges_dt <- fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
-                                       ][, lab := paste("<", .SD[, round(end, 2)]), by=values]
-
-    colors_vector <- colfunc(n = (nrow(fixed_ranges_dt)-1)*3+1)
-    colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(fixed_ranges_dt))]
-    fixed_ranges_dt <- fixed_ranges_dt[, colors := colors_vector]
-
-    dtlist[[c]] <- fixed_ranges_dt
-  }
 
   if (together){
     # dtlist[["-"]] <- dtlist[["-"]][, end := -end
@@ -365,6 +359,21 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
     dtlist[['together']] <- fixed_ranges_dt
 
+  } else {
+    for (c in unlist(grouping_vars)){
+      #cat(c)
+      colfunc <- colorRampPalette(colors[[c]])
+
+      fixed_ranges_dt <- copy(fixed_ranges_dt)
+      fixed_ranges_dt <- fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
+      ][, lab := paste("<", .SD[, round(end, 2)]), by=values]
+
+      colors_vector <- colfunc(n = (nrow(fixed_ranges_dt)-1)*3+1)
+      colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(fixed_ranges_dt))]
+      fixed_ranges_dt <- fixed_ranges_dt[, colors := colors_vector]
+
+      dtlist[[c]] <- fixed_ranges_dt
+    }
   }
 
   return(dtlist)
@@ -392,18 +401,18 @@ groupval_byloc <- function(genes, plot_data, gene_loc_table, col_name, coloring_
 
   gene_loc_table <- gene_loc_table[Description %in% unique(plot_data$subcell_struct)]
 
-  genes_sel <- merge.data.table(genes,
-                                gene_loc_table[, c("gene_symbol", "Description")],
-                                by = "gene_symbol")
+  genes_sel <- data.table::merge.data.table(genes,
+                                            gene_loc_table[, c("gene_symbol", "Description")],
+                                            by = "gene_symbol")
 
   if (coloring_mode == "mean"){
     localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]
-    localization_values <- localization_values[order(V1)]
+    localization_values <- localization_values[order(abs(V1))]
     setnames(localization_values, old="V1", new=eval(coloring_mode))
   } else {
     if (coloring_mode == "median"){
       localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=Description]
-      localization_values <- localization_values[order(V1)]
+      localization_values <- localization_values[order(abs(V1))]
       setnames(localization_values, old="V1", new=eval(coloring_mode))
     } else {
       cat("Unrecognized parameter, assigned default coloring_mode=\"mean\"")
@@ -493,12 +502,12 @@ color_cell <- function(timepoint_list,
             }
 
             if (!is.null(grouping_vars)){
-              colors <- colors[names(colors) %in% grouping_vars]
+              colors <- colors[names(colors) %in% unlist(grouping_vars)]
             }
           }
         } else {
           # not grouping by any categorical variable
-          colors = c("white", "darkblue")
+          colors = c("white", "#296d98")
 
         }
 
@@ -511,27 +520,27 @@ color_cell <- function(timepoint_list,
           # create a separate plot for each category
             if (is.null(grouping_vars)) {
               # all the categories are plotted
-              grouping_vars <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
+              grouping_vars[[group_by]] <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
             }
 
             grouped_out <- list()
-            for (v in grouping_vars){
+            for (v in unlist(grouping_vars)){
               genes <- timepoint_list[[tp]][get(group_by) == v]
 
-              fixed_ranges_f <-  discrete_symmetric_ranges(timepoint_list,
-                                                           plot_data,
-                                                           gene_loc_table,
-                                                           col_name,
-                                                           grouping_vars,
-                                                           colors,
-                                                           coloring_mode)
+              fixed_ranges_f <-  discrete_symmetric_ranges(timepoint_list = timepoint_list,
+                                                           plot_data = plot_data,
+                                                           gene_loc_table = gene_loc_table,
+                                                           col_name = col_name,
+                                                           grouping_vars = grouping_vars,
+                                                           colors = colors,
+                                                           coloring_mode = coloring_mode)
 
               grouped_out[[v]] <- assign_color_by_value(genes = genes,
-                                                        plot_data,
-                                                        gene_loc_table,
-                                                        col_name,
+                                                        plot_data = plot_data,
+                                                        gene_loc_table = gene_loc_table,
+                                                        col_name = col_name,
                                                         categorical_classes = fixed_ranges_f[[v]],
-                                                        coloring_mode)
+                                                        coloring_mode = coloring_mode)
 
 
             }
@@ -542,8 +551,17 @@ color_cell <- function(timepoint_list,
             # create a plot regardless the classification
             if (!is.null(grouping_vars)) {
               # only specified categories are plotted, and genes are averaged regardless any classification
-              for (v in grouping_vars){
-                genes <- timepoint_list[[tp]][get(group_by) == v]
+
+              tmp <- data.table::data.table(gene_symbol=character(),
+                                            x=character(),
+                                            y=numeric())
+
+              setnames(tmp, old=c("x", "y"), new = c(names(grouping_vars), col_name))
+
+              for (v in unlist(grouping_vars)){
+                genes <- timepoint_list[[tp]][get(names(grouping_vars)) == v,
+                                              c("gene_symbol", names(grouping_vars), col_name),
+                                              with = FALSE]
                 tmp <- funion(tmp, genes)
               }
             } else {
@@ -562,10 +580,12 @@ color_cell <- function(timepoint_list,
 
 
             tp_out[[tp]] <- assign_color_by_value(genes = genes,
-                                                  plot_data,
-                                                  gene_loc_table,
+                                                  plot_data = plot_data,
+                                                  gene_loc_table = gene_loc_table,
+                                                  col_name = col_name,
                                                   categorical_classes = fixed_ranges_f_together[["together"]],
-                                                  coloring_mode)
+                                                  coloring_mode = coloring_mode,
+                                                  together = TRUE)
           }
         }
         return(tp_out)

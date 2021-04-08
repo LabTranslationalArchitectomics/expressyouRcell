@@ -161,15 +161,13 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         #                                                                                         (get(coloring_mode)) <= abs(categorical_classes[[class]][, end]), colors]), by=Description]
 
     } else {
-        localization_values <- localization_values[get(coloring_mode) < 0, `:=` ("value"=categorical_classes[get(coloring_mode) <= categorical_classes$start &
-                                                                                                        get(coloring_mode) > categorical_classes$end, values],
-                                                                        "color_grad"=categorical_classes[get(coloring_mode) <= categorical_classes$start &
-                                                                                                             get(coloring_mode) > categorical_classes$end, colors]), by=Description]
 
-        localization_values <- localization_values[(get(coloring_mode)>=0),  `:=` ("value"=categorical_classes[get(coloring_mode) > categorical_classes$start &
-                                                                                                          get(coloring_mode) <= categorical_classes$end, values],
-                                                                          "color_grad"=categorical_classes[get(coloring_mode) > categorical_classes$start &
-                                                                                                               get(coloring_mode) <= categorical_classes$end, colors]), by=Description]
+        f <- function(vec) {
+            if(length(.categorical_classes <- which(vec > categorical_classes$start & vec <= categorical_classes$end))) .categorical_classes else NA
+        }
+
+        localization_values$value <- categorical_classes$values[mapply(f, localization_values[, get(coloring_mode)])]
+        localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
     }
 
 
@@ -190,9 +188,6 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         lab_title <- paste0(col_name, " ", coloring_mode)
         dec = TRUE
     }
-
-    # check which modalities should I use
-
 
     colors_vec <- categorical_classes$colors
     colors.spe <- colors_vec[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
