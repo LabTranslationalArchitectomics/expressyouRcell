@@ -127,9 +127,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     genes_sel <- merge.data.table(genes,
                                   gene_loc_table[, c("gene_symbol", "Description")],
-                                  all.y = TRUE,
-                                  by.x = "gene_symbol",
-                                  by.y = "gene_symbol")
+                                  by = "gene_symbol")
 
     if (coloring_mode == "mean"){
         localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]

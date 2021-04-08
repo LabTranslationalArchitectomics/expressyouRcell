@@ -17,8 +17,7 @@ color_cell(
 )
 }
 \arguments{
-\item{timepoint_list}{A list of \code{data.table}s, one for each time point. Each one must have at least two defined columns named respectively
-"gene_symbol" and "logFC".}
+\item{timepoint_list}{A list of \code{data.table}s, one for each time point. Each one must have at least a column named "gene_symbol".}
 
 \item{plot_data}{A \code{data.table} with the polygon coordinates to be
 plotted.}

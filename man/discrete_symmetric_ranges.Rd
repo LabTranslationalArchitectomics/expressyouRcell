@@ -16,8 +16,8 @@ discrete_symmetric_ranges(
 )
 }
 \arguments{
-\item{timepoint_list}{A list of \code{data.table}s, one for each time point. Each one must have at least two defined columns named respectively
-"gene_symbol" and "logFC".}
+\item{timepoint_list}{A list of \code{data.table}s, one for each time point. Each one must have at least a column named
+"gene_symbol".}
 
 \item{grouping_vars}{A character vector with classes of genes to be considered.}
 

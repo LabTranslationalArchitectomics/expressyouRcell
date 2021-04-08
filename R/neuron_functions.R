@@ -207,8 +207,8 @@ create_legend <- function(color_vector, lab_vector){
 #' Compute discrete and symmetric ranges into which classify FC values
 #'
 #' @description This function creates a table with ranges for mapping fold change values with associated colors and labels.
-#' @param timepoint_list A list of \code{data.table}s, one for each time point. Each one must have at least two defined columns named respectively
-#' "gene_symbol" and "logFC".
+#' @param timepoint_list A list of \code{data.table}s, one for each time point. Each one must have at least a column named
+#' "gene_symbol".
 #' @param grouping_vars A character vector with classes of genes to be considered.
 #' @param colors A character vector with two color codes for generating a color palettes with a shade for each interval.
 #' @param value A character vector with two color codes for generating a color palettes composed of n_intervals colors.
@@ -258,10 +258,32 @@ discrete_symmetric_ranges <- function(timepoint_list,
                                    coloring_mode))
     }
 
-    sup <- max(abs(min(groupedval)), max(groupedval))
+    sup <- ceiling(max(groupedval, na.rm = TRUE))
+    inf <- floor(min(groupedval, na.rm = TRUE))
 
-    fixed_ranges_dt <- data.table(start = head(c(0, 0.5, seq(1, ceiling(sup))), -1),
-                                  end = c(0.5, seq(1, ceiling(sup))))
+    width <- abs(sup - inf)
+
+    if (width <= 8){
+
+      fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
+                                    end = seq(inf, sup)[-1])
+
+    } else {
+      binsize <- width / 8
+
+      sizes <- c(1, 1.5, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000, 2000)
+      diff <- sizes - binsize
+
+      binsize <- sizes[which(diff == min(diff[diff > 0]))]
+
+      inf <- unlist(min_v[max_range_width])
+      sup <- width + inf
+
+
+      fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = binsize), -1),
+                                    end = seq(inf, sup, by = binsize)[-1])
+
+    }
   } else {
     max_v <- min_v <- widths <- c()
     for (c in grouping_vars){
@@ -308,7 +330,6 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
       fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = binsize), -1),
                                     end = seq(inf, sup, by = binsize)[-1])
-
     }
 
   }
@@ -330,16 +351,20 @@ discrete_symmetric_ranges <- function(timepoint_list,
   }
 
   if (together){
-    dtlist[["-"]] <- dtlist[["-"]][, end := -end
-                                   ][, start := -start
-                                     ][, lab := paste("<", .SD[, round(start, 2)]), by=values
-                                       ][order(start)]
+    # dtlist[["-"]] <- dtlist[["-"]][, end := -end
+    #                                ][, start := -start
+    #                                  ][, lab := paste("<", .SD[, round(start, 2)]), by=values
+    #                                    ][order(start)]
+    #
+    # dt_together <- rbind(dtlist$`-`, dtlist$`+`)
+    #
+    # dt_together[, values := seq(1, nrow(dt_together))]
+    #
+    # dtlist[['together']] <- dt_together]
 
-    dt_together <- rbind(dtlist$`-`, dtlist$`+`)
 
-    dt_together[, values := seq(1, nrow(dt_together))]
+    dtlist[['together']] <- fixed_ranges_dt
 
-    dtlist[['together']] <- dt_together
   }
 
   return(dtlist)
@@ -406,8 +431,7 @@ sample_colors <- function(n){
 #' Main function that creates static cellular pictogram with the desired coloring method
 #'
 #' @description This function creates static cellular pictogram with the desired coloring method for assigning colors to subcellular localizations
-#' @param timepoint_list A list of \code{data.table}s, one for each time point. Each one must have at least two defined columns named respectively
-#' "gene_symbol" and "logFC".
+#' @param timepoint_list A list of \code{data.table}s, one for each time point. Each one must have at least a column named "gene_symbol".
 #' @param plot_data A \code{data.table} with the polygon coordinates to be
 #'   plotted.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
@@ -540,7 +564,7 @@ color_cell <- function(timepoint_list,
             tp_out[[tp]] <- assign_color_by_value(genes = genes,
                                                   plot_data,
                                                   gene_loc_table,
-                                                  categorical_classes = fixed_ranges_f_together$together,
+                                                  categorical_classes = fixed_ranges_f_together[["together"]],
                                                   coloring_mode)
           }
         }
