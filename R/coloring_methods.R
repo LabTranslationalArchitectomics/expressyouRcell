@@ -131,12 +131,24 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     if (coloring_mode == "mean"){
         localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]
-        localization_values <- localization_values[order(V1)]
+
+        if (all(localization_values$V1 > 0)){
+            localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
+        } else {
+            localization_values <- localization_values[order(V1, decreasing = FALSE)]
+        }
+
         setnames(localization_values, old="V1", new=eval(coloring_mode))
     } else {
         if (coloring_mode == "median"){
             localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=Description]
-            localization_values <- localization_values[order(V1)]
+
+            if (all(localization_values$V1 > 0)){
+                localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
+            } else {
+                localization_values <- localization_values[order(V1, decreasing = FALSE)]
+            }
+
             setnames(localization_values, old="V1", new=eval(coloring_mode))
         } else {
             cat("Unrecognized parameter, assigned default coloring_mode=\"mean\"")
@@ -206,24 +218,27 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     nogreysquares <- copy(final_dt[color_grad != "grey90"])
     nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
-    p <- ggplot(final_dt, aes(x, y, color=color_grad, fill=value)) +
+    p <- ggplot(final_dt, aes(x, y, color=value, fill=value)) +
         scale_fill_manual(values = colors.spe,
                           name = lab_title,
                           labels = lab.spe,
-                          breaks = levels(nogreysquares$value)) +
-        scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct)))) +
+                          breaks = levels(nogreysquares $value)) +
+        scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct))),
+                           name = lab_title,
+                           labels = lab.spe,
+                           breaks = levels(nogreysquares$value)) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
         scale_y_reverse() +
-        guides(color = FALSE) +
+        #guides(color = FALSE) +
         theme_void()
 
-    if (together){
-        p <- p +
-            theme(legend.background = element_rect(fill="lightgrey",
-                                                   size=0.5,
-                                                   linetype="solid"))
-    }
+    # if (together){
+    #     p <- p +
+    #         theme(legend.background = element_rect(fill="lightgrey",
+    #                                                size=0.5,
+    #                                                linetype="solid"))
+    # }
 
     p
 
