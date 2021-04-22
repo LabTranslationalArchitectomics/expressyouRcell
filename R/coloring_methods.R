@@ -215,18 +215,18 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     }
 
 
-    nogreysquares <- copy(final_dt[color_grad != "grey90"])
-    nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
+    #nogreysquares <- copy(final_dt[color_grad != "grey90"])
+    #nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
     p <- ggplot(final_dt, aes(x, y, color=value, fill=value)) +
         scale_fill_manual(values = colors.spe,
                           name = lab_title,
-                          labels = lab.spe,
-                          breaks = levels(nogreysquares $value)) +
+                          labels = lab.spe) +
+                          #breaks = levels(nogreysquares $value)) +
         scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct))),
                            name = lab_title,
-                           labels = lab.spe,
-                           breaks = levels(nogreysquares$value)) +
+                           labels = lab.spe) +
+                           #breaks = levels(nogreysquares$value)) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
         scale_y_reverse() +

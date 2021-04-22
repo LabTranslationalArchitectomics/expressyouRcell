@@ -293,6 +293,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
     if (!all(fixed_ranges_dt$start>0)){
       # I am plotting down and up together in the same plot
       # and I need to remove zero ranges and have two color scales, green and red
+      fixed_ranges_dt_o <- copy(fixed_ranges_dt)
       fixed_ranges_dt <- fixed_ranges_dt[apply(fixed_ranges_dt, 1, function(row) all(row !=0 )), ]
 
       pos <- fixed_ranges_dt[start > 0]
@@ -311,28 +312,45 @@ discrete_symmetric_ranges <- function(timepoint_list,
         colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(neg))]
         neg <- neg[, colors := colors_vector]
       } else {
-        colfunc <- colorRampPalette(colors[[1]])
-        colors_vector <- colfunc(n = 1+(nrow(pos)-1)*3+1)[-1]
-        colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(pos))]
-        pos <- pos[, colors := colors_vector]
 
-        colfunc <- colorRampPalette(colors[[2]])
-        colors_vector <- rev(colfunc(n = 1+(nrow(neg)-1)*3+1))[-1]
-        colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(neg))]
-        neg <- neg[, colors := colors_vector]
+        if (nrow(fixed_ranges_dt) == 0){
+          # if only two existing ranges, one positive and one negative, and the user has not
+          # provided colors, white is substituted and this pair of colors assigned to the fixed_dt
+
+          #colors[colors == "white"] <- "#29988c"
+
+          fixed_ranges_dt <- fixed_ranges_dt_o[, values := seq(1, nrow(fixed_ranges_dt_o))
+                                                 ][, lab := paste("<", .SD[, round(end, 2)]), by=values
+                                                   ][, colors := colors]
+        } else {
+          colfunc <- colorRampPalette(colors[[1]])
+          colors_vector <- colfunc(n = 1+(nrow(pos)-1)*3+1)[-1]
+          colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(pos))]
+          pos <- pos[, colors := colors_vector]
+
+          colfunc <- colorRampPalette(colors[[2]])
+          colors_vector <- rev(colfunc(n = 1+(nrow(neg)-1)*3+1))[-1]
+          colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(neg))]
+          neg <- neg[, colors := colors_vector]
+
+          fixed_ranges_dt <- rbind(neg, pos)
+
+          # fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
+          #                 ][, lab := paste("<", .SD[, round(end, 2)]), by=values]
+
+          fixed_ranges_dt <- rbind(neg,
+                                   data.table(start = max(neg$end),
+                                              end = min(pos$start),
+                                              colors = "white"),
+                                   pos)
+          fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
+                           ][, lab := paste("<", .SD[, round(end, 2)]), by=values
+                             ][colors == "white", lab := "= 0"]
+
+        }
       }
 
-      fixed_ranges_dt<- rbind(neg, pos)
 
-      fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
-                      ][, lab := paste("<", .SD[, round(end, 2)]), by=values]
-
-      fixed_ranges_dt <- rbind(fixed_ranges_dt,
-                               data.table(start = max(neg$end),
-                                          end = min(pos$start),
-                                          colors = "white",
-                                          values = max(fixed_ranges_dt$values)+1,
-                                          lab = "= 0"))
 
     } else {
       # all the values are of the same sign, so I am plotting CPM cols or FC but all for the same sign
