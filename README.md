@@ -1,4 +1,5 @@
 # expressyouRcell
+expressyouRcell is an easy-to-use R package, which provides a range of customizable options for generating more intuitive representations to disentangle load of biological data,  leading towards a more comprehensive understanding on physiological and pathological conditions. 
 
 ## plot_cell
 Plot cellular structure with default colors
