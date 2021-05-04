@@ -35,15 +35,17 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     return(list("final_dt"=final_dt, "localization_values"=localization_values))
 }
 
-#' Plot the neuron figure coloring subcellular localizations according to FDR
+#' Plot the neuron figure coloring subcellular localizations according to FDR from the Fisher’s test, used to assess the statistical significance of the enrichment.
 #'
 #' @description This function creates the plot of the neuron figure with colored
 #'   subcellular localizations according to FDR values.
-#' @param gene_set A character vector of gene names.
+#' @param genes A character vector of gene names.
 #' @param plot_data A \code{data.table} with the polygon coordinates to be
 #'   plotted.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
 #'   to subcellular localizations.
+#' @param coloring_mode If "enrichment", computes the False Discovery Rate grouping genes
+#' by subcellular localization.
 #' @param categorical_classes An optional \code{data.table} with values for
 #'   specified intervals and associated colors. Default classification is
 #'   divided in 8 intervals.
@@ -59,10 +61,10 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 #'
 #' @import data.table
 #' @export
-assign_color_by_fdr <- function(gene_set, plot_data, gene_loc_table, categorical_classes=NULL){
+assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode, categorical_classes=NULL){
 
     universe_set <- unique(gene_loc_table$gene_symbol)
-    gene_set <- intersect(gene_set, universe_set)
+    genes <- intersect(genes$gene_symbol, universe_set)
 
     if (is.null(categorical_classes)){
         categorical_classes <- data.table(start = c(0, 1*10^-30, 1*10^-20, 1*10^-10, 1*10^-5, 1*10^-4, 1*10^-3, 5*10^-2),
@@ -74,7 +76,7 @@ assign_color_by_fdr <- function(gene_set, plot_data, gene_loc_table, categorical
         categorical_classes <- categorical_classes[, lab := paste("<", .SD[, end]), by=values]
     }
 
-    res <- compute_enrichment(genes=gene_set,
+    res <- compute_enrichment(genes=genes,
                               plot_data,
                               universe_set = universe_set,
                               gene_loc_table=gene_loc_table,
@@ -100,7 +102,8 @@ assign_color_by_fdr <- function(gene_set, plot_data, gene_loc_table, categorical
         theme(legend.text=element_text(size=bs*0.7),
               legend.title=element_text(size=bs*0.7))
 
-    return(list("plot"=p, "localization_values"=localization_values, "final_dt"=final_dt))
+    return(list("plot"=p,
+                "localization_values"=localization_values))
 }
 
 #' Assign colors to subcellular structures according to fold changes of genes

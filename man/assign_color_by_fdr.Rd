@@ -2,23 +2,27 @@
 % Please edit documentation in R/coloring_methods.R
 \name{assign_color_by_fdr}
 \alias{assign_color_by_fdr}
-\title{Plot the neuron figure coloring subcellular localizations according to FDR}
+\title{Plot the neuron figure coloring subcellular localizations according to FDR from the Fisher’s test, used to assess the statistical significance of the enrichment.}
 \usage{
 assign_color_by_fdr(
-  gene_set,
+  genes,
   plot_data,
   gene_loc_table,
+  coloring_mode,
   categorical_classes = NULL
 )
 }
 \arguments{
-\item{gene_set}{A character vector of gene names.}
+\item{genes}{A character vector of gene names.}
 
 \item{plot_data}{A \code{data.table} with the polygon coordinates to be
 plotted.}
 
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes
 to subcellular localizations.}
+
+\item{coloring_mode}{If "enrichment", computes the False Discovery Rate grouping genes
+by subcellular localization.}
 
 \item{categorical_classes}{An optional \code{data.table} with values for
 specified intervals and associated colors. Default classification is

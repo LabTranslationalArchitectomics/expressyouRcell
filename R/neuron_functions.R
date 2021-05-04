@@ -714,6 +714,96 @@ color_cell <- function(timepoint_list,
     }
   } else {
     if (coloring_mode == "enrichment"){
+      if (!is.null(group_by)){
+        # we are grouping by class of DEGs
+        if (!all(unlist(lapply(timepoint_list, function(x) group_by %in% colnames(x))))) {
+          cat("check that every list contains a column named as specified in group_by param")
+        } else {
+          if (is.null(colors)){
+            # random colors are chosen for each category in group_by column
+            all_grouping_vars <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
+
+            colors=list()
+            color_codes <- sample_colors(length(all_grouping_vars))
+            for (v in seq_len(length(all_grouping_vars))){
+              colors[[all_grouping_vars[v]]] <- c("white", color_codes[[v]])
+            }
+          }
+
+          if (!is.null(grouping_vars)){
+            colors <- colors[names(colors) %in% unlist(grouping_vars)]
+          }
+        }
+      } else {
+        # not grouping by any categorical variable
+        if (is.null(colors)){
+          colors = c("white", "#296d98")
+        }
+      }
+
+      tp_out <- list()
+      for (tp in names(timepoint_list)){
+
+        cat(paste0("Creating cell pictogram for stage: ", tp, "\n"))
+
+        if (!is.null(group_by)){
+          # create a separate plot for each category
+          if (is.null(grouping_vars)) {
+            # all the categories are plotted
+            grouping_vars[[group_by]] <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
+          }
+
+          grouped_out <- list()
+
+          for (v in unlist(grouping_vars)){
+            genes <- timepoint_list[[tp]][get(group_by) == v]
+
+            grouped_out[[v]] <- assign_color_by_fdr(genes = genes,
+                                                    plot_data = plot_data,
+                                                    gene_loc_table = gene_loc_table,
+                                                    categorical_classes = NULL,
+                                                    coloring_mode = coloring_mode)
+
+
+          }
+
+          tp_out[[tp]] <- grouped_out
+
+        } else {
+          # create a plot regardless the classification
+          if (!is.null(grouping_vars)) {
+            # only specified categories are plotted, and genes are averaged regardless any classification
+
+            tmp <- data.table::data.table(gene_symbol=character())
+
+            for (v in unlist(grouping_vars)){
+              genes <- timepoint_list[[tp]][get(names(grouping_vars)) == v,
+                                            c("gene_symbol"),
+                                            with = FALSE]
+              tmp <- funion(tmp, genes)
+            }
+
+            genes <- tmp
+
+          } else {
+            # genes belonging to all categories are plotted
+            genes <- timepoint_list[[tp]]
+          }
+
+          tp_out[[tp]] <- assign_color_by_fdr(genes = genes,
+                                              plot_data = plot_data,
+                                              gene_loc_table = gene_loc_table,
+                                              categorical_classes = NULL,
+                                              coloring_mode = coloring_mode,
+                                              together = TRUE)
+        }
+      }
+      return(tp_out)
+
+      assign_color_by_fdr(genes,
+                          plot_data=plot_data,
+                          gene_loc_table=gene_loc_table,
+                          categorical_classes=NULL)
 
     } else {
       cat("Wrong coloring method")
