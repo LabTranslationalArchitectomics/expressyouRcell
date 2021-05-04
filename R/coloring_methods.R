@@ -190,7 +190,8 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     final_dt <- merge.data.table(plot_data,
                                  localization_values,
                                  by.x = "subcell_struct",
-                                 by.y = "Description")
+                                 by.y = "Description",
+                                 all = TRUE)
 
     final_dt[, comb := factor(comb, levels = intersect(plot_data$comb, final_dt$comb))
              ][, value := factor(value, levels = unique(localization_values$value))]
@@ -199,16 +200,10 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     if (all(localization_values[, get(coloring_mode)] > 0) || all(localization_values[, get(coloring_mode)] < 0)){
         mixed <- FALSE
+        dec = TRUE
     } else {
         mixed <- TRUE
-    }
-
-    if (mixed){
-        lab_title <- paste0(col_name,  " ", coloring_mode)
         dec = FALSE
-    } else {
-        lab_title <- paste0(col_name, " ", coloring_mode)
-        dec = TRUE
     }
 
     lab_title <- paste0(col_name, " ", coloring_mode)
@@ -220,26 +215,26 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     lab <- as.expression(sapply(categorical_classes$lab, function(x) x))
     lab.spe <- lab[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
 
-    final_dt[is.na(value), value := max(as.numeric(final_dt$value))+1
-             ][is.na(color_grad), color_grad := "grey90"]
+    na_val <- max(as.numeric(final_dt$value), na.rm = TRUE)
+    final_dt <- final_dt[is.na(value), value := as.factor(na_val + 1)
+                         ][is.na(color_grad), color_grad := "grey90"]
 
-    if (length(levels(final_dt$value)) > length(colors.spe)){
+    if (length(levels(plot_data$subcell_struct)) > length(localization_values$Description)){
         colors.spe <- c(colors.spe,  "grey90")
     }
 
-
-    #nogreysquares <- copy(final_dt[color_grad != "grey90"])
-    #nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
+    nogreysquares <- copy(final_dt[color_grad != "grey90"])
+    nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
     p <- ggplot(final_dt, aes(x, y, color=value, fill=value)) +
         scale_fill_manual(values = colors.spe,
                           name = lab_title,
-                          labels = lab.spe) +
-                          #breaks = levels(nogreysquares $value)) +
+                          labels = lab.spe,
+                          breaks = levels(nogreysquares$value)) +
         scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct))),
                            name = lab_title,
-                           labels = lab.spe) +
-                           #breaks = levels(nogreysquares$value)) +
+                           labels = lab.spe,
+                           breaks = levels(nogreysquares$value)) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
         scale_y_reverse() +

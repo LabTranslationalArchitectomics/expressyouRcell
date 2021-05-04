@@ -643,7 +643,7 @@ color_cell <- function(timepoint_list,
 
             grouped_out <- list()
 
-            fixed_ranges_f <-  discrete_symmetric_ranges(timepoint_list = timepoint_list,
+            ranges <-  discrete_symmetric_ranges(timepoint_list = timepoint_list,
                                                          plot_data = plot_data,
                                                          gene_loc_table = gene_loc_table,
                                                          col_name = col_name,
@@ -657,7 +657,7 @@ color_cell <- function(timepoint_list,
                                                         plot_data = plot_data,
                                                         gene_loc_table = gene_loc_table,
                                                         col_name = col_name,
-                                                        categorical_classes = fixed_ranges_f[[v]],
+                                                        categorical_classes = ranges[[v]],
                                                         coloring_mode = coloring_mode)
 
 
@@ -690,7 +690,7 @@ color_cell <- function(timepoint_list,
               genes <- timepoint_list[[tp]]
             }
 
-            fixed_ranges_f_together <- discrete_symmetric_ranges(timepoint_list,
+            ranges <- discrete_symmetric_ranges(timepoint_list,
                                                                  plot_data,
                                                                  gene_loc_table,
                                                                  col_name,
@@ -698,18 +698,20 @@ color_cell <- function(timepoint_list,
                                                                  colors,
                                                                  coloring_mode,
                                                                  together=TRUE)
+            ranges <- ranges[["together"]]
 
 
             tp_out[[tp]] <- assign_color_by_value(genes = genes,
                                                   plot_data = plot_data,
                                                   gene_loc_table = gene_loc_table,
                                                   col_name = col_name,
-                                                  categorical_classes = fixed_ranges_f_together[["together"]],
+                                                  categorical_classes = ranges,
                                                   coloring_mode = coloring_mode,
                                                   together = TRUE)
           }
         }
-        return(tp_out)
+        return(list("tp_out" = tp_out,
+                    "ranges" = ranges))
       }
     }
   } else {
@@ -794,11 +796,10 @@ color_cell <- function(timepoint_list,
                                               plot_data = plot_data,
                                               gene_loc_table = gene_loc_table,
                                               categorical_classes = NULL,
-                                              coloring_mode = coloring_mode,
-                                              together = TRUE)
+                                              coloring_mode = coloring_mode)
         }
       }
-      return(tp_out)
+      return("tp_out" = tp_out)
 
       assign_color_by_fdr(genes,
                           plot_data=plot_data,
