@@ -28,7 +28,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
                                  by.y = "Description")
 
     final_dt[, comb := factor(comb, levels = intersect(plot_data$comb, final_dt$comb))
-    ][, value := factor(value, levels = rev(unique(localization_values$value)))]
+             ][, value := factor(value, levels = rev(unique(localization_values$value)))]
 
     final_dt <- final_dt[order(comb)]
 
@@ -132,7 +132,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     if (coloring_mode == "mean"){
         localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]
 
-        if (all(localization_values$V1 > 0)){
+        if (all(localization_values$V1 > 0) || all(localization_values$V1 < 0)){
             localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
         } else {
             localization_values <- localization_values[order(V1, decreasing = FALSE)]
@@ -143,7 +143,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         if (coloring_mode == "median"){
             localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=Description]
 
-            if (all(localization_values$V1 > 0)){
+            if (all(localization_values$V1 > 0) || all(localization_values$V1 < 0)){
                 localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
             } else {
                 localization_values <- localization_values[order(V1, decreasing = FALSE)]
@@ -183,6 +183,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     }
 
 
+
     final_dt <- merge.data.table(plot_data,
                                  localization_values,
                                  by.x = "subcell_struct",
@@ -193,13 +194,22 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     final_dt <- final_dt[order(comb)]
 
-    if (together){
-        lab_title <- paste0(col_name, coloring_mode)
+    if (all(localization_values[, get(coloring_mode)] > 0) || all(localization_values[, get(coloring_mode)] < 0)){
+        mixed <- FALSE
+    } else {
+        mixed <- TRUE
+    }
+
+    if (mixed){
+        lab_title <- paste0(col_name,  " ", coloring_mode)
         dec = FALSE
     } else {
         lab_title <- paste0(col_name, " ", coloring_mode)
         dec = TRUE
     }
+
+    lab_title <- paste0(col_name, " ", coloring_mode)
+    #dec = TRUE
 
     colors_vec <- categorical_classes$colors
     colors.spe <- colors_vec[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]

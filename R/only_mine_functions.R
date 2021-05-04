@@ -54,16 +54,16 @@ create_legend_dt <- function(svg_folder){
 
   subcell_structures <- tstrsplit(list.files(file.path(getwd(), svg_folder)), '\\.')[[1]]
 
-  dt_complete <- data.table()
+  coords_dt <- data.table()
   for (subcell_struct in subcell_structures){
     cat(paste0(subcell_struct, "\n"))
     dt_pol <- read_coordinates(file_svg = file.path(svg_folder, paste0(subcell_struct, '.svg')))
     dt_pol$subcell_struct <- subcell_struct
-    dt_complete <- rbind(dt_complete, dt_pol)
+    coords_dt <- rbind(coords_dt, dt_pol)
   }
 
-  dt_complete[, comb := factor(paste0(subcell_struct, pol), levels = unique(paste0(subcell_struct, pol)))]
-  return(dt_complete)
+  coords_dt[, comb := factor(paste0(subcell_struct, pol), levels = unique(paste0(subcell_struct, pol)))]
+  return(coords_dt)
 }
 
 #' Create neuron data.table to be plotted
@@ -80,20 +80,20 @@ create_legend_dt <- function(svg_folder){
 #' @export
 create_cell_dt <- function(svg_folder, colors_shapes, order_levels){
 
-  dt_complete <- data.table()
+  coords_dt <- data.table()
   for (subcell_struct in names(colors_shapes)){
     cat(paste0(subcell_struct, "\n"))
     #f_svg <- rsvg::rsvg_svg(svg = file.path(svg_folder, paste0(subcell_struct, '.svg')))
     dt_pol <- read_coordinates(file_svg = file.path(svg_folder, paste0(subcell_struct, '.svg')))
     dt_pol$subcell_struct <- subcell_struct
     dt_pol$color <- colors_shapes[[subcell_struct]]
-    dt_complete <- rbind(dt_complete, dt_pol)
+    coords_dt <- rbind(coords_dt, dt_pol)
   }
 
-  dt_complete <- dt_complete[, subcell_struct := factor(subcell_struct,
+  coords_dt <- coords_dt[, subcell_struct := factor(subcell_struct,
                                                levels = order_levels)
                              ][, pol := factor(pol)
                                ][order(subcell_struct)
                                  ][, comb := factor(paste0(subcell_struct, pol), levels = unique(paste0(subcell_struct, pol)))]
-  return(dt_complete)
+  return(coords_dt)
 }

@@ -13,7 +13,7 @@ map_gene_localization(gtf_path, dataSource = NA, organism = NA)
 A \code{data.table} with the gene ontology subcellular localization term for each gene.
 }
 \description{
-This function generates the \code{data.table} necessary to associate genes to subcellular localization.
+This function generates the \code{data.table} necessary to associate genes to a subcellular localization.
 }
 \details{
 A gene annotatation file, in GTF format is required as input. On this complete
