@@ -107,9 +107,9 @@ map_gene_localization <- function(gtf_path, dataSource = NA, organism = NA){
                                maxGSSize = length(ensembl_entrez$ENTREZID),
                                readable = T)))
 
-  cc_complete_dt <- cc_complete[, .(gene_symbol = unlist(tstrsplit(gene_symbol, "\\/", type.convert = TRUE))), by = c("ID", "Description")]
+  cc_complete_dt <- cc_complete[, .(geneID = unlist(tstrsplit(geneID, "\\/", type.convert = TRUE))), by = c("ID", "Description")]
   cc_complete_dt <- cc_complete_dt[, Description := stringr::str_replace(Description, "\\ ", "\\_")]
-  setnames(cc_complete_dt, old = "gene_symbol", new="gene_symbol")
+  setnames(cc_complete_dt, old = c("geneID", "Description"), new=c("gene_symbol", "subcell_struct"))
   return(cc_complete_dt)
 }
 
@@ -298,10 +298,14 @@ discrete_symmetric_ranges <- function(timepoint_list,
       # I am plotting down and up together in the same plot
       # and I need to remove zero ranges and have two color scales, green and red
       fixed_ranges_dt_o <- copy(fixed_ranges_dt)
-      fixed_ranges_dt <- fixed_ranges_dt[apply(fixed_ranges_dt, 1, function(row) all(row !=0 )), ]
 
+      zeros_dt <- fixed_ranges_dt[apply(fixed_ranges_dt, 1, function(row) any(row == 0 ))]
+      zeros_dt <- rbind(zeros_dt, data.table(start = min(zeros_dt$start), end = max(zeros_dt$end)))
+
+      fixed_ranges_dt <- fixed_ranges_dt[apply(fixed_ranges_dt, 1, function(row) all(row !=0 )), ]
       pos <- fixed_ranges_dt[start > 0]
       neg <- fixed_ranges_dt[start < 0]
+      zeros_dt <- zeros_dt[apply(zeros_dt, 1, function(row) all(row !=0 )), ]
 
       if (is.null(colors)){
         color_codes <- sample_colors(2)
@@ -343,26 +347,30 @@ discrete_symmetric_ranges <- function(timepoint_list,
                                                    ][, colors := colors]
           }
         } else {
-          colfunc <- colorRampPalette(colors[[1]])
-          colors_vector <- colfunc(n = 1+(nrow(pos)-1)*3+1)[-1]
-          colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(pos))]
-          pos <- pos[, colors := colors_vector]
+          dt_list <- list()
+          if (nrow(pos)>0) {
+            colfunc <- colorRampPalette(colors[[1]])
+            colors_vector <- colfunc(n = 1+(nrow(pos)-1)*3+1)[-1]
+            colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(pos))]
+            pos <- pos[, colors := colors_vector]
+            dt_list[["pos"]] <- pos
+          }
 
-          colfunc <- colorRampPalette(colors[[2]])
-          colors_vector <- rev(colfunc(n = 1+(nrow(neg)-1)*3+1))[-1]
-          colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(neg))]
-          neg <- neg[, colors := colors_vector]
+          if (nrow(neg)>0) {
+            colfunc <- colorRampPalette(colors[[2]])
+            colors_vector <- rev(colfunc(n = 1+(nrow(neg)-1)*3+1))[-1]
+            colors_vector <- colors_vector[seq(1, length(colors_vector), len=nrow(neg))]
+            neg <- neg[, colors := colors_vector]
+            dt_list[["neg"]] <- neg
+          }
 
-          fixed_ranges_dt <- rbind(neg, pos)
+          zeros_dt <- zeros_dt[, colors := "white"]
+          dt_list[["zeros"]] <- zeros_dt
 
-          # fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
-          #                 ][, lab := paste("<", .SD[, round(end, 2)]), by=values]
+          fixed_ranges_dt <- rbindlist(dt_list)
 
-          fixed_ranges_dt <- rbind(neg,
-                                   data.table(start = max(neg$end),
-                                              end = min(pos$start),
-                                              colors = "white"),
-                                   pos)
+          fixed_ranges_dt <- fixed_ranges_dt[order(start)]
+
           fixed_ranges_dt[, values := seq(1, nrow(fixed_ranges_dt))
                            ][, lab := paste("<", .SD[, round(end, 2)]), by=values
                              ][colors == "white", lab := "= 0"]
@@ -515,19 +523,19 @@ discrete_symmetric_ranges <- function(timepoint_list,
 #'
 groupval_byloc <- function(genes, plot_data, gene_loc_table, col_name, coloring_mode="mean"){
 
-  gene_loc_table <- gene_loc_table[Description %in% unique(plot_data$subcell_struct)]
+  gene_loc_table <- gene_loc_table[subcell_struct %in% unique(plot_data$subcell_struct)]
 
   genes_sel <- data.table::merge.data.table(genes,
-                                            gene_loc_table[, c("gene_symbol", "Description")],
+                                            gene_loc_table[, c("gene_symbol", "subcell_struct")],
                                             by = "gene_symbol")
 
   if (coloring_mode == "mean"){
-    localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]
+    localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=subcell_struct]
     localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
     setnames(localization_values, old="V1", new=eval(coloring_mode))
   } else {
     if (coloring_mode == "median"){
-      localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=Description]
+      localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=subcell_struct]
       localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
       setnames(localization_values, old="V1", new=eval(coloring_mode))
     } else {
@@ -691,13 +699,13 @@ color_cell <- function(timepoint_list,
             }
 
             ranges <- discrete_symmetric_ranges(timepoint_list,
-                                                                 plot_data,
-                                                                 gene_loc_table,
-                                                                 col_name,
-                                                                 grouping_vars,
-                                                                 colors,
-                                                                 coloring_mode,
-                                                                 together=TRUE)
+                                                plot_data,
+                                                gene_loc_table,
+                                                col_name,
+                                                grouping_vars,
+                                                colors,
+                                                coloring_mode,
+                                                together=TRUE)
             ranges <- ranges[["together"]]
 
 

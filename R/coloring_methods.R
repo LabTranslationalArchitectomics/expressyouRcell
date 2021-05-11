@@ -2,7 +2,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     localization_values <- data.table()
     # for each subcellular component computes FDR
     for (t in unique(plot_data$subcell_struct)){
-        list_interest <- intersect(gene_loc_table[Description == t]$gene_symbol, universe_set)
+        list_interest <- intersect(gene_loc_table[subcell_struct == t]$gene_symbol, universe_set)
         my_list <- genes
 
         LY <- length(intersect(my_list, list_interest))
@@ -12,7 +12,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 
         test <- fisher.test(matrix(c(LY, RY, LN, RN), 2, 2), alternative="greater")
 
-        row <- data.table(Description = t, enr = test$estimate, pval = test$p.value)
+        row <- data.table(subcell_struct = t, enr = test$estimate, pval = test$p.value)
         localization_values <- rbind(localization_values, row)
     }
 
@@ -20,12 +20,12 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     localization_values <- localization_values[, `:=` ("value"=categorical_classes[pval > categorical_classes$start &
                                                                                        pval <= categorical_classes$end, values],
                                                        "enr_color"=categorical_classes[pval > categorical_classes$start &
-                                                                                           pval <= categorical_classes$end, colors]), by=Description]
+                                                                                           pval <= categorical_classes$end, colors]), by=subcell_struct]
 
     final_dt <- merge.data.table(plot_data,
-                                 localization_values[, c("Description", "enr_color", "value")],
+                                 localization_values[, c("subcell_struct", "enr_color", "value")],
                                  by.x = "subcell_struct",
-                                 by.y = "Description")
+                                 by.y = "subcell_struct")
 
     final_dt[, comb := factor(comb, levels = intersect(plot_data$comb, final_dt$comb))
              ][, value := factor(value, levels = rev(unique(localization_values$value)))]
@@ -126,14 +126,14 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
 #' @export
 assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, categorical_classes, coloring_mode="mean", together=FALSE){
 
-    gene_loc_table <- gene_loc_table[Description %in% unique(plot_data$subcell_struct)]
+    gene_loc_table <- gene_loc_table[subcell_struct %in% unique(plot_data$subcell_struct)]
 
     genes_sel <- merge.data.table(genes,
-                                  gene_loc_table[, c("gene_symbol", "Description")],
+                                  gene_loc_table[, c("gene_symbol", "subcell_struct")],
                                   by = "gene_symbol")
 
     if (coloring_mode == "mean"){
-        localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=Description]
+        localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=subcell_struct]
 
         if (all(localization_values$V1 > 0) || all(localization_values$V1 < 0)){
             localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
@@ -144,7 +144,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         setnames(localization_values, old="V1", new=eval(coloring_mode))
     } else {
         if (coloring_mode == "median"){
-            localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=Description]
+            localization_values <- genes_sel[, .(median(get(col_name), na.rm = TRUE)), by=subcell_struct]
 
             if (all(localization_values$V1 > 0) || all(localization_values$V1 < 0)){
                 localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
@@ -173,7 +173,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         # localization_values <- localization_values[, `:=` ("value"=categorical_classes[(get(coloring_mode)) > abs(categorical_classes[[class]][, start]) &
         #                                                                                    (get(coloring_mode)) <= abs(categorical_classes[[class]][, end]), values],
         #                                                    "color_grad"=categorical_classes[(get(coloring_mode)) > abs(categorical_classes[[class]][, start]) &
-        #                                                                                         (get(coloring_mode)) <= abs(categorical_classes[[class]][, end]), colors]), by=Description]
+        #                                                                                         (get(coloring_mode)) <= abs(categorical_classes[[class]][, end]), colors]), by=subcell_struct]
 
     } else {
 
@@ -190,7 +190,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     final_dt <- merge.data.table(plot_data,
                                  localization_values,
                                  by.x = "subcell_struct",
-                                 by.y = "Description",
+                                 by.y = "subcell_struct",
                                  all = TRUE)
 
     final_dt[, comb := factor(comb, levels = intersect(plot_data$comb, final_dt$comb))
@@ -219,7 +219,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     final_dt <- final_dt[is.na(value), value := as.factor(na_val + 1)
                          ][is.na(color_grad), color_grad := "grey90"]
 
-    if (length(levels(plot_data$subcell_struct)) > length(localization_values$Description)){
+    if (length(levels(plot_data$subcell_struct)) > length(localization_values$subcell_struct)){
         colors.spe <- c(colors.spe,  "grey90")
     }
 
