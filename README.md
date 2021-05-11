@@ -1,5 +1,16 @@
 # expressyouRcell
-expressyouRcell is an easy-to-use R package, which provides a range of customizable options for generating more intuitive representations to disentangle load of biological data,  leading towards a more comprehensive understanding on physiological and pathological conditions. 
+expressyouRcell is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. This tool gives the possibility of generating animations of pictographic representations of cells, or pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. 
+A range of customizable options is provided to create cellular pictograms starting from your data! :)
+
+## Load the package
+To load expressyouRcell run
+library(expressyouRcell)
+
+## Create the gene-localization table
+
+## Prepare your data
+expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason the input has to be organized as a list of data.tables. For example, in case of multiple stages, each data.table should correspond to a specific time point. 
+Each data.table must have at least a column of gene names named precisely “gene_symbol”.
 
 ## plot_cell
 Plot cellular structure with default colors
