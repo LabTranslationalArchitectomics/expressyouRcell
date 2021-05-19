@@ -42,22 +42,21 @@ If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are gro
 expressyouRcell can handle your output in two main different manners, and this can be achieved with the optional parameters in the ```color_cell``` function.
 
 #### 1) Classify genes into separate groups and for each one generate a distinct plot
-Let's suppose you want to color only genes belonging to one class (either "up" or "down"), and obtain a separate plot for each class. In this case, separated analysis for each subset of genes can be obtained and expressyouRcell will then output single ggplot objects for each category. To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you stored your gene classification. 
+Let's suppose you want to color only genes belonging to one class (either "up" or "down"), and obtain a separate plot for each class. In this case, separate analysis for each subset of genes can be obtained and expressyouRcell will then output single ```ggplot``` objects for each category. 
+To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. 
 
-If you have not previously organized your genes in distinct classes, expressyouRcell can do this for you.  
-
-
-##### a) 
-If downstream of your differential analysis pipeline you have already organized genes into classes (e.g. up/down-regulated for DEGs classification),   are associated with categorical classes ,  If you
+If you have not previously organized your genes in distinct classes, expressyouRcell can do this for you. To do so, you have to provide some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes with the parameters:
+* ```thr``` to specify the cutoff value on the ```col_name``` column, 
+* ```pval_col``` to specify the column with the statistical significance values,
+* ```pval_thr``` to specify the cutoff value on the ```pval_col``` column.
 
 #### 2) Classify genes into separate groups and merge all the results into a single plot 
-Default value of this parameter is null. In this case, no grouping by category is performed and values of genes mapped to each subcellular localization are averaged regardless their classification. 
-An additional parameter ```grouping_vars``` can be specified to select the categories the user is interested to plot (e.g. in case of DEGs classification, “up” and “down”). 
-Default value of this parameter is null. In this case, genes belonging to the specified categories are subselected and their corresponding values are averaged for each subcellular localization.
+If you prefer to obtain a single plot without any discrimination of genes the ```group_by``` parameter must be null. This is also the default value. In this case, no grouping by classification is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+
+With both the options, an additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
 
 ### Enrichment based p-value
 Enrichment analysis restricted to the sub-ontology of cellular components is performed on genes input by the user. Colors of each subcellular compartment are based on pvalues from the Fisher’s test, used to assess the statistical significance of the enrichment.
 
-
-## create_animation
+## create_animation function
 Create animation between stages
