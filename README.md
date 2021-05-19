@@ -9,7 +9,7 @@ library(expressyouRcell)
 ```
 
 ## 2) Create the gene-localization table
-This step can be skipped if you provide your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly "gene_symbol") and one with the associated information of the localization of that gene within the cell (named exactly subcell_struct).
+This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly "gene_symbol") and one with the associated information of the localization of that gene within the cell (named exactly subcell_struct).
 
 Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. As far as now, the annotation is working only for mouse.
 
@@ -29,17 +29,29 @@ plot_cell(coords_dt = neuron_dt_nocyto)
 ```
 
 ## color_cell
-The main function is called color_cell and needs three mandatory input parameters.
-* A list of data.tables, each corresponding to a time point and must have at least a column named “external_gene_name” with gene symbols.
-* A data.table containing x and y coordinates, name of the subcellular structures and an associated default color.
-* A data.table storing for each gene the mapping to a subcellular localization according to the cellular component gene ontology. 
-Different methods for assigning colors to subcellular localizations are then provided. 
+The main function is called ```color_cell``` and needs at least three mandatory input parameters.
+* A list of ```data.table```s, each corresponding to a time point and must have at least a column named ```external_gene_name``` with gene symbols.
+* A ```data.table``` containing ```x``` and ```y``` coordinates, name of the subcellular structures and an associated default color.
+* A ```data.table``` storing for each gene the mapping to a subcellular localization according to the cellular component gene ontology. 
+
+Different methods for assigning colors to subcellular localizations can be chosen through the ```coloring_method``` parameter. 
 
 ### Mean (or median) of values
-Genes are grouped according to their localization and mean (or median) of numeric values associated with each gene is computed for each group. If one of these methods are chosen, ```data.table``` in the input list must also have additional columns containing numeric values (e.g. logFC , CPM values, etc.). An additional parameter with the name of the column (named ```col_name```)on which the user wants to base the color of cellular localizations must be provided as input. The given name must be compatible with column names in the datatables of the input list. 
-If genes are associated with categorical classes (e.g. up/down-regulation for DEGs classification), separated analysis for each subset of genes can be obtained by specifying as ```group_by``` parameter the name of the column with the categorical variable (e.g. “class”). 
-Default value of this parameter is null. In this case, no grouping by category is performed and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are grouped according to their localization and mean (or median) of numeric values associated with each gene is computed for each group. In this case, the ```data.table```s  in the input list must also have an additional column containing numeric values (e.g. logFC, CPM values, etc.). To specify the value column on which you want to base your coloring, an additional parameter with the name of the column (```col_name```) must be provided as input. The given name must be compatible with column names in the ```data.table```s of the input list. 
 
+expressyouRcell can handle your output in two main different manners, and this can be achieved with the optional parameters in the ```color_cell``` function.
+
+#### 1) Classify genes into separate groups and for each one generate a distinct plot
+Let's suppose you want to color only genes belonging to one class (either "up" or "down"), and obtain a separate plot for each class. In this case, separated analysis for each subset of genes can be obtained and expressyouRcell will then output single ggplot objects for each category. To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you stored your gene classification. 
+
+If you have not previously organized your genes in distinct classes, expressyouRcell can do this for you.  
+
+
+##### a) 
+If downstream of your differential analysis pipeline you have already organized genes into classes (e.g. up/down-regulated for DEGs classification),   are associated with categorical classes ,  If you
+
+#### 2) Classify genes into separate groups and merge all the results into a single plot 
+Default value of this parameter is null. In this case, no grouping by category is performed and values of genes mapped to each subcellular localization are averaged regardless their classification. 
 An additional parameter ```grouping_vars``` can be specified to select the categories the user is interested to plot (e.g. in case of DEGs classification, “up” and “down”). 
 Default value of this parameter is null. In this case, genes belonging to the specified categories are subselected and their corresponding values are averaged for each subcellular localization.
 
