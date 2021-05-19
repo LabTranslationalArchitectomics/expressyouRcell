@@ -4,7 +4,9 @@ A range of customizable options is provided to create cellular pictograms starti
 
 ## Load the package
 To load expressyouRcell run
+```
 library(expressyouRcell)
+```
 
 ## Create the gene-localization table
 
