@@ -2,6 +2,27 @@
 expressyouRcell is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. This tool gives the possibility of generating animations of pictographic representations of cells, or pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. 
 A range of customizable options is provided to create cellular pictograms starting from your data! :)
 
+## 0) Before starting
+### Dependencies
+* CRAN
+  data.table (>= 1.13.6),
+	ggplot2 (>= 3.3.3),
+	rsvg (>= 2.1),
+	grImport2 (>= 0.2),
+  magick (>= 2.5.2),
+	ggpubr (>= 0.4.0),
+  RColorBrewer (>= 1.1-2)  
+	 
+* Bioconductor
+	IRanges (>= 2.24.1),
+  org.Mm.eg.db (>= 3.12.0),
+	clusterProfiler (>= 3.18.0),  
+	DOSE (>= 3.16.0),	
+	multtest (>= 2.46.0),
+
+### Installation
+### Getting help
+
 ## 1) Load the package
 To load expressyouRcell run:
 ```
