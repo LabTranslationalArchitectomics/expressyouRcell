@@ -5,20 +5,20 @@ A range of customizable options is provided to create cellular pictograms starti
 ## 0) Before starting
 ### Dependencies
 * CRAN
-  data.table (>= 1.13.6),
-	ggplot2 (>= 3.3.3),
-	rsvg (>= 2.1),
-	grImport2 (>= 0.2),
-  magick (>= 2.5.2),
-	ggpubr (>= 0.4.0),
-  RColorBrewer (>= 1.1-2)  
+- data.table (>= 1.13.6),
+- ggplot2 (>= 3.3.3),
+- rsvg (>= 2.1),
+- grImport2 (>= 0.2),
+- magick (>= 2.5.2),
+- ggpubr (>= 0.4.0),
+- RColorBrewer (>= 1.1-2)  
 	 
 * Bioconductor
-	IRanges (>= 2.24.1),
-  org.Mm.eg.db (>= 3.12.0),
-	clusterProfiler (>= 3.18.0),  
-	DOSE (>= 3.16.0),	
-	multtest (>= 2.46.0),
+- IRanges (>= 2.24.1),
+- org.Mm.eg.db (>= 3.12.0),
+- clusterProfiler (>= 3.18.0),  
+- DOSE (>= 3.16.0),	
+- multtest (>= 2.46.0),
 
 ### Installation
 ### Getting help
