@@ -69,7 +69,7 @@ The main function is called ```color_cell``` and needs at least three mandatory 
 Different methods for assigning colors to subcellular localizations can be chosen through the ```coloring_method``` parameter. 
 
 ### Mean (or median) of values
-If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are grouped according to their localization and mean (or median) of numeric values associated with each gene is computed for each group. In this case, the ```data.table```s  in the input list must also have an additional column containing numeric values (e.g. logFC, CPM values, etc.). To specify the value column on which you want to base your coloring, an additional parameter with the name of the column (```col_name```) must be provided as input. The given name must be compatible with column names in the ```data.table```s of the input list. 
+If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are first grouped according to their localization, then, mean (or median) of numeric values associated with each gene is computed for each group. In this case, the ```data.table```s  in the input list must also have an additional column containing numeric values (e.g. logFC, CPM values, etc.). To specify the value column on which you want to base your coloring, an additional parameter with the name of the column (```col_name```) must be provided as input. The given name must be compatible with column names in the ```data.table```s of the input list. 
 
 expressyouRcell can handle your output in two main different manners, and this can be achieved with the optional parameters in the ```color_cell``` function.
 
