@@ -34,8 +34,6 @@ library(devtools)
 install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE)
 ```
 
-### Getting help
-
 ## 1) Load the package
 To load expressyouRcell run:
 ```
