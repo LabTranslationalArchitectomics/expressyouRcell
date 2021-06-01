@@ -21,6 +21,19 @@ A range of customizable options is provided to create cellular pictograms starti
 	- multtest (>= 2.46.0),
 
 ### Installation
+You can install expressyouRcell directly from GitHub. To do so, the devtools package is required. If not already installed on your system, run:
+
+```
+install.packages("devtools")
+```
+
+Otherwise, load devtools and install expressyouRcell by:
+
+```
+library(devtools)
+install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE)
+```
+
 ### Getting help
 
 ## 1) Load the package
