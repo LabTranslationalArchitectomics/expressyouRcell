@@ -82,6 +82,8 @@ If you have not previously organized your genes in distinct classes, expressyouR
 * ```pval_col``` to specify the column with the statistical significance values,
 * ```pval_thr``` to specify the cutoff value on the ```pval_col``` column.
 
+![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img1.png?raw=true)
+
 #### 2) Classify genes into separate groups and merge all the results into a single plot 
 If you prefer to obtain a single plot without any discrimination of genes the ```group_by``` parameter must be null. This is also the default value. In this case, no grouping by classification is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
 
