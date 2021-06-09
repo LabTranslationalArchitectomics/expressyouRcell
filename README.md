@@ -41,12 +41,18 @@ library(expressyouRcell)
 ```
 
 ## 2) Create the gene-localization table
-This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly "gene_symbol") and one with the associated information of the localization of that gene within the cell (named exactly subcell_struct).
+This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly ```gene_symbol```) and one with the associated information of the localization of that gene within the cell (named exactly ```subcell_struct```).
 
 Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. As far as now, the annotation is working only for mouse.
 
 ### map_gene_localization function
 A gene annotation file, in GTF format, is required as input. On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This step generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+
+gene_symbol | subcell_struct 
+Rgs20 | Golgi_apparatus 
+Vcpip1 | Golgi_apparatus 
+Sox17 | nucleus 
+Lypla1 | nucleus 
 
 ## 3) Prepare your data
 expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of data.tables. For example, in case of multiple stages, each data.table should correspond to a specific time point. 
