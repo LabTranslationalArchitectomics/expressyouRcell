@@ -2,7 +2,8 @@
 % Please edit documentation in R/main_functions.R
 \name{groupval_byloc}
 \alias{groupval_byloc}
-\title{Compute mean or median of values associated to genes for each cellular compartment}
+\title{Compute mean or median of values associated to genes for each cellular
+compartment}
 \usage{
 groupval_byloc(
   genes,
@@ -13,7 +14,8 @@ groupval_byloc(
 )
 }
 \arguments{
-\item{genes}{A \code{data.table} of gene names with associated log fold change values. Columns must be named "gene_symbol" and "logFC".}
+\item{genes}{A \code{data.table} of gene names with associated log fold
+change values. Columns must be named "gene_symbol" and "logFC".}
 
 \item{plot_data}{A \code{data.table} with the polygon coordinates to be
 plotted.}
@@ -21,14 +23,17 @@ plotted.}
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes
 to subcellular localizations.}
 
-\item{col_name}{A character string with the name of the column on which the user wants
-to base the color of cellular localizations when "median" or "mean" are the chosen coloring method.}
+\item{col_name}{A character string with the name of the column on which the
+user wants to base the color of cellular localizations when "median" or
+"mean" are the chosen coloring method.}
 
 \item{coloring_mode}{Either "mean" or "median". Default is "mean".
 
-A name of a numerical columns must also be provided as \code{col_name} parameter.
-This method computes the mean (or median) of values specified in the \code{col_name} column.}
+A name of a numerical columns must also be provided as \code{col_name}
+parameter. This method computes the mean (or median) of values specified in
+the \code{col_name} column.}
 }
 \description{
-Compute mean or median of values associated to genes for each cellular compartment
+Compute mean or median of values associated to genes for each cellular
+compartment
 }

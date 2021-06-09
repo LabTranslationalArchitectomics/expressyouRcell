@@ -7,7 +7,8 @@
 plot_legend_organelles(dt_legend)
 }
 \arguments{
-\item{dt_legend}{A \code{data.table} with the polygon coordinates to be plotted in the legend figure}
+\item{dt_legend}{A \code{data.table} with the polygon coordinates to be
+plotted in the legend figure}
 }
 \value{
 a ggplot object with the legend of labeled organelles

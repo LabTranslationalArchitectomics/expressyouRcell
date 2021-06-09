@@ -16,24 +16,28 @@ discrete_symmetric_ranges(
 )
 }
 \arguments{
-\item{timepoint_list}{A list of \code{data.table}s, one for each time point. Each one must have at least a column named
-"gene_symbol".}
+\item{timepoint_list}{A list of \code{data.table}s, one for each time point.
+Each one must have at least a column named "gene_symbol".}
 
-\item{grouping_vars}{A character vector with classes of genes to be considered.}
+\item{grouping_vars}{A character vector with classes of genes to be
+considered.}
 
-\item{colors}{A character vector with two color codes for generating a color palettes with a shade for each interval.}
+\item{colors}{A character vector with two color codes for generating a color
+palettes with a shade for each interval.}
 
-\item{together}{An boolean value specifying whether genes with different classification labels should be considered together (regardless their classification) or separately}
+\item{together}{An boolean value specifying whether genes with different
+classification labels should be considered together (regardless their
+classification) or separately}
 
-\item{value}{A character vector with two color codes for generating a color palettes composed of n_intervals colors.}
+\item{value}{A character vector with two color codes for generating a color
+palettes composed of n_intervals colors.}
 }
 \value{
-A list of \code{data.table}s (one for each classes specified in the parameter classes) with categorical classes into which the fold change values grouped for each subcellular localization are mapped.
+A list of \code{data.table}s (one for each classes specified in the
+parameter classes) with categorical classes into which the fold change
+values grouped for each subcellular localization are mapped.
 }
 \description{
-This function creates a table with ranges for mapping fold change values with associated colors and labels.
-}
-\examples{
-#assign_color_by_pval(genes=genes_down,plot_data = neuron_dt,gene_loc_table = gene_loc_table,colors=c("darkred", "white"))
-
+This function creates a table with ranges for mapping fold
+change values with associated colors and labels.
 }

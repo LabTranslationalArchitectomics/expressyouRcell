@@ -13,7 +13,7 @@
 #'   "enrichment". If "enrichment" is specified, enrichment analysis restricted
 #'   to the sub-ontology of cellular components is performed on genes input by
 #'   the user. Colors of each subcellular compartment are based on pvalues from
-#'   the Fisher’s test, used to assess the statistical significance of the
+#'   the Fisher's test, used to assess the statistical significance of the
 #'   enrichment.
 #'
 #'   If "mean" or "median" are specified, a name of a numerical columns must
@@ -57,7 +57,7 @@ color_cell <- function(timepoint_list,
     }
 
     if (!all(unlist(lapply(timepoint_list, function(x) "gene_symbol" %in% colnames(x))))){
-        stop("Input data must include a column of gene names named precisely “gene_symbol”.")
+        stop("Input data must include a column of gene names named precisely \"gene_symbol\".")
     }
 
     if (coloring_mode == 'mean' || coloring_mode == 'median'){
@@ -211,7 +211,7 @@ color_cell <- function(timepoint_list,
             if (!is.null(group_by)){
                 # we are grouping by class of DEGs
                 if (!all(unlist(lapply(timepoint_list, function(x) group_by %in% colnames(x))))) {
-                    cat("check that every list contains a column named as specified in group_by param")
+                    stop("check that every list contains a column named as specified in group_by param")
                 } else {
                     if (is.null(colors)){
                         # random colors are chosen for each category in group_by column
