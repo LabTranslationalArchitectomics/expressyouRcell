@@ -75,6 +75,8 @@ The input table can also contain additional columns with values of gene expressi
 ### plot_cell function
 This function simply allows the user to visualize the chosen cellular map with the default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
 
+
+
 Example of usage:
 ```
 plot_cell(coords_dt = neuron_dt_nocyto)
