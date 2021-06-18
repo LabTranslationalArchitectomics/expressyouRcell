@@ -107,7 +107,9 @@ If you have not previously organized your genes in distinct classes, expressyouR
 ![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img1.png?raw=true)
 
 #### 2) Classify genes into separate groups and merge all the results into a single plot 
-If you prefer to obtain a single plot without any discrimination of genes the ```group_by``` parameter must be null. This is also the default value. In this case, no grouping by classification is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+If you prefer to obtain a single plot without without any discrimination of genes, the ```group_by``` parameter must be set to null. This is also the default value. In this case, no grouping by classification value is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+
+![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png?raw=true)
 
 With both the options, an additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
 
