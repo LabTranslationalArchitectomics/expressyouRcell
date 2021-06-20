@@ -41,19 +41,41 @@ library(expressyouRcell)
 ```
 
 ## 2) Create the gene-localization table
-This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly "gene_symbol") and one with the associated information of the localization of that gene within the cell (named exactly subcell_struct).
+This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly ```gene_symbol```) and one with the associated information of the localization of that gene within the cell (named exactly ```subcell_struct```).
 
 Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. As far as now, the annotation is working only for mouse.
 
 ### map_gene_localization function
-A gene annotation file, in GTF format, is required as input. On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This step generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+A gene annotation file, in GTF format, is required as input. On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+
+```map_gene_localization``` returns a ```data.table``` containing for each gene its localization to a subcellular structure:
+
+| gene_symbol | subcell_struct  |
+| :---:       |      :-:        |
+| Rgs20       | Golgi_apparatus |
+| Vcpip1      | Golgi_apparatus |
+| ...      | ... |
+| Sox17       | nucleus         |
+| Lypla1      | nucleus         |
+
 
 ## 3) Prepare your data
-expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of data.tables. For example, in case of multiple stages, each data.table should correspond to a specific time point. 
-Each data.table must have at least a column of gene names named precisely “gene_symbol”.
+expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of ```data.table```s. For example, in case of multiple stages, each ```data.table``` should correspond to a specific time point. 
+
+Each ```data.table``` must have at least a column of gene names named precisely ```gene_symbol```. 
+The input table can also contain additional columns with values of gene expression levels (CPM or FPKM) or results from upstream differential analysis pipeline (such as fold changes and pvalues).
+
+| gene_symbol | Value  |
+| :---:       |      :-:        |
+| Rgs20       | 0.5 |
+| Vcpip1      | 1.2 |
+| Sox17       | -2.5         |
+| Lypla1      | 1.1         |
 
 ### plot_cell function
-This function simply allows the user to visualize the chosen cellular structure with the default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
+This function simply allows the user to visualize the chosen cellular map with the default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
+
+
 
 Example of usage:
 ```
@@ -85,7 +107,9 @@ If you have not previously organized your genes in distinct classes, expressyouR
 ![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img1.png?raw=true)
 
 #### 2) Classify genes into separate groups and merge all the results into a single plot 
-If you prefer to obtain a single plot without any discrimination of genes the ```group_by``` parameter must be null. This is also the default value. In this case, no grouping by classification is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+If you prefer to obtain a single plot without without any discrimination of genes, the ```group_by``` parameter must be set to null. This is also the default value. In this case, no grouping by classification value is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+
+![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png?raw=true)
 
 With both the options, an additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
 
