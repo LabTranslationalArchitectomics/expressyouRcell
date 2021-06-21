@@ -75,8 +75,6 @@ The input table can also contain additional columns with values of gene expressi
 ### plot_cell function
 This function simply allows the user to visualize the chosen cellular map with the default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
 
-
-
 Example of usage:
 ```
 plot_cell(coords_dt = neuron_dt_nocyto)
@@ -96,18 +94,41 @@ If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are fir
 expressyouRcell can handle your output in two main different manners, and this can be achieved with the optional parameters in the ```color_cell``` function.
 
 #### 1) Classify genes into separate groups and for each one generate a distinct plot
-Let's suppose you want to color only genes belonging to one class (either "up" or "down"), and obtain a separate plot for each class. In this case, separate analysis for each subset of genes can be obtained and expressyouRcell will then output single ```ggplot``` objects for each category. 
+expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generating separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` objects for each category. 
 To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. 
 
-If you have not previously organized your genes in distinct classes, expressyouRcell can do this for you. To do so, you have to provide some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes with the parameters:
-* ```thr``` to specify the cutoff value on the ```col_name``` column, 
-* ```pval_col``` to specify the column with the statistical significance values,
-* ```pval_thr``` to specify the cutoff value on the ```pval_col``` column.
+If you have not previously organized your genes in distinct classes, expressyouRcell can do this step for you. To do so, you have to provide it with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
+* ```thr``` to specify the cutoff value to be applied on the ```col_name``` column, 
+* ```pval_col``` to specify the column containing the statistical significance values,
+* ```pval_thr``` to specify the cutoff value  to be applied on the ```pval_col``` column.
+
+```
+example_list_output <- color_cell(timepoint_list = example_list,
+                                  plot_data = neuron_dt_nocyto,
+                                  gene_loc_table = gene_loc_table,
+                                  coloring_mode = "mean",
+                                  group_by = "class",
+                                  grouping_vars = list("class"=c("+","-")),
+                                  col_name = "logFC",
+                                  colors = list("+" = c("#eaf3ea", "#307e2d"),
+                                                "-" = c("#f3eaea", "#7e302d")))
+```
 
 ![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img1.png?raw=true)
 
 #### 2) Classify genes into separate groups and merge all the results into a single plot 
 If you prefer to obtain a single plot without without any discrimination of genes, the ```group_by``` parameter must be set to null. This is also the default value. In this case, no grouping by classification value is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+
+```
+example_list_output_together <- color_cell(timepoint_list = example_list,
+                                           plot_data = neuron_dt_nocyto,
+                                           gene_loc_table = gene_loc_table,
+                                           coloring_mode = "mean",
+                                           grouping_vars = list("class"=c("+","-")),
+                                           col_name = "logFC",
+                                           colors = list("+" = c("#eaf3ea", "#307e2d"),
+                                                         "-" = c("#f3eaea", "#7e302d")))
+```
 
 ![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png?raw=true)
 
