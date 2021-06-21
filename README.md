@@ -130,7 +130,8 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
                                                          "-" = c("#f3eaea", "#7e302d")))
 ```
 
-![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png?raw=true)
+
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png" width="100" height="100">
 
 With both the options, an additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
 
