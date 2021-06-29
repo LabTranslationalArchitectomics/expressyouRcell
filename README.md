@@ -140,5 +140,21 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 ### Enrichment based p-value
 Enrichment analysis restricted to the sub-ontology of cellular components is performed on genes input by the user. Colors of each subcellular compartment are based on pvalues from the Fisher’s test, used to assess the statistical significance of the enrichment.
 
+## Print and save your results
+The main function ```color_cell``` finally returns a list containing 3 items:
+* ```localization_values```: a ```data.table``` with five columns, reporting respectively the subcellular structure with its associated value, a numeric code for grouping the cellular localizations by colour with their associated colour shades, and the identifier of each time point.
+* ```ranges```: a ```data.table``` summarizing the necessary information (e.g. start, end, color and labels) for each range into which subcellular localization values have been assigned. 
+* ```plot```: a list of ```ggplot``` objects with the resulting cellular pictograms, coloured accordingly to your input data.
+
+So, to save your results you can simply print the pictograms as you prefer by accessing the ```plot``` item within the final list returned by ```color_cell```.
+
+```    
+ggsave(example_list_output_together_cpm[["plot"]][["plot_brain_p3_rs"]],
+	filename = file.path(p, paste0(t, ".png")),
+	device = "png",
+	width = 10,
+	height = 4)
+```
+
 ## create_animation function
 Create animation between stages
