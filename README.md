@@ -95,12 +95,9 @@ expressyouRcell can handle your output in two main different manners, and this c
 
 #### 1) Classify genes into separate groups and for each one generate a distinct plot
 expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generating separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` objects for each category. 
-To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. 
+To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. The additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
 
-If you have not previously organized your genes in distinct classes, expressyouRcell can do this step for you. To do so, you have to provide it with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
-* ```thr``` to specify the cutoff value to be applied on the ```col_name``` column, 
-* ```pval_col``` to specify the column containing the statistical significance values,
-* ```pval_thr``` to specify the cutoff value  to be applied on the ```pval_col``` column.
+For example, the following lines will generate two distinct cellular pictograms (for the specified classes '+' and '-') for each time point in your list, as can be seen in the picture below.
 
 ```
 example_list_output <- color_cell(timepoint_list = example_list,
@@ -116,8 +113,15 @@ example_list_output <- color_cell(timepoint_list = example_list,
 
 ![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img1.png?raw=true)
 
+If your data have not been previously organized into distinct classes of genes, expressyouRcell can perform this step for you. To do so, you have to provide the tool with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
+* ```thr``` to specify the cutoff value to be applied on the ```col_name``` column, 
+* ```pval_col``` to specify the column containing the statistical significance values,
+* ```pval_thr``` to specify the cutoff value  to be applied on the ```pval_col``` column.
+
 #### 2) Classify genes into separate groups and merge all the results into a single plot 
-If you prefer to obtain a single plot without without any discrimination of genes, the ```group_by``` parameter must be set to null. This is also the default value. In this case, no grouping by classification value is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification. 
+If you do not want to discriminate genes by defined categories, you can set the ```group_by``` parameter to null. This is also the default value. In this case, no grouping by classification value is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictograms. However, to avoid poorly informative pictograms, it is recommended to include only differentially expressed genes with the ```grouping_vars```, in particular when the logFC values are used for defining the color shade of the cellular regions.
+
+The following lines will then output the cellular pictograms in the picture below.
 
 ```
 example_list_output_together <- color_cell(timepoint_list = example_list,
@@ -131,9 +135,7 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 ```
 
 
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png" width="100" height="100">
-
-With both the options, an additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png" width="450" height="380">
 
 ### Enrichment based p-value
 Enrichment analysis restricted to the sub-ontology of cellular components is performed on genes input by the user. Colors of each subcellular compartment are based on pvalues from the Fisher’s test, used to assess the statistical significance of the enrichment.
