@@ -284,7 +284,6 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
         sup <- ceiling(max(groupedval, na.rm = TRUE))
         inf <- floor(min(groupedval, na.rm = TRUE))
-        inf <- round(inf) * 10
 
         width <- abs(sup - inf)
 
@@ -300,6 +299,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
             binsize <- sizes[which(diff == min(diff[diff > 0]))]
             sup <- sup + binsize
+            inf <- round(inf/10) * 10
 
             fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = binsize), -1),
                                           end = seq(inf, sup, by = binsize)[-1])
