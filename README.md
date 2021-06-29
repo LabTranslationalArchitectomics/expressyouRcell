@@ -139,6 +139,7 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 
 ### Enrichment based p-value
 Enrichment analysis restricted to the sub-ontology of cellular components is performed on genes input by the user. Colors of each subcellular compartment are based on pvalues from the Fisher’s test, used to assess the statistical significance of the enrichment.
+Also in this case, it is possible to selectively visualize only genes belonging to distinct classes by providing the ```group_by``` parameter with the name of the column with the categorical variable (e.g. “class”) on which you have previously stored the gene classification. Otherwise, if you do not want to discriminate genes by defined categories, you can set the ```group_by``` parameter to null. As previously described, the additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot, otherwise the default value of this parameter is null and all the genes will be considered regardless any classification.
 
 ## Print and save your results
 The main function ```color_cell``` finally returns a list containing 3 items:
