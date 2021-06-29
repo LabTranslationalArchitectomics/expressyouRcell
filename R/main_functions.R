@@ -284,7 +284,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
         sup <- ceiling(max(groupedval, na.rm = TRUE))
         inf <- floor(min(groupedval, na.rm = TRUE))
-        inf <- round(5.2) * 10
+        inf <- round(inf) * 10
 
         width <- abs(sup - inf)
 
