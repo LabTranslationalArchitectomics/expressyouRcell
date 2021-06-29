@@ -153,6 +153,8 @@ example_list_output_together_enr <- color_cell(timepoint_list = example_list,
                                                grouping_vars = c("+", "-"))
 ```
 
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img3.png">
+
 ## Print and save your results
 The main function ```color_cell``` finally returns a list containing 3 items:
 * ```localization_values```: a ```data.table``` with five columns, reporting respectively the subcellular structure with its associated value, a numeric code for grouping the cellular localizations by colour with their associated colour shades, and the identifier of each time point.
@@ -169,7 +171,7 @@ ggsave(example_list_output_together_cpm[["plot"]][["plot_brain_p3_rs"]],
 	height = 4)
 ```
 
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img3.png">
+
 
 ## create_animation function
 Create animation between stages
