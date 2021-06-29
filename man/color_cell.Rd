@@ -34,7 +34,7 @@ to subcellular localizations.}
 "enrichment". If "enrichment" is specified, enrichment analysis restricted
 to the sub-ontology of cellular components is performed on genes input by
 the user. Colors of each subcellular compartment are based on pvalues from
-the Fisher\\’s test, used to assess the statistical significance of the
+the Fisher's test, used to assess the statistical significance of the
 enrichment.
 
 If "mean" or "median" are specified, a name of a numerical columns must
