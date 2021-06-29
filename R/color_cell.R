@@ -235,7 +235,7 @@ color_cell <- function(timepoint_list,
                 }
             }
 
-            tp_out <- list()
+            locdt_l <- plot_l <- list()
             for (tp in names(timepoint_list)){
 
                 cat(paste0("Creating cell pictogram for stage: ", tp, "\n"))
@@ -252,16 +252,20 @@ color_cell <- function(timepoint_list,
                     for (v in unlist(grouping_vars)){
                         genes <- timepoint_list[[tp]][get(group_by) == v]
 
-                        grouped_out[[v]] <- assign_color_by_fdr(genes = genes,
+                        colored_out <- assign_color_by_fdr(genes = genes,
                                                                 plot_data = plot_data,
                                                                 gene_loc_table = gene_loc_table,
                                                                 categorical_classes = NULL,
                                                                 coloring_mode = coloring_mode)
 
+                        colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp
+                                                                                                     ][, eval(group_by) := v]
+                        locdt_l[[paste0(tp,v)]] <- colored_out[["localization_values"]]
+                        plot_l[[paste0("plot_", tp, v)]] <- colored_out[["plot"]]
 
                     }
 
-                    tp_out[[tp]] <- grouped_out
+
 
                 } else {
                     # create a plot regardless the classification
@@ -285,14 +289,24 @@ color_cell <- function(timepoint_list,
                         genes <- timepoint_list[[tp]]
                     }
 
-                    tp_out[[tp]] <- assign_color_by_fdr(genes = genes,
+                    colored_out <- assign_color_by_fdr(genes = genes,
                                                         plot_data = plot_data,
                                                         gene_loc_table = gene_loc_table,
                                                         categorical_classes = NULL,
                                                         coloring_mode = coloring_mode)
+                    colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp]
+                    locdt_l[[tp]] <- colored_out[["localization_values"]]
+
+                    plot_l[[paste0("plot_", tp)]] <- colored_out[["plot"]]
                 }
             }
-            return("tp_out" = tp_out)
+            output <- list()
+
+            output[["localization_values"]] <- rbindlist(locdt_l)
+            output[["ranges"]] <- ranges
+            output[["plot"]]<- plot_l
+
+            return(output)
 
             assign_color_by_fdr(genes,
                                 plot_data=plot_data,
