@@ -46,7 +46,17 @@ This step can be skipped if you want to use your own table with information on t
 Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. As far as now, the annotation is working only for mouse.
 
 ### map_gene_localization function
-A gene annotation file, in GTF format, is required as input. On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+You can either input the filename of the gene annotation file, in GTF format, used during the alignment procuder for your sample, or in alternative, you can provide as input a list of data.tables where your data have been stored. It is mandatory to organize the input datasets as a list of data.tables, and each one must contain a column with names of the genes named precisely "gene_symbol". 
+On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+
+Example of usage with the annotation GTF file:
+```
+gene_loc_table <- map_gene_localization(gene_set = paste0(utils_folder, "gencode.vM22.primary_assembly.annotation.gtf"))
+```
+Example of usage with the list of data.table provided with the package:
+```
+gene_loc_table <- map_gene_localization(gene_set = example_list)
+```
 
 ```map_gene_localization``` returns a ```data.table``` containing for each gene its localization to a subcellular structure:
 
