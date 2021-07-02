@@ -74,11 +74,13 @@ plot_cell <- function(coords_dt){
 #'
 #' @description This function generates the \code{data.table} necessary to
 #'   associate genes to a subcellular localization.
-#' @param gtf_path A character vector with the gtf file path.
+#' @param gene_set Can be either a character vector with the gtf file path with
+#' the genome annotation, or the timepoint list of data.table input by the user.
+#' Each data.table must have at least a column named "gene_symbol".
 #' @return A \code{data.table} with the gene ontology subcellular localization
 #'   term for each gene.
 #' @examples
-#' #map_gene_localization(ensembl_gene_set)
+#' #map_gene_localization(gene_set)
 #'
 #' @import data.table
 #' @import clusterProfiler
@@ -95,11 +97,19 @@ plot_cell <- function(coords_dt){
 #'
 #' @export
 #'
-map_gene_localization <- function(gtf_path, dataSource = NA, organism = NA){
+map_gene_localization <- function(gene_set, dataSource = NA, organism = NA){
 
-    gtf <- rtracklayer::import(gtf_path)
+    if (is.character(gene_set)){
+        gtf <- rtracklayer::import(gene_set)
 
-    annotation_gene_names <- unique(gtf$gene_name)
+        annotation_gene_names <- unique(gtf$gene_name)
+    } else {
+        if (inherits(gene_set, "list")){
+            annotation_gene_names <- unique(unlist(lapply(gene_set, function(x) x[, "gene_symbol"])))
+        } else {
+            stop("Unrecognized input")
+        }
+    }
 
     ensembl_entrez <- bitr(annotation_gene_names, fromType="SYMBOL", toType=c("ENTREZID"), OrgDb=org.Mm.eg.db, drop=T)
     cc_complete <- as.data.table(as.data.frame(enrichGO(gene = ensembl_entrez[,2],

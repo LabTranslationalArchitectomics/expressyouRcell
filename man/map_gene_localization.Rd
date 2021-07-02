@@ -4,10 +4,12 @@
 \alias{map_gene_localization}
 \title{Create table for mapping genes to subcellular localization}
 \usage{
-map_gene_localization(gtf_path, dataSource = NA, organism = NA)
+map_gene_localization(gene_set, dataSource = NA, organism = NA)
 }
 \arguments{
-\item{gtf_path}{A character vector with the gtf file path.}
+\item{gene_set}{Can be either a character vector with the gtf file path with
+the genome annotation, or the timepoint list of data.table input by the user.
+Each data.table must have at least a column named "gene_symbol".}
 }
 \value{
 A \code{data.table} with the gene ontology subcellular localization
@@ -27,6 +29,6 @@ which maps each gene to the locations in the cellular structures, either
 cellular compartments or macromolecular complexes.
 }
 \examples{
-#map_gene_localization(ensembl_gene_set)
+#map_gene_localization(gene_set)
 
 }
