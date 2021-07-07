@@ -87,7 +87,7 @@ This function simply allows the user to visualize the chosen cellular map with t
 
 Example of usage:
 ```
-plot_cell(coords_dt = neuron_dt_nocyto)
+plot_cell(coords_dt = "neuron")
 ```
 
 ## color_cell
@@ -111,7 +111,7 @@ For example, the following lines will generate two distinct cellular pictograms 
 
 ```
 example_list_output <- color_cell(timepoint_list = example_list,
-                                  plot_data = neuron_dt_nocyto,
+                                  plot_data = "neuron",
                                   gene_loc_table = gene_loc_table,
                                   coloring_mode = "mean",
                                   group_by = "class",
@@ -135,7 +135,7 @@ The following lines will then output the cellular pictograms in the picture belo
 
 ```
 example_list_output_together <- color_cell(timepoint_list = example_list,
-                                           plot_data = neuron_dt_nocyto,
+                                           plot_data = "neuron",
                                            gene_loc_table = gene_loc_table,
                                            coloring_mode = "mean",
                                            grouping_vars = list("class"=c("+","-")),
@@ -156,7 +156,7 @@ For example, the following lines will generate two distinct cellular pictograms 
 
 ```
 example_list_output_together_enr <- color_cell(timepoint_list = example_list,
-                                               plot_data = neuron_dt_nocyto,
+                                               plot_data = "neuron",
                                                gene_loc_table = gene_loc_table,
                                                coloring_mode = "enrichment",
                                                group_by = "class",
