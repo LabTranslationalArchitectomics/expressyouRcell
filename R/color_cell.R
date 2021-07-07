@@ -37,7 +37,7 @@
 #' @export
 #'
 color_cell <- function(timepoint_list,
-                       plot_data,
+                       plot_data="cell",
                        gene_loc_table,
                        coloring_mode='enrichment',
                        col_name=NULL,
@@ -48,6 +48,17 @@ color_cell <- function(timepoint_list,
                        thr=NULL,
                        pval_col=NULL,
                        pval_thr=NULL){
+
+    if (plot_data == "cell"){
+        plot_data <- cell_dt
+    } else {
+        if (plot_data == "neuron") {
+            plot_data <- neuron_dt_nocyto
+        } else {
+            stop("No available pictogram with this name")
+        }
+    }
+
 
     if (!inherits(timepoint_list, "list")){
         tmp_timepoint_list <- list()

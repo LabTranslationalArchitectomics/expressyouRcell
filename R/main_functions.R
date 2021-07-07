@@ -59,6 +59,17 @@ plot_legend_organelles <- function(dt_legend){
 #'
 #' @export
 plot_cell <- function(coords_dt){
+
+    if (coords_dt == "cell"){
+        coords_dt <- cell_dt
+    } else {
+        if (coords_dt == "neuron") {
+            coords_dt <- neuron_dt_nocyto
+        } else {
+            stop("No available pictogram with this name")
+        }
+    }
+
     p <- ggplot(coords_dt, aes(x, y, fill=comb, color=comb)) +
         scale_fill_manual(values = coords_dt[, first(color), by=comb]$V1) +
         scale_color_manual(values = rep("black", length(coords_dt[, first(color), by=comb]$V1))) +

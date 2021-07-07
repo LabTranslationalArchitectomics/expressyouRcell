@@ -7,7 +7,7 @@ coloring method}
 \usage{
 color_cell(
   timepoint_list,
-  plot_data,
+  plot_data = "cell",
   gene_loc_table,
   coloring_mode = "enrichment",
   col_name = NULL,
