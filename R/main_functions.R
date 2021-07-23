@@ -51,7 +51,7 @@ plot_legend_organelles <- function(dt_legend){
 #'   plotted.
 #' @return a ggplot object with the cell figure with default colors.
 #' @examples
-#' plot_cell(coords_dt=neuron_dt_nocyto)
+#' plot_cell(coords_dt="neuron")
 #'
 #' @return A ggplot object.
 #'
@@ -60,10 +60,10 @@ plot_legend_organelles <- function(dt_legend){
 #' @export
 plot_cell <- function(coords_dt){
 
-    if (coords_dt == "cell"){
+    if (all(coords_dt == "cell")){
         coords_dt <- cell_dt
     } else {
-        if (coords_dt == "neuron") {
+        if (all(coords_dt == "neuron")) {
             coords_dt <- neuron_dt_nocyto
         } else {
             stop("No available pictogram with this name")
@@ -108,7 +108,7 @@ plot_cell <- function(coords_dt){
 #'
 #' @export
 #'
-map_gene_localization <- function(gene_set, dataSource = NA, organism = NA){
+map_gene_localization <- function(gene_set){
 
     if (is.character(gene_set)){
         gtf <- rtracklayer::import(gene_set)
@@ -145,6 +145,9 @@ map_gene_localization <- function(gene_set, dataSource = NA, organism = NA){
 #' @param sample_name A character vector with the name of the sample
 #' @param colors A vector of colors to be assigned to the categorical classes
 #' @param lab A vector of labels to be assigned to the categorical classes
+#' @param plots_dt A list of ggplot objects with the static pictograms to be animated.
+#' @param n_frames Number of frames to use in output animation
+#' @param fps Frames per second, how many images to capture per second of video.
 #' @param output_folder A file path where to save output animated pictures
 #'
 #' @examples
@@ -517,9 +520,9 @@ discrete_symmetric_ranges <- function(timepoint_list,
 #'   "mean" are the chosen coloring method.
 #' @param coloring_mode Either "mean" or "median". Default is "mean".
 #'
-#'   A name of a numerical columns must also be provided as \code{col_name}
-#'   parameter. This method computes the mean (or median) of values specified in
-#'   the \code{col_name} column.
+#' A name of a numerical columns must also be provided as \code{col_name}
+#' parameter. This method computes the mean (or median) of values specified in
+#' the \code{col_name} column.
 #'
 #'
 #' @import data.table

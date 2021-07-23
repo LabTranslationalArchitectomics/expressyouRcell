@@ -21,6 +21,12 @@ create_animation(
 
 \item{lab}{A vector of labels to be assigned to the categorical classes}
 
+\item{plots_dt}{A list of ggplot objects with the static pictograms to be animated.}
+
+\item{n_frames}{Number of frames to use in output animation}
+
+\item{fps}{Frames per second, how many images to capture per second of video.}
+
 \item{output_folder}{A file path where to save output animated pictures}
 }
 \description{

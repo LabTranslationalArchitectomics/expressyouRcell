@@ -56,6 +56,15 @@ only to the specified values of the varible \code{group_by}}
 
 \item{ranges}{An optional \code{data.table} with values for specified
 intervals and associated colors.}
+
+\item{thr}{a numeric value specifying the cutoff value to be applied on the
+col_name column}
+
+\item{pval_col}{a character with the name of the column containing the
+statistical significance values}
+
+\item{pval_thr}{a numeric value with the cutoff value to be applied on the
+pval_col column}
 }
 \value{
 

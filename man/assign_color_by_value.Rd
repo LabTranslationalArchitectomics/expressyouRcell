@@ -15,25 +15,38 @@ assign_color_by_value(
 )
 }
 \arguments{
-\item{genes}{A \code{data.table} of gene names with associated log fold change values. Columns must be named "gene_symbol" and "logFC".}
+\item{genes}{A \code{data.table} of gene names with associated log fold
+change values. Columns must be named "gene_symbol" and "logFC".}
 
-\item{plot_data}{A \code{data.table} with the polygon coordinates to be plotted.}
+\item{plot_data}{A \code{data.table} with the polygon coordinates to be
+plotted.}
 
-\item{gene_loc_table}{A \code{data.table} with information for mapping genes to subcellular localizations.}
+\item{gene_loc_table}{A \code{data.table} with information for mapping genes
+to subcellular localizations.}
 
-\item{coloring_mode}{Either "mean" or "median". It computes the mean (or median) of log fold change values grouping genes
-by subcellular localization. Default is "mean".}
+\item{col_name}{A character string with the name of the column on which the
+user wants to base the color of cellular localizations when "median" or
+"mean" are the chosen coloring method.}
 
-\item{colors}{A character vector of hex color codes for palette generation.}
+\item{categorical_classes}{An optional \code{data.table} with values for
+specified intervals and associated colors. Default classification is
+divided in 8 intervals.}
+
+\item{coloring_mode}{Either "mean" or "median". It computes the mean (or
+median) of log fold change values grouping genes by subcellular
+localization. Default is "mean".}
+
+\item{together}{A boolean specifying whether or not genes are considered all
+together without any classification. Default value is false, so genes will
+be grouped by specified categories.}
 }
 \value{
-A list containing a ggplot2 object and two \code{data.table}s. "final_dt" contains data associated to the
-ggplot2 object, while "localization_values" contains the resulting mean (or median) fold changes for each subcellular localization.
+A list containing a ggplot2 object and two \code{data.table}s.
+"final_dt" contains data associated to the ggplot2 object, while
+"localization_values" contains the resulting mean (or median) fold changes
+for each subcellular localization.
 }
 \description{
-This function colors subcellular structures based on mean (or median) of fold change of genes.
-}
-\examples{
-#assign_color_by_fc(genes=genes_down,plot_data = neuron_dt,gene_loc_table = gene_loc_table,colors=c("darkred", "white"),value="median")
-
+This function colors subcellular structures based on mean (or
+median) of fold change of genes.
 }

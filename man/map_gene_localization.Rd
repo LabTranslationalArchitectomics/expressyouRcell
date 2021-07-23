@@ -4,7 +4,7 @@
 \alias{map_gene_localization}
 \title{Create table for mapping genes to subcellular localization}
 \usage{
-map_gene_localization(gene_set, dataSource = NA, organism = NA)
+map_gene_localization(gene_set)
 }
 \arguments{
 \item{gene_set}{Can be either a character vector with the gtf file path with

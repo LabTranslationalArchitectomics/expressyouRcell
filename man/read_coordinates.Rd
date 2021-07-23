@@ -7,18 +7,14 @@
 read_coordinates(file_svg)
 }
 \arguments{
-\item{f_svg}{A character string giving the path to svg file where polygon coordinates are saved}
-
-\item{subcell_struct}{A character specifying the name of a subcellular structure}
-
-\item{color}{A character specifying the color for a subcellular structure}
+\item{file_svg}{A character string giving the path to svg file where polygon
+coordinates are saved}
 }
 \value{
-A \code{data.table} with x and y coordinates, number of polygons and colors
+A \code{data.table} with x and y coordinates, number of polygons and
+colors
 }
 \description{
-Read coordinates from svg file and assign them predefined colors
-}
-\examples{
-#read_coordinates(f_svg = "file-path/actin.svg", subcell_struct="actin", color = colors_shapes[["actin"]])
+Read coordinates from svg file and assign them predefined
+colors
 }

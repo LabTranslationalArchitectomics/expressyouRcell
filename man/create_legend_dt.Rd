@@ -7,10 +7,12 @@
 create_legend_dt(svg_folder)
 }
 \arguments{
-\item{svg_folder}{A character vector with the path of the folder containing the svg files for the legend}
+\item{svg_folder}{A character vector with the path of the folder containing
+the svg files for the legend}
 }
 \value{
-the \code{data.table} with the polygon coordinates to be plotted in the legend
+the \code{data.table} with the polygon coordinates to be plotted in
+the legend
 }
 \description{
 This function creates animation between stages

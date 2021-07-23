@@ -1,17 +1,16 @@
 #' Read svg files
 #'
-#' @description  Read coordinates from svg file and assign them predefined colors
-#' @param f_svg A character string giving the path to svg file where polygon coordinates are saved
-#' @param subcell_struct A character specifying the name of a subcellular structure
-#' @param color A character specifying the color for a subcellular structure
-#' @return A \code{data.table} with x and y coordinates, number of polygons and colors
+#' @description  Read coordinates from svg file and assign them predefined
+#'   colors
+#' @param file_svg A character string giving the path to svg file where polygon
+#'   coordinates are saved
+#' @return A \code{data.table} with x and y coordinates, number of polygons and
+#'   colors
 #'
 #' @import data.table
 #' @import grImport2
 #' @import rsvg
 #'
-#' @examples
-#' #read_coordinates(f_svg = "file-path/actin.svg", subcell_struct="actin", color = colors_shapes[["actin"]])
 read_coordinates <- function(file_svg) {
   file_svg <- rsvg::rsvg_svg(file_svg)
   rtc <- rawToChar(file_svg)
@@ -40,14 +39,16 @@ read_coordinates <- function(file_svg) {
 #' Create data.table for plotting the legend of organelles
 #'
 #' @description This function creates animation between stages
-#' @param svg_folder A character vector with the path of the folder containing the svg files for the legend
+#' @param svg_folder A character vector with the path of the folder containing
+#'   the svg files for the legend
 #'
 #' @examples
 #' #create_legend_dt(svg_folder = "legend")
 #'
 #' @import data.table
 #'
-#' @return the \code{data.table} with the polygon coordinates to be plotted in the legend
+#' @return the \code{data.table} with the polygon coordinates to be plotted in
+#'   the legend
 #'
 #' @export
 create_legend_dt <- function(svg_folder){
@@ -68,9 +69,15 @@ create_legend_dt <- function(svg_folder){
 
 #' Create neuron data.table to be plotted
 #'
-#' @description This function generates the main \code{data.table} containing all the coordinates of the polygons to be plotted
-#' @param svg_folder A character string giving the path to folder where svg files are stored
-#' @return the \code{data.table} with the polygon coordinates to be plotted
+#' @description This function generates the main \code{data.table} containing
+#'   all the coordinates of the polygons to be plotted.
+#' @param svg_folder A character string giving the path to folder where svg
+#'   files are stored.
+#' @param colors_shapes List with subcellular compartments and associated
+#'   defalut colors.
+#' @param order_levels Array of characters with the order of visualization of
+#'   organelles.
+#' @return the \code{data.table} with the polygon coordinates to be plotted.
 #' @examples
 #' #create_neuron(svg_folder="single_shapes")
 #'

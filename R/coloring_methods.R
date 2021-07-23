@@ -35,7 +35,9 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     return(list("final_dt"=final_dt, "localization_values"=localization_values))
 }
 
-#' Plot the neuron figure coloring subcellular localizations according to FDR from the Fisher’s test, used to assess the statistical significance of the enrichment.
+#' Plot the neuron figure coloring subcellular localizations according to FDR
+#' from the Fisher’s test, used to assess the statistical significance of the
+#' enrichment.
 #'
 #' @description This function creates the plot of the neuron figure with colored
 #'   subcellular localizations according to FDR values.
@@ -44,17 +46,17 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 #'   plotted.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
 #'   to subcellular localizations.
-#' @param coloring_mode If "enrichment", computes the False Discovery Rate grouping genes
-#' by subcellular localization.
+#' @param coloring_mode If "enrichment", computes the False Discovery Rate
+#'   grouping genes by subcellular localization.
 #' @param categorical_classes An optional \code{data.table} with values for
 #'   specified intervals and associated colors. Default classification is
 #'   divided in 8 intervals.
 #'
 #' @return \itemize{A list with two \code{data.table}s:
-#' \item{"final_dt"}{contains all the necessary information for plotting
-#' subcellular localizations with color values depending on the FDR;}
-#' \item{"localization_dt"}{contains a table with the enrichment scores and
-#' pvalues obtained for each subcellular localization} }
+#'   \item{"final_dt"}{contains all the necessary information for plotting
+#'   subcellular localizations with color values depending on the FDR;}
+#'   \item{"localization_dt"}{contains a table with the enrichment scores and
+#'   pvalues obtained for each subcellular localization} }
 #'
 #' @examples
 #' #compute_enrichment(genes, plot_data, gene_loc_table)
@@ -108,17 +110,30 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
 
 #' Assign colors to subcellular structures according to fold changes of genes
 #'
-#' @description This function colors subcellular structures based on mean (or median) of fold change of genes.
-#' @param genes A \code{data.table} of gene names with associated log fold change values. Columns must be named "gene_symbol" and "logFC".
-#' @param plot_data A \code{data.table} with the polygon coordinates to be plotted.
-#' @param colors A character vector of hex color codes for palette generation.
-#' @param gene_loc_table A \code{data.table} with information for mapping genes to subcellular localizations.
-#' @param coloring_mode Either "mean" or "median". It computes the mean (or median) of log fold change values grouping genes
-#' by subcellular localization. Default is "mean".
-#' @return A list containing a ggplot2 object and two \code{data.table}s. "final_dt" contains data associated to the
-#' ggplot2 object, while "localization_values" contains the resulting mean (or median) fold changes for each subcellular localization.
-#' @examples
-#' #assign_color_by_fc(genes=genes_down,plot_data = neuron_dt,gene_loc_table = gene_loc_table,colors=c("darkred", "white"),value="median")
+#' @description This function colors subcellular structures based on mean (or
+#'   median) of fold change of genes.
+#' @param genes A \code{data.table} of gene names with associated log fold
+#'   change values. Columns must be named "gene_symbol" and "logFC".
+#' @param plot_data A \code{data.table} with the polygon coordinates to be
+#'   plotted.
+#' @param gene_loc_table A \code{data.table} with information for mapping genes
+#'   to subcellular localizations.
+#' @param col_name  A character string with the name of the column on which the
+#'   user wants to base the color of cellular localizations when "median" or
+#'   "mean" are the chosen coloring method.
+#' @param categorical_classes An optional \code{data.table} with values for
+#'   specified intervals and associated colors. Default classification is
+#'   divided in 8 intervals.
+#' @param coloring_mode Either "mean" or "median". It computes the mean (or
+#'   median) of log fold change values grouping genes by subcellular
+#'   localization. Default is "mean".
+#' @param together A boolean specifying whether or not genes are considered all
+#'   together without any classification. Default value is false, so genes will
+#'   be grouped by specified categories.
+#' @return A list containing a ggplot2 object and two \code{data.table}s.
+#'   "final_dt" contains data associated to the ggplot2 object, while
+#'   "localization_values" contains the resulting mean (or median) fold changes
+#'   for each subcellular localization.
 #'
 #' @import ggplot2
 #' @import data.table

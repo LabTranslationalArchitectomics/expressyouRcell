@@ -25,6 +25,6 @@ This function creates the plot of the specified cellular
 structure.
 }
 \examples{
-plot_cell(coords_dt=neuron_dt_nocyto)
+plot_cell(coords_dt="neuron")
 
 }

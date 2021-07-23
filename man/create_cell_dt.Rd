@@ -7,13 +7,21 @@
 create_cell_dt(svg_folder, colors_shapes, order_levels)
 }
 \arguments{
-\item{svg_folder}{A character string giving the path to folder where svg files are stored}
+\item{svg_folder}{A character string giving the path to folder where svg
+files are stored.}
+
+\item{colors_shapes}{List with subcellular compartments and associated
+defalut colors.}
+
+\item{order_levels}{Array of characters with the order of visualization of
+organelles.}
 }
 \value{
-the \code{data.table} with the polygon coordinates to be plotted
+the \code{data.table} with the polygon coordinates to be plotted.
 }
 \description{
-This function generates the main \code{data.table} containing all the coordinates of the polygons to be plotted
+This function generates the main \code{data.table} containing
+all the coordinates of the polygons to be plotted.
 }
 \examples{
 #create_neuron(svg_folder="single_shapes")
