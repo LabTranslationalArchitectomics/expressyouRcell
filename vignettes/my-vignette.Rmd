@@ -154,10 +154,10 @@ example_list_output_together_enr <- color_cell(timepoint_list = example_list,
 
 # Print and save your results 
 
-The main function ```color_cell``` finally returns a list containing three items:
+The main function `color_cell` finally returns a list containing three items:
 
 * `localization_values`: a *data.table* with five columns, reporting respectively the subcellular structure with its associated value, a numeric code for grouping the cellular localizations by colour with their associated colour shades, and the identifier of each time point.
-* `ranges`: a data.table summarizing the necessary information (e.g. start, end, color and labels) for each range into which subcellular localization values have been assigned. 
+* `ranges`: a *data.table* summarizing the necessary information (e.g. start, end, color and labels) for each range into which subcellular localization values have been assigned. 
 * `plot`: a list of `ggplot` objects with the resulting cellular pictograms, coloured accordingly to your input data.
 
 So, the pictograms can be printed by accessing the `plot` item stored within the final list returned by the `color_cell` function.
