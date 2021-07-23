@@ -16,33 +16,88 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+# Overview
 
-## Vignette Info
+__expressyouRcell__ is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. This tool gives the possibility of generating animations of pictographic representations of cells, or pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. A range of customizable options is provided to create cellular pictograms starting from users's data.
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+# Before starting
 
-## Styles
+## Dependencies
+
+* CRAN
+	+ data.table (>= 1.13.6),
+	+ ggplot2 (>= 3.3.3),
+	+ rsvg (>= 2.1),
+	+ grImport2 (>= 0.2),
+	+ magick (>= 2.5.2),
+	+ ggpubr (>= 0.4.0),
+	+ RColorBrewer (>= 1.1-2)  
+	 
+* Bioconductor
+	+ IRanges (>= 2.24.1),
+	+ org.Mm.eg.db (>= 3.12.0),
+	+ clusterProfiler (>= 3.18.0),  
+	+ DOSE (>= 3.16.0),	
+	+ multtest (>= 2.46.0)
+	
+## Installation
+
+To install __expressyouRcell__ directly from GitHub, the *devtools* package is required. If not already installed on your system, run:
+
+```{r, eval = FALSE}
+install.packages("devtools")
+```
+
+Otherwise, load *devtools* and install __expressyouRcell__ by:
+
+```{r, eval = FALSE}
+library(devtools)
+install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE)
+```
+
+# Loading
+
+To load __expressyouRcell__ run:
+
+```{r, eval = TRUE, warning = FALSE}
+library(expressyouRcell)
+```
+
+# Prepare input data
+__expressyouRcell__ is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of *data.tables*. For example, in case of multiple stages, each *data.table* should correspond to a specific time point.
+
+Each *data.table* must have at least a column of gene names named precisely `gene_symbol`. The input table can also contain additional columns with values of gene expression levels (CPM or FPKM) or results from upstream differential analysis pipeline (such as fold changes and pvalues).
+
+# Create the gene-localization table
+Before computing the color shade of each region, genes have to be associated with their cellular localization within the cell structure. So, for this step a table with information on gene localization within cellular organelles is needed. A custom table with this information, if the user already has it, can be used by __expressyouRcell__ for creating the cellular pictograms. In this case, the table must contain two columns: one with gene names (named exactly `gene_symbol`) and one with the associated information of the localization of that gene within the cell (named exactly `subcell_struct`).
+
+Otherwise, the user can create the gene-localization table with the `map_gene_localization` function provided within __expressyouRcell__
+
+__expressyouRcell__ offers two options for associating each gene with its localization.
+The first option requires as input the gene annotation file, in GTF format, used during the alignment step of the samples. The second one, requires as input a list of *data.tables* where data have been stored. It is mandatory to organize the input datasets as a list of *data.tables*, and each one must contain a column with names of the genes named precisely `gene_symbol`. On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes.
+
+Example of usage with the annotation GTF file:
+
+```{r, eval = FALSE}
+gene_loc_table <- map_gene_localization(gene_set = paste0(utils_folder, "gencode.vM22.primary_assembly.annotation.gtf"))
+```
+
+Example of usage with the list of *data.table* provided with the package:
+
+```{r, eval = TRUE, warning = FALSE}
+gene_loc_table <- map_gene_localization(gene_set = example_list)
+```
+
+# Print and save your results 
+# Create the gene-localization table
 
 The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
 
     output: 
       rmarkdown::html_vignette:
         css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
+        
 You can enable figure captions by `fig_caption: yes` in YAML:
 
     output:
