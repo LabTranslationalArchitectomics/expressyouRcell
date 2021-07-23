@@ -40,13 +40,26 @@ To load expressyouRcell run:
 library(expressyouRcell)
 ```
 
-## 2) Create the gene-localization table
+## 2) Prepare your data
+expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of ```data.table```s. For example, in case of multiple stages, each ```data.table``` should correspond to a specific time point. 
+
+Each ```data.table``` must have at least a column of gene names named precisely ```gene_symbol```. 
+The input table can also contain additional columns with values of gene expression levels (CPM or FPKM) or results from upstream differential analysis pipeline (such as fold changes and pvalues).
+
+| gene_symbol | Value  |
+| :---:       |      :-:        |
+| Rgs20       | 0.5 |
+| Vcpip1      | 1.2 |
+| Sox17       | -2.5         |
+| Lypla1      | 1.1         |
+
+## 3) Create the gene-localization table
 This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly ```gene_symbol```) and one with the associated information of the localization of that gene within the cell (named exactly ```subcell_struct```).
 
 Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. As far as now, the annotation is working only for mouse.
 
 ### map_gene_localization function
-You can either input the filename of the gene annotation file, in GTF format, used during the alignment procuder for your sample, or in alternative, you can provide as input a list of data.tables where your data have been stored. It is mandatory to organize the input datasets as a list of data.tables, and each one must contain a column with names of the genes named precisely "gene_symbol". 
+You can either input the filename of the gene annotation file, in GTF format, used during the alignment of your sample, or in alternative, you can provide as input a list of data.tables where your data have been stored. It is mandatory to organize the input datasets as a list of data.tables, and each one must contain a column with names of the genes named precisely "gene_symbol". 
 On this complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
 
 Example of usage with the annotation GTF file:
@@ -69,18 +82,7 @@ gene_loc_table <- map_gene_localization(gene_set = example_list)
 | Lypla1      | nucleus         |
 
 
-## 3) Prepare your data
-expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of ```data.table```s. For example, in case of multiple stages, each ```data.table``` should correspond to a specific time point. 
-
-Each ```data.table``` must have at least a column of gene names named precisely ```gene_symbol```. 
-The input table can also contain additional columns with values of gene expression levels (CPM or FPKM) or results from upstream differential analysis pipeline (such as fold changes and pvalues).
-
-| gene_symbol | Value  |
-| :---:       |      :-:        |
-| Rgs20       | 0.5 |
-| Vcpip1      | 1.2 |
-| Sox17       | -2.5         |
-| Lypla1      | 1.1         |
+## 4) Choose and color the cellular pictogram and color 
 
 ### plot_cell function
 This function simply allows the user to visualize the chosen cellular map with the default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
@@ -166,7 +168,7 @@ example_list_output_together_enr <- color_cell(timepoint_list = example_list,
  <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img3.png">
 
 ## Print and save your results
-The main function ```color_cell``` finally returns a list containing 3 items:
+The main function ```color_cell``` finally returns a list containing three items:
 * ```localization_values```: a ```data.table``` with five columns, reporting respectively the subcellular structure with its associated value, a numeric code for grouping the cellular localizations by colour with their associated colour shades, and the identifier of each time point.
 * ```ranges```: a ```data.table``` summarizing the necessary information (e.g. start, end, color and labels) for each range into which subcellular localization values have been assigned. 
 * ```plot```: a list of ```ggplot``` objects with the resulting cellular pictograms, coloured accordingly to your input data.
