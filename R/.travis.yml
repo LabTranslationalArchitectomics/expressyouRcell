@@ -1,0 +1,26 @@
+language: r
+cache: packages
+
+r_packages:
+- data.table
+- ggplot2
+- rsvg
+- grImport2
+- magick
+- ggpubr
+- RColorBrewer
+
+
+bioc_packages:
+- IRanges
+- org.Mm.eg.db
+- clusterProfiler
+- multtest
+- DOSE
+
+notifications:
+    email:
+    on_success: never
+on_failure: never
+
+warnings_are_errors: false
