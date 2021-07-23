@@ -85,36 +85,48 @@ gene_loc_table <- map_gene_localization(gene_set = paste0(utils_folder, "gencode
 
 Example of usage with the list of *data.table* provided with the package:
 
-```{r, eval = TRUE, warning = FALSE}
+```{r, eval=TRUE, message=FALSE, warning=FALSE}
 gene_loc_table <- map_gene_localization(gene_set = example_list)
 ```
 
-# Print and save your results 
-# Create the gene-localization table
+# Choose and color the cellular pictogram
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+# Visualize pictogram with default colors
+The `plot_cell` function allows the user to visualize the chosen cellular map with the default colors. It requires as input the *data.table* with the graphical information (coordinates and colors for the cellular organelles). 
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-        
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r eval=TRUE, fig.height=5, fig.width=10, message=FALSE, warning=FALSE}
+plot_cell(coords_dt = "neuron")
 ```
 
-Also a quote using `>`:
+## Visualize user's data on the cellular pictogram
+The main function is called `color_cell` and needs at least three mandatory input parameters.
+* A list of *data.tables*, each corresponding to a time point and must have at least a column named `external_gene_name` with gene symbols.
+* A *data.table* containing `x` and `y` coordinates, name of the subcellular structures and an associated default color.
+* A *data.table* storing for each gene the mapping to a subcellular localization according to the cellular component gene ontology. 
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+Different methods for assigning colors to subcellular localizations can be chosen through the `coloring_method` parameter. 
+
+### Mean (or median) of values
+If  `coloring_method` is equal to `mean` or `median`,  genes are first grouped according to their localization, then, mean (or median) of numeric values associated with each gene is computed for each group. In this case, the *data.tables*  in the input list must also have an additional column containing numeric values (e.g. logFC, CPM values, etc.). To specify the value column on which you want to base your coloring, an additional parameter with the name of the column (`col_name`) must be provided as input. The given name must be compatible with column names in the *data.tables* of the input list. 
+
+expressyouRcell can handle your output in two main different manners, and this can be achieved with the optional parameters in the ```color_cell``` function.
+
+#### 1) Classify genes into separate groups and for each one generate a distinct plot
+expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generating separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` objects for each category. 
+To select this analysis, you must specify as the ```group_by``` parameter the name of a column with the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. The additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification.
+
+```{r eval=TRUE, fig.height=5, fig.width=10, message=FALSE, warning=FALSE}
+example_list_output <- color_cell(timepoint_list = example_list,
+                                  plot_data = "neuron",
+                                  gene_loc_table = gene_loc_table,
+                                  coloring_mode = "mean",
+                                  group_by = "class",
+                                  grouping_vars = list("class"=c("+","-")),
+                                  col_name = "logFC",
+                                  colors = list("+" = c("#eaf3ea", "#307e2d"),
+                                                "-" = c("#f3eaea", "#7e302d")))
+```
+
+# Print and save your results 
+
+
