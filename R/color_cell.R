@@ -94,8 +94,8 @@ color_cell <- function(timepoint_list,
                             stop("You want to group your data by the \"group_by\" parameter, but some data.table does not contain a column with the name you specified and I don't know how to create this column, since some parameters are missing (check thr, pval_col, pval_thr)")
                         } else {
                             timepoint_list <- lapply(timepoint_list, function(x) x[, eval(group_by) := "="
-                                                                 ][get(col_name) >= thr & get(pval_col) <= pval_thr, eval(group_by) := '-'
-                                                                   ][get(col_name) <= thr & get(pval_col) <= pval_thr, eval(group_by) := '+'])
+                                                                 ][get(col_name) <= thr & get(pval_col) <= pval_thr, eval(group_by) := '-'
+                                                                   ][get(col_name) >= thr & get(pval_col) <= pval_thr, eval(group_by) := '+'])
 
                         }
 
