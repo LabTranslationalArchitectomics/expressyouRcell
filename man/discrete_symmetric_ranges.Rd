@@ -19,6 +19,16 @@ discrete_symmetric_ranges(
 \item{timepoint_list}{A list of \code{data.table}s, one for each time point.
 Each one must have at least a column named "gene_symbol".}
 
+\item{plot_data}{A \code{data.table} with the polygon coordinates to be
+plotted.}
+
+\item{gene_loc_table}{A \code{data.table} with information for mapping genes
+to subcellular localizations.}
+
+\item{col_name}{A character string with the name of the column on which the
+user wants to base the color of cellular localizations when "median" or
+"mean" are the chosen coloring method.}
+
 \item{grouping_vars}{A character vector with classes of genes to be
 considered.}
 
@@ -28,9 +38,6 @@ palettes with a shade for each interval.}
 \item{together}{An boolean value specifying whether genes with different
 classification labels should be considered together (regardless their
 classification) or separately}
-
-\item{value}{A character vector with two color codes for generating a color
-palettes composed of n_intervals colors.}
 }
 \value{
 A list of \code{data.table}s (one for each classes specified in the

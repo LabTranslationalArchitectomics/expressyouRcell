@@ -86,29 +86,56 @@ plot_cell <- function(coords_dt){
 #' @description This function generates the \code{data.table} necessary to
 #'   associate genes to a subcellular localization.
 #' @param gene_set Can be either a character vector with the gtf file path with
-#' the genome annotation, or the timepoint list of data.table input by the user.
-#' Each data.table must have at least a column named "gene_symbol".
+#'   the genome annotation, or the timepoint list of data.table input by the
+#'   user. Each data.table must have at least a column named "gene_symbol".
+#' @param  organism A character vector with the name of the organism-specific
+#'   gene annotaion. term for each gene.
 #' @return A \code{data.table} with the gene ontology subcellular localization
-#'   term for each gene.
+#'
 #' @examples
 #' #map_gene_localization(gene_set)
 #'
 #' @import data.table
 #' @import clusterProfiler
 #' @import org.Mm.eg.db
+#' @import org.Hs.eg.db
+#' @import org.Rn.eg.db
+#' @import org.Dr.eg.db
+#' @import org.Sc.sgd.db
 #' @import DOSE
 #'
 #' @details A gene annotatation file, in GTF format is required as input. On
-#' this complete set of gene symbols, a gene ontology enrichment analysis is
-#' performed to associate a gene with a term in the cellular component ontology.
-#' For this purpose, only the sub-ontology of the cellular components is taken
-#' into consideration. This step generates the gene-localization data.table,
-#' which maps each gene to the locations in the cellular structures, either
-#' cellular compartments or macromolecular complexes.
+#'   this complete set of gene symbols, a gene ontology enrichment analysis is
+#'   performed to associate a gene with a term in the cellular component
+#'   ontology. For this purpose, only the sub-ontology of the cellular
+#'   components is taken into consideration. This step generates the
+#'   gene-localization data.table, which maps each gene to the locations in the
+#'   cellular structures, either cellular compartments or macromolecular
+#'   complexes.
 #'
 #' @export
 #'
-map_gene_localization <- function(gene_set){
+map_gene_localization <- function(gene_set, organism="mouse"){
+
+    if (organism=="human"){
+        OrgDb_chosen="org.Hs.eg.db"
+    }
+
+    if (organism=="mouse"){
+        OrgDb_chosen="org.Mm.eg.db"
+    }
+
+    if (organism=="rat"){
+        OrgDb_chosen="org.Rn.eg.db"
+    }
+
+    # if (organism=="zebrafish"){
+    #     OrgDb_chosen="org.Dr.eg.db"
+    # }
+
+    if (organism=="yeast"){
+        OrgDb_chosen="org.Sc.sgd.db"
+    }
 
     if (is.character(gene_set)){
         gtf <- rtracklayer::import(gene_set)
@@ -122,9 +149,9 @@ map_gene_localization <- function(gene_set){
         }
     }
 
-    ensembl_entrez <- bitr(annotation_gene_names, fromType="SYMBOL", toType=c("ENTREZID"), OrgDb=org.Mm.eg.db, drop=T)
+    ensembl_entrez <- bitr(annotation_gene_names, fromType="SYMBOL", toType=c("ENTREZID"), OrgDb=OrgDb_chosen, drop=T)
     cc_complete <- as.data.table(as.data.frame(enrichGO(gene = ensembl_entrez[,2],
-                                                        OrgDb=org.Mm.eg.db,
+                                                        OrgDb=OrgDb_chosen,
                                                         ont = "CC",
                                                         pvalueCutoff = 1,
                                                         pAdjustMethod = "none",
@@ -242,12 +269,17 @@ create_legend <- function(color_vector, lab_vector){
 #'   change values with associated colors and labels.
 #' @param timepoint_list A list of \code{data.table}s, one for each time point.
 #'   Each one must have at least a column named "gene_symbol".
+#' @param plot_data A \code{data.table} with the polygon coordinates to be
+#'   plotted.
+#' @param gene_loc_table A \code{data.table} with information for mapping genes
+#'   to subcellular localizations.
+#' @param col_name A character string with the name of the column on which the
+#'   user wants to base the color of cellular localizations when "median" or
+#'   "mean" are the chosen coloring method.
 #' @param grouping_vars A character vector with classes of genes to be
 #'   considered.
 #' @param colors A character vector with two color codes for generating a color
 #'   palettes with a shade for each interval.
-#' @param value A character vector with two color codes for generating a color
-#'   palettes composed of n_intervals colors.
 #' @param together An boolean value specifying whether genes with different
 #'   classification labels should be considered together (regardless their
 #'   classification) or separately

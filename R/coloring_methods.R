@@ -101,8 +101,8 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
         scale_y_reverse() +
         guides(color = FALSE) +
         theme_void()  +
-        theme(legend.text=element_text(size=bs*0.7),
-              legend.title=element_text(size=bs*0.7))
+        theme(legend.title = element_text(size=bs*0.9),
+              legend.text = element_text(size=bs*0.9))
 
     return(list("plot"=p,
                 "localization_values"=localization_values))
@@ -200,8 +200,6 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
     }
 
-
-
     final_dt <- merge.data.table(plot_data,
                                  localization_values,
                                  by.x = "subcell_struct",
@@ -222,7 +220,6 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     }
 
     lab_title <- paste0(col_name, " ", coloring_mode)
-    #dec = TRUE
 
     colors_vec <- categorical_classes$colors
     colors.spe <- colors_vec[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
@@ -241,6 +238,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     nogreysquares <- copy(final_dt[color_grad != "grey90"])
     nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
+    bs = 25
     p <- ggplot(final_dt, aes(x, y, color=value, fill=value)) +
         scale_fill_manual(values = colors.spe,
                           name = lab_title,
@@ -254,14 +252,9 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
         geom_polygon(aes(subgroup=comb)) +
         scale_y_reverse() +
         #guides(color = FALSE) +
-        theme_void()
-
-    # if (together){
-    #     p <- p +
-    #         theme(legend.background = element_rect(fill="lightgrey",
-    #                                                size=0.5,
-    #                                                linetype="solid"))
-    # }
+        theme_void() +
+        theme(legend.title = element_text(size=bs*0.9),
+              legend.text = element_text(size=bs*0.9))
 
     p
 

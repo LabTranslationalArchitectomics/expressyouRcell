@@ -4,16 +4,18 @@
 \alias{map_gene_localization}
 \title{Create table for mapping genes to subcellular localization}
 \usage{
-map_gene_localization(gene_set)
+map_gene_localization(gene_set, organism = "mouse")
 }
 \arguments{
 \item{gene_set}{Can be either a character vector with the gtf file path with
-the genome annotation, or the timepoint list of data.table input by the user.
-Each data.table must have at least a column named "gene_symbol".}
+the genome annotation, or the timepoint list of data.table input by the
+user. Each data.table must have at least a column named "gene_symbol".}
+
+\item{organism}{A character vector with the name of the organism-specific
+gene annotaion. term for each gene.}
 }
 \value{
 A \code{data.table} with the gene ontology subcellular localization
-term for each gene.
 }
 \description{
 This function generates the \code{data.table} necessary to
@@ -22,11 +24,12 @@ associate genes to a subcellular localization.
 \details{
 A gene annotatation file, in GTF format is required as input. On
 this complete set of gene symbols, a gene ontology enrichment analysis is
-performed to associate a gene with a term in the cellular component ontology.
-For this purpose, only the sub-ontology of the cellular components is taken
-into consideration. This step generates the gene-localization data.table,
-which maps each gene to the locations in the cellular structures, either
-cellular compartments or macromolecular complexes.
+performed to associate a gene with a term in the cellular component
+ontology. For this purpose, only the sub-ontology of the cellular
+components is taken into consideration. This step generates the
+gene-localization data.table, which maps each gene to the locations in the
+cellular structures, either cellular compartments or macromolecular
+complexes.
 }
 \examples{
 #map_gene_localization(gene_set)
