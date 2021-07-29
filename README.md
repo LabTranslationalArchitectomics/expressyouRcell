@@ -56,7 +56,7 @@ The input table can also contain additional columns with values of gene expressi
 ## 3) Create the gene-localization table
 This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly ```gene_symbol```) and one with the associated information of the localization of that gene within the cell (named exactly ```subcell_struct```).
 
-Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. As far as now, the annotation is working only for mouse.
+Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. 
 
 ### map_gene_localization function
 You can either input the filename of the gene annotation file, in GTF format, used during the alignment of your sample, or in alternative, you can provide as input a list of data.tables where your data have been stored. It is mandatory to organize the input datasets as a list of data.tables, and each one must contain a column with names of the genes named precisely "gene_symbol". 
