@@ -228,7 +228,14 @@ color_cell <- function(timepoint_list,
             if (!is.null(group_by)){
                 # we are grouping by class of DEGs
                 if (!all(unlist(lapply(timepoint_list, function(x) group_by %in% colnames(x))))) {
-                    stop("check that every list contains a column named as specified in group_by param")
+                    if (is.null(thr) || is.null(pval_col) || is.null(pval_thr)){
+                        stop("You want to group your data by the \"group_by\" parameter, but some data.table does not contain a column with the name you specified and I don't know how to create this column, since some parameters are missing (check thr, pval_col, pval_thr)")
+                    } else {
+                        timepoint_list <- lapply(timepoint_list, function(x) x[, eval(group_by) := "="
+                        ][get(col_name) <= thr & get(pval_col) <= pval_thr, eval(group_by) := '-'
+                        ][get(col_name) >= thr & get(pval_col) <= pval_thr, eval(group_by) := '+'])
+
+                    }
                 } else {
                     if (is.null(colors)){
                         # random colors are chosen for each category in group_by column
