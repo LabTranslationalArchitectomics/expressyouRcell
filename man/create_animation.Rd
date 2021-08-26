@@ -4,30 +4,22 @@
 \alias{create_animation}
 \title{Create animation between stages}
 \usage{
-create_animation(
-  sample_name,
-  colors,
-  lab,
-  plots_dt,
-  n_frames,
-  fps,
-  output_folder = NULL
-)
+create_animation(samples, colors, lab, n_frames, fps, output_folder = NULL)
 }
 \arguments{
-\item{sample_name}{A character vector with the name of the sample}
-
 \item{colors}{A vector of colors to be assigned to the categorical classes}
 
 \item{lab}{A vector of labels to be assigned to the categorical classes}
-
-\item{plots_dt}{A list of ggplot objects with the static pictograms to be animated.}
 
 \item{n_frames}{Number of frames to use in output animation}
 
 \item{fps}{Frames per second, how many images to capture per second of video.}
 
 \item{output_folder}{A file path where to save output animated pictures}
+
+\item{sample_name}{A character vector with the name of the sample}
+
+\item{plots_dt}{A list of ggplot objects with the static pictograms to be animated.}
 }
 \description{
 This function creates animation between stages

@@ -259,7 +259,7 @@ color_cell <- function(timepoint_list,
                 }
             }
 
-            locdt_l <- plot_l <- list()
+            locdt_l <- plot_l <- finaldt_l <- list()
             for (tp in names(timepoint_list)){
 
                 cat(paste0("Creating cell pictogram for stage: ", tp, "\n"))
@@ -286,6 +286,7 @@ color_cell <- function(timepoint_list,
                                                                                                      ][, eval(group_by) := v]
                         locdt_l[[paste0(tp,v)]] <- colored_out[["localization_values"]]
                         plot_l[[paste0("plot_", tp, v)]] <- colored_out[["plot"]]
+                        finaldt_l[[paste0("final_dt_", tp, v)]] <- colored_out[["final_dt"]]
 
                     }
 
@@ -322,20 +323,22 @@ color_cell <- function(timepoint_list,
                     locdt_l[[tp]] <- colored_out[["localization_values"]]
 
                     plot_l[[paste0("plot_", tp)]] <- colored_out[["plot"]]
+                    finaldt_l[[paste0("final_dt_", tp)]] <- colored_out[["final_dt"]]
                 }
             }
             output <- list()
 
             output[["localization_values"]] <- rbindlist(locdt_l)
-            output[["ranges"]] <- ranges
+            output[["ranges"]] <- colored_out$ranges
             output[["plot"]]<- plot_l
+            output[["final_dt"]]<- finaldt_l
 
             return(output)
 
-            assign_color_by_fdr(genes,
-                                plot_data=plot_data,
-                                gene_loc_table=gene_loc_table,
-                                categorical_classes=NULL)
+            # assign_color_by_fdr(genes,
+            #                     plot_data=plot_data,
+            #                     gene_loc_table=gene_loc_table,
+            #                     categorical_classes=NULL)
 
         } else {
             cat("Wrong coloring method")

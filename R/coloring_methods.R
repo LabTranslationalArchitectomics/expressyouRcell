@@ -105,7 +105,9 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
               legend.text = element_text(size=bs*0.9))
 
     return(list("plot"=p,
-                "localization_values"=localization_values))
+                "localization_values"=localization_values,
+                "final_dt"=final_dt,
+                "ranges" = categorical_classes))
 }
 
 #' Assign colors to subcellular structures according to fold changes of genes
