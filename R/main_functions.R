@@ -85,9 +85,8 @@ plot_cell <- function(coords_dt){
 #'
 #' @description This function generates the \code{data.table} necessary to
 #'   associate genes to a subcellular localization.
-#' @param gene_set Can be either a character vector with the gtf file path with
-#'   the genome annotation, or the timepoint list of data.table input by the
-#'   user. Each data.table must have at least a column named "gene_symbol".
+#' @param gene_set A character vector with the gtf file path with
+#'   the genome annotation.
 #' @param  organism A character vector with the name of the organism-specific
 #'   gene annotaion. term for each gene.
 #' @return A \code{data.table} with the gene ontology subcellular localization
@@ -96,13 +95,13 @@ plot_cell <- function(coords_dt){
 #' #map_gene_localization(gene_set)
 #'
 #' @import data.table
-#' @import clusterProfiler
 #' @import org.Mm.eg.db
 #' @import org.Hs.eg.db
 #' @import org.Rn.eg.db
 #' @import org.Dr.eg.db
 #' @import org.Sc.sgd.db
 #' @import DOSE
+#' @import clusterProfiler
 #'
 #' @details A gene annotatation file, in GTF format is required as input. On
 #'   this complete set of gene symbols, a gene ontology enrichment analysis is
@@ -129,9 +128,9 @@ map_gene_localization <- function(gene_set, organism="mouse"){
         OrgDb_chosen="org.Rn.eg.db"
     }
 
-    # if (organism=="zebrafish"){
-    #     OrgDb_chosen="org.Dr.eg.db"
-    # }
+    if (organism=="zebrafish"){
+        OrgDb_chosen="org.Dr.eg.db"
+    }
 
     if (organism=="yeast"){
         OrgDb_chosen="org.Sc.sgd.db"
@@ -141,15 +140,19 @@ map_gene_localization <- function(gene_set, organism="mouse"){
         gtf <- rtracklayer::import(gene_set)
 
         annotation_gene_names <- unique(gtf$gene_name)
-    } else {
-        if (inherits(gene_set, "list")){
-            annotation_gene_names <- unique(unlist(lapply(gene_set, function(x) x[, "gene_symbol"])))
-        } else {
-            stop("Unrecognized input")
-        }
     }
 
+    # else {
+    #     if (inherits(gene_set, "list")){
+    #         annotation_gene_names <- unique(unlist(lapply(gene_set, function(x) x[, "gene_symbol"])))
+    #     } else {
+    #         stop("Unrecognized input")
+    #     }
+    # }
+
     ensembl_entrez <- bitr(annotation_gene_names, fromType="SYMBOL", toType=c("ENTREZID"), OrgDb=OrgDb_chosen, drop=T)
+
+
     cc_complete <- as.data.table(as.data.frame(enrichGO(gene = ensembl_entrez[,2],
                                                         OrgDb=OrgDb_chosen,
                                                         ont = "CC",
@@ -185,7 +188,7 @@ map_gene_localization <- function(gene_set, organism="mouse"){
 #' @import magick
 #'
 #' @export
-create_animation <- function(sample_name, colors, lab, plots_dt, n_frames, fps, output_folder=NULL){
+create_animation <- function(samples, colors, lab, n_frames, fps, output_folder=NULL){
 
     if (is.null(output_folder)){
         output_folder = getwd()
@@ -198,9 +201,9 @@ create_animation <- function(sample_name, colors, lab, plots_dt, n_frames, fps, 
     legend <- create_legend(color_vector = colors, lab_vector = lab)
 
     anim_stages <- list()
-    for (stage in names(samples[[sample_name]])){
+    for (stage in names(samples)){
         cat(paste0("stage ", stage, "\n"))
-        p <- ggarrange(plots_dt[[samples[[sample_name]][[stage]]]] +
+        p <- ggarrange(samples[[stage]] +
                            guides(fill = FALSE) +
                            ggtitle(stage),
                        legend,

@@ -7,9 +7,8 @@
 map_gene_localization(gene_set, organism = "mouse")
 }
 \arguments{
-\item{gene_set}{Can be either a character vector with the gtf file path with
-the genome annotation, or the timepoint list of data.table input by the
-user. Each data.table must have at least a column named "gene_symbol".}
+\item{gene_set}{A character vector with the gtf file path with
+the genome annotation.}
 
 \item{organism}{A character vector with the name of the organism-specific
 gene annotaion. term for each gene.}
