@@ -19,11 +19,11 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     localization_values <- localization_values[order(pval, decreasing = FALSE)]
     localization_values <- localization_values[, `:=` ("value"=categorical_classes[pval > categorical_classes$start &
                                                                                        pval <= categorical_classes$end, values],
-                                                       "enr_color"=categorical_classes[pval > categorical_classes$start &
+                                                       "color_grad"=categorical_classes[pval > categorical_classes$start &
                                                                                            pval <= categorical_classes$end, colors]), by=subcell_struct]
 
     final_dt <- merge.data.table(plot_data,
-                                 localization_values[, c("subcell_struct", "enr_color", "value")],
+                                 localization_values[, c("subcell_struct", "color_grad", "value")],
                                  by.x = "subcell_struct",
                                  by.y = "subcell_struct")
 
@@ -93,10 +93,10 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
     lab.spe <- lab[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = TRUE)]
 
     bs=25
-    p <- ggplot(final_dt, aes(x, y, color=enr_color, fill=value)) +
+    p <- ggplot(final_dt, aes(x, y, color=color_grad, fill=value)) +
         scale_fill_manual(values = colors.spe, name="FDR", labels=lab.spe) +
         scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct)))) +
-        scale_size_manual(values = rep(0.005, length(final_dt[, first(enr_color), by=subcell_struct]$V1))) +
+        scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
         scale_y_reverse() +
         guides(color = FALSE) +
@@ -260,8 +260,10 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
 
     p
 
-    return(list("localization_values"=localization_values,
-                "plot"=p))
+    return(list("plot"=p,
+                "localization_values"=localization_values,
+                "final_dt"=final_dt,
+                "ranges" = categorical_classes))
 }
 
 
