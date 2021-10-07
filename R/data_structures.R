@@ -11,7 +11,7 @@
 #' \item{color}{the value to fill the polygon in an example}
 #' \item{comb}{a string that uniquely identify the subpolygon}
 #' }
-"neuron_dt_nocyto"
+"neuron_dt"
 
 #' @title Cell data table without cytoplasm mapping
 #'
