@@ -11,9 +11,11 @@ animate(
   seconds,
   fps,
   dir,
+  names,
   height = 250,
   width = 700,
-  filename = "animation.gif"
+  filename = "animation.gif",
+  format = "gif"
 )
 }
 \arguments{

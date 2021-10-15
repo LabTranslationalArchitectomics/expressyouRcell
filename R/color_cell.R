@@ -59,7 +59,7 @@ color_cell <- function(timepoint_list,
         plot_data <- cell_dt
     } else {
         if (plot_data == "neuron") {
-            plot_data <- neuron_dt_nocyto
+            plot_data <- neuron_dt
         } else {
             stop("No available pictogram with this name")
         }

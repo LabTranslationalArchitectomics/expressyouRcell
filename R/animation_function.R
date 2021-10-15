@@ -54,7 +54,7 @@ start <- Sys.time()
 #'
 #' @export
 #'
-animate <- function(data, timepoints, seconds, fps, dir, height = 250, width = 700, filename="animation.gif"){
+animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, width = 700, filename="animation.gif", format = "gif"){
 
   if (!dir.exists(dir)){
     dir.create(dir, recursive = TRUE)
@@ -102,7 +102,7 @@ animate <- function(data, timepoints, seconds, fps, dir, height = 250, width = 7
       dt <- rbind(dt, t(colll))
     }
 
-    dt[, combine :=paste0(V1, get(paste0("V", tot_frame)))]
+    dt[, combine := paste0(V1, get(paste0("V", tot_frame)))]
 
     together <- merge.data.table(together, dt, all.x = TRUE, by = "combine")
 
@@ -116,31 +116,68 @@ animate <- function(data, timepoints, seconds, fps, dir, height = 250, width = 7
       setnames(temp, old=paste0("V", j), new="color_grad")
 
       bs=25
-      plot <- ggplot(temp,
-                  aes(x, y, color=color_grad)) +
+
+      xmin <- min(temp$x)
+      xmax <- max(temp$x)
+      ymin <- min(temp$y)
+
+      tot_l <- xmax - xmin
+      trans_l <- tot_l/(length(stages)-1)
+
+      s <- seq_len(length(stages))
+      xmin_trans <- xmin + ((s-1)*trans_l)
+
+      labels <- data.table(name=names, xmin_trans, y = ymin - 50)
+
+      frame_l <- trans_l/tot_frame
+
+      xminf <- xmin
+      xmaxf <- xminf+(trans_l*(i-1))+(frame_l*(j))
+
+      ecmx <- max(temp[subcell_struct == "extracellular_region"]$x)-(max(temp[subcell_struct == "extracellular_region"]$x)-min(temp[subcell_struct == "extracellular_region"]$x))/3
+
+      ecmy <- (min(temp[subcell_struct == "extracellular_region"]$y)+max(temp[subcell_struct == "extracellular_region"]$y))/3
+
+      plot <- ggplot(data=temp,
+                  aes(x, y)) +
         #scale_fill_manual(values = colors.spe, name="FDR", labels=lab.spe) +
         scale_fill_manual(values = temp$color_grad) +
         scale_color_manual(values = rep("black", length(unique(temp$subcell_struct)))) +
         scale_size_manual(values = rep(0.005, length(temp[, first(color_grad), by=subcell_struct]$V1))) +
-        geom_polygon(aes(subgroup=comb), fill=temp$color_grad) +
+        geom_polygon(aes(subgroup=comb, color=temp$color_grad), fill=temp$color_grad)  +
         scale_y_reverse() +
         guides(color = FALSE, fill=FALSE) +
         theme_void()  +
+        geom_text(data=labels, aes(x=xmin_trans, y=y, label=name), size=0.3*bs) +
+        annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2) +
+        geom_segment(aes(x=xminf, y=ymin-100, xend=xmaxf, yend=ymin-100), size = 0.2*bs, lineend = "butt", color="darkgrey") +
+        geom_point(data = labels, aes(xmin_trans, y-50), size = 0.2*bs, shape=19, color="grey20") +
         theme(legend.title = element_text(size=bs*0.9),
-              legend.text = element_text(size=bs*0.9))
+              legend.text = element_text(size=bs*0.9),
+              plot.title = element_text(size=bs*0.9))
 
-      pl <- ggarrange(plot +
-                guides(fill = FALSE),
-                #ggtitle(stage),
-                l,
-                widths = c(3, 1))
+      pl <- ggpubr::ggarrange(plot + guides(fill = FALSE),
+                      l,
+                      widths = c(3, 1))
 
 
       if (!dir.exists(frame_path)){
         dir.create(frame_path, recursive = TRUE)
       }
 
-      ggsave(pl, filename = file.path(frame_path, paste0(transition, "_", j, ".png")), width = 10, height = 4)
+      if (transition<10){
+        tr_n <- paste0(0, transition)
+      } else {
+        tr_n <- transition
+      }
+
+      if (j<10){
+        j_n <- paste0(0, j)
+      } else {
+        j_n <- j
+      }
+
+      ggsave(pl, filename = file.path(frame_path, paste0(tr_n, "_", j_n, ".png")), width = 10, height = 4)
     }
     k=k+50
 
@@ -150,11 +187,27 @@ animate <- function(data, timepoints, seconds, fps, dir, height = 250, width = 7
   cat("\n")
   lf <- list.files(frame_path, full.names = T)
   png_files <- stringr::str_sort(lf, numeric = TRUE)
-  gifski::gifski(png_files, gif_file = file.path(dir, filename), width = width, height = height, delay = seconds/tot_frame)
+
+  if (format == "gif"){
+  gifski::gifski(png_files,
+                 gif_file = file.path(dir, filename),
+                 width = width,
+                 height = height,
+                 delay = seconds/tot_frame)
+  } else {
+    if (format == "video"){
+      av::av_encode_video(input = png_files, output = file.path(dir, filename))
+    } else {
+      stop("Output format unrecognized")
+    }
+  }
+
+
   #do.call(file.remove, list(list.files(frame_path, full.names = TRUE)))
-  unlink(frame_path, recursive = TRUE)
+  #unlink(frame_path, recursive = TRUE)
   end <- Sys.time()
-  cat(paste0("Total time:", eval(end-start)))
+  cat(paste0("Total time: ", eval(end-start), "\n"))
+  cat(paste0("saved in ", file.path(dir, filename)))
 }
 
 

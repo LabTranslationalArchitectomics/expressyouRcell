@@ -71,7 +71,7 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
     if (is.null(categorical_classes)){
         categorical_classes <- data.table(start = c(0, 1*10^-30, 1*10^-20, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
                                           end = c(1*10^-30, 1*10^-20, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
-                                          values = seq(1:8),
+                                          values = seq(1:7),
                                           colors = c("#222c57", "#323059", "#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
                                           #5364b0
 
@@ -94,12 +94,17 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
     lab <- as.expression(sapply(categorical_classes$lab, function(x) x))
     lab.spe <- lab[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = TRUE)]
 
+    ecmx <- max(final_dt[subcell_struct == "extracellular_region"]$x)-(max(final_dt[subcell_struct == "extracellular_region"]$x)-min(final_dt[subcell_struct == "extracellular_region"]$x))/3
+
+    ecmy <- (min(final_dt[subcell_struct == "extracellular_region"]$y)+max(final_dt[subcell_struct == "extracellular_region"]$y))/3
+
     bs=25
     p <- ggplot(final_dt, aes(x, y, color=color_grad, fill=value)) +
         scale_fill_manual(values = colors.spe, name="FDR", labels=lab.spe) +
         scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct)))) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
+        annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs) +
         scale_y_reverse() +
         guides(color = FALSE) +
         theme_void()  +
@@ -242,6 +247,10 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
     nogreysquares <- copy(final_dt[color_grad != "grey90"])
     nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
+    ecmx <- max(final_dt[subcell_struct == "extracellular_region"]$x)-(max(final_dt[subcell_struct == "extracellular_region"]$x)-min(final_dt[subcell_struct == "extracellular_region"]$x))/3
+
+    ecmy <- (min(final_dt[subcell_struct == "extracellular_region"]$y)+max(final_dt[subcell_struct == "extracellular_region"]$y))/3
+
     bs = 25
     p <- ggplot(final_dt, aes(x, y, color=value, fill=value)) +
         scale_fill_manual(values = colors.spe,
@@ -254,6 +263,7 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
                            breaks = levels(nogreysquares$value)) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
+        annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs) +
         scale_y_reverse() +
         #guides(color = FALSE) +
         theme_void() +
