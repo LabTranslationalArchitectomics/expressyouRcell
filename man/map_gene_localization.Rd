@@ -30,7 +30,3 @@ gene-localization data.table, which maps each gene to the locations in the
 cellular structures, either cellular compartments or macromolecular
 complexes.
 }
-\examples{
-#map_gene_localization(gene_set)
-
-}

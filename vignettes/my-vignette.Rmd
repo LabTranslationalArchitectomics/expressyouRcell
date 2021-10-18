@@ -79,14 +79,12 @@ The first option requires as input the gene annotation file, in GTF format, used
 
 Example of usage with the annotation GTF file:
 
-```{r, eval = FALSE}
-gene_loc_table <- map_gene_localization(gene_set = paste0(utils_folder, "gencode.vM22.primary_assembly.annotation.gtf"))
+```{r eval=FALSE}
+gene_loc_table <- map_gene_localization(gene_set = "gencode.vM22.primary_assembly.annotation.gtf")
 ```
 
-Example of usage with the list of *data.table* provided with the package:
-
-```{r, eval=TRUE, message=FALSE, warning=FALSE}
-gene_loc_table <- map_gene_localization(gene_set = example_list)
+```{r include=FALSE}
+load("gene_loc_table.RData")
 ```
 
 The resulting `gene_loc_table`:

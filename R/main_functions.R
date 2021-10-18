@@ -64,7 +64,7 @@ plot_cell <- function(coords_dt){
         coords_dt <- cell_dt
     } else {
         if (all(coords_dt == "neuron")) {
-            coords_dt <- neuron_dt_nocyto
+            coords_dt <- neuron_dt
         } else {
             stop("No available pictogram with this name")
         }
@@ -91,8 +91,6 @@ plot_cell <- function(coords_dt){
 #'   gene annotaion. term for each gene.
 #' @return A \code{data.table} with the gene ontology subcellular localization
 #'
-#' @examples
-#' #map_gene_localization(gene_set)
 #'
 #' @import data.table
 #' @import org.Mm.eg.db
@@ -167,75 +165,6 @@ map_gene_localization <- function(gene_set, organism="mouse"){
     cc_complete_dt <- cc_complete_dt[, Description := stringr::str_replace(Description, "\\ ", "\\_")]
     setnames(cc_complete_dt, old = c("geneID", "Description"), new=c("gene_symbol", "subcell_struct"))
     return(cc_complete_dt)
-}
-
-#' Create animation between stages
-#'
-#' @description This function creates animation between stages
-#' @param sample_name A character vector with the name of the sample
-#' @param colors A vector of colors to be assigned to the categorical classes
-#' @param lab A vector of labels to be assigned to the categorical classes
-#' @param plots_dt A list of ggplot objects with the static pictograms to be animated.
-#' @param n_frames Number of frames to use in output animation
-#' @param fps Frames per second, how many images to capture per second of video.
-#' @param output_folder A file path where to save output animated pictures
-#'
-#' @examples
-#' #create_animation(sample_name, colors, lab, output_folder)
-#'
-#' @import data.table
-#' @import ggpubr
-#' @import magick
-#'
-#' @export
-create_animation <- function(samples, colors, lab, n_frames, fps, output_folder=NULL){
-
-    if (is.null(output_folder)){
-        output_folder = getwd()
-    }
-
-    if (!dir.exists(file.path(output_folder, "gif"))){
-        dir.create(path = file.path(output_folder, "gif"), recursive = T)
-    }
-
-    legend <- create_legend(color_vector = colors, lab_vector = lab)
-
-    anim_stages <- list()
-    for (stage in names(samples)){
-        cat(paste0("stage ", stage, "\n"))
-        p <- ggarrange(samples[[stage]] +
-                           guides(fill = FALSE) +
-                           ggtitle(stage),
-                       legend,
-                       widths = c(3, 1))
-        ggsave(p, filename = file.path(output_folder, "gif", paste0(stage, ".png")), device = "png", width = 9, height = 3)
-
-        anim_stages[[stage]] <- file.path(output_folder, "gif", paste0(stage, ".png"))
-
-        im <- image_scale(image_read(file.path(output_folder, "gif", paste0(stage, ".png"))))
-        anim_stages[[stage]] <- im
-        unlink(file.path(output_folder, "gif", paste0(stage, ".png")))
-    }
-
-    start.time <- Sys.time()
-    animation <- image_resize(image_join(anim_stages), '1800x600!') %>%
-        image_morph(frames = n_frames) %>%
-        image_animate(optimize = TRUE, fps = fps)
-    end.time <- Sys.time()
-
-    time.taken <- end.time - start.time
-    cat(paste0("animation time:", time.taken, "\n"))
-
-    start.time <- Sys.time()
-    image_write(animation,
-                file.path(output_folder, "gif", paste0(sample_name, ".gif")),
-                quality = 100)
-    end.time <- Sys.time()
-
-    time.taken <- end.time - start.time
-    cat(paste0("saving time:", time.taken, "\n"))
-
-    cat("gif saved in: ", file.path(output_folder, "gif", paste0(sample_name, ".gif")))
 }
 
 #' Create a legend for the animated pictures

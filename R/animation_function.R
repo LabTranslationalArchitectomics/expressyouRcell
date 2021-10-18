@@ -49,6 +49,7 @@ start <- Sys.time()
 #'
 #' @import data.table
 #' @import gifski
+#' @import av
 #' @import ggpubr
 #' @import ggplot2
 #'
