@@ -55,7 +55,7 @@ start <- Sys.time()
 #'
 #' @export
 #'
-animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, width = 700, filename="animation.gif", format = "gif"){
+animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, width = 700, filename="animation.gif", format){
 
   if (!dir.exists(dir)){
     dir.create(dir, recursive = TRUE)
@@ -118,8 +118,8 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
 
       bs=25
 
-      xmin <- min(temp$x)
-      xmax <- max(temp$x)
+      xmin <- min(temp$x)+20
+      xmax <- max(temp$x)-20
       ymin <- min(temp$y)
 
       tot_l <- xmax - xmin
@@ -149,7 +149,7 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
         scale_y_reverse() +
         guides(color = FALSE, fill=FALSE) +
         theme_void()  +
-        geom_text(data=labels, aes(x=xmin_trans, y=y, label=name), size=0.3*bs) +
+        geom_text(data=labels, aes(x=xmin_trans, y=y, label=name), size=0.2*bs) +
         annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2) +
         geom_segment(aes(x=xminf, y=ymin-100, xend=xmaxf, yend=ymin-100), size = 0.2*bs, lineend = "butt", color="darkgrey") +
         geom_point(data = labels, aes(xmin_trans, y-50), size = 0.2*bs, shape=19, color="grey20") +
@@ -178,7 +178,8 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
         j_n <- j
       }
 
-      ggsave(pl, filename = file.path(frame_path, paste0(tr_n, "_", j_n, ".png")), width = 10, height = 4)
+      ggsave(pl, filename = file.path(frame_path, paste0(tr_n, "_", j_n, ".png")), width = width/100,
+             height = height/100)
     }
     k=k+50
 
@@ -210,29 +211,3 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
   cat(paste0("Total time: ", eval(end-start), "\n"))
   cat(paste0("saved in ", file.path(dir, filename)))
 }
-
-
-
-# seconds <- 2
-# fps <- 25
-
-# dt_toplot = t2
-#
-# colors_vec <- categorical_classes$colors
-# colors.spe <- colors_vec[sort(as.numeric(unique(as.vector(dt_toplot$value))), decreasing = TRUE)]
-#
-# lab <- as.expression(sapply(categorical_classes$lab, function(x) x))
-# lab.spe <- lab[sort(as.numeric(unique(as.vector(dt_toplot$value))), decreasing = TRUE)]
-#
-# bs= 25
-# p <- ggplot(dt_toplot, aes(x, y, color=color_grad, fill=value)) +
-#   scale_fill_manual(values = colors.spe, name="FDR", labels=lab.spe) +
-#   scale_color_manual(values = rep("black", length(unique(dt_toplot$subcell_struct)))) +
-#   scale_size_manual(values = rep(0.005, length(dt_toplot[, first(color_grad), by=subcell_struct]$V1))) +
-#   geom_polygon(aes(subgroup=comb)) +
-#   scale_y_reverse() +
-#   guides(color = FALSE) +
-#   theme_void()  +
-#   theme(legend.title = element_text(size=bs*0.9),
-#         legend.text = element_text(size=bs*0.9))
-# p

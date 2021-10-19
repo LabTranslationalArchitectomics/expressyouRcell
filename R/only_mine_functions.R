@@ -12,8 +12,8 @@
 #' @import rsvg
 #'
 read_coordinates <- function(file_svg) {
-  file_svg <- rsvg::rsvg_svg(file_svg)
-  rtc <- rawToChar(file_svg)
+  file <- rsvg::rsvg_svg(file_svg)
+  rtc <- rawToChar(file)
   pic <- grImport2::readPicture(rtc)
   pic@content[[1]]@content[[1]]@d@segments[[3]]
 
@@ -90,8 +90,10 @@ create_cell_dt <- function(svg_folder, colors_shapes, order_levels){
   coords_dt <- data.table()
   for (subcell_struct in names(colors_shapes)){
     cat(paste0(subcell_struct, "\n"))
-    #f_svg <- rsvg::rsvg_svg(svg = file.path(svg_folder, paste0(subcell_struct, '.svg')))
+
     dt_pol <- read_coordinates(file_svg = file.path(svg_folder, paste0(subcell_struct, '.svg')))
+
+    #dt_pol <- read_coordinates(file_svg = file.path(svg_folder, paste0(subcell_struct, '.svg')))
     dt_pol$subcell_struct <- subcell_struct
     dt_pol$color <- colors_shapes[[subcell_struct]]
     coords_dt <- rbind(coords_dt, dt_pol)

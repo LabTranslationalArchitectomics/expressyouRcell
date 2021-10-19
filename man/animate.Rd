@@ -15,7 +15,7 @@ animate(
   height = 250,
   width = 700,
   filename = "animation.gif",
-  format = "gif"
+  format
 )
 }
 \arguments{
