@@ -64,7 +64,7 @@ plot_cell <- function(coords_dt){
         coords_dt <- cell_dt
     } else {
         if (all(coords_dt == "neuron")) {
-            coords_dt <- neuron_dt
+                coords_dt <- neuron_dt
         } else {
             stop("No available pictogram with this name")
         }

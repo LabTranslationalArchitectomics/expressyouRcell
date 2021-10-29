@@ -206,8 +206,8 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
 
 
   #do.call(file.remove, list(list.files(frame_path, full.names = TRUE)))
-  #unlink(frame_path, recursive = TRUE)
+  unlink(frame_path, recursive = TRUE)
   end <- Sys.time()
   cat(paste0("Total time: ", eval(end-start), "\n"))
-  cat(paste0("saved in ", file.path(dir, filename)))
+  cat(paste0("saved in ", file.path(dir, paste0(filename, "\n"))))
 }
