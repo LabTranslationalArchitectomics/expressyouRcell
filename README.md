@@ -185,5 +185,18 @@ ggsave(example_list_output_together_cpm[["plot"]][["plot_brain_p3_rs"]],
 
 
 
-## create_animation function
-Create animation between stages
+## animate function
+If you want to visualize how your gene expression data change across multiple variables, you can use expressyouRcell to generate a dynamic representations of cellular pictograms. This is particularly useful when your input data consists of multiple datasets, such as gene expression data measured at multiple stages.
+This function takes as input the data structure obtained from the ```color_cell``` function.  
+
+The other input parameters are 
+* a list with time point labels, 
+* the transition duration (in seconds),
+* the number of frames to be created for each transition between time points. 
+* the animation sizes (height and width), 
+* the output directory and filename,
+* a vector of character labels to visualize as timeline on the final animated figure.
+
+For each transition, the function creates a set of temporary frames with intermediate color shades which will then be merged together in a single animated picture or short movie. The gifski and av packages are respecitvely used to produce the gif picture or the movie. 
+
+As a final step, the function saves in the specified folder the movie (in mp4 format) or animated picture (gif format). 
