@@ -2,7 +2,7 @@
 % Please edit documentation in R/main_functions.R
 \name{discrete_symmetric_ranges}
 \alias{discrete_symmetric_ranges}
-\title{Compute discrete and symmetric ranges into which classify FC values}
+\title{Compute discrete and symmetric ranges}
 \usage{
 discrete_symmetric_ranges(
   timepoint_list,
@@ -16,35 +16,33 @@ discrete_symmetric_ranges(
 )
 }
 \arguments{
-\item{timepoint_list}{A list of \code{data.table}s, one for each time point.
-Each one must have at least a column named "gene_symbol".}
+\item{timepoint_list}{A list of \code{data.table}s, one for each time point. Each one must have at least a column
+named "gene_symbol".}
 
-\item{plot_data}{A \code{data.table} with the polygon coordinates to be
-plotted.}
+\item{plot_data}{A \code{data.table} with the polygon coordinates to be plotted.}
 
-\item{gene_loc_table}{A \code{data.table} with information for mapping genes
-to subcellular localizations.}
+\item{gene_loc_table}{A \code{data.table} with information for mapping genes to subcellular localizations.}
 
-\item{col_name}{A character string with the name of the column on which the
-user wants to base the color of cellular localizations when "median" or
-"mean" are the chosen coloring method.}
+\item{col_name}{A character string with the name of the column on which the user wants to base the color of cellular
+localizations when "median" or "mean" are the chosen coloring method.}
 
-\item{grouping_vars}{A character vector with classes of genes to be
-considered.}
+\item{grouping_vars}{A character vector with classes of genes to be considered.}
 
-\item{colors}{A character vector with two color codes for generating a color
-palettes with a shade for each interval.}
+\item{colors}{A character vector with two color codes for generating a color palettes with a shade for each interval.}
 
-\item{together}{An boolean value specifying whether genes with different
-classification labels should be considered together (regardless their
-classification) or separately}
+\item{coloring_mode}{Either "mean" or "median". Default is "mean".
+
+A name of a numerical columns must also be provided as \code{col_name} parameter. This method computes the mean (or
+median) of values specified in the \code{col_name} column.}
+
+\item{together}{A boolean value specifying whether genes with different classification labels should be considered
+together (regardless their classification) or separately.}
 }
 \value{
-A list of \code{data.table}s (one for each classes specified in the
-parameter classes) with categorical classes into which the fold change
-values grouped for each subcellular localization are mapped.
+A list of \code{data.table}s (one for each categorical variable value specified in the \code{grouping_vars}
+parameter) with categorical classes into which the numerical values (previously grouped for each subcellular
+localization) are mapped.
 }
 \description{
-This function creates a table with ranges for mapping fold
-change values with associated colors and labels.
+This function creates a table with ranges for mapping values with associated colors and labels.
 }

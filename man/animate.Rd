@@ -10,32 +10,39 @@ animate(
   timepoints,
   seconds,
   fps,
-  dir,
+  input_dir,
   names,
   height = 250,
   width = 700,
-  filename = "animation.gif",
+  filename = "animation",
   format
 )
 }
 \arguments{
 \item{data}{List of data structures from \link[expressyouRcell]{color_cell}}
 
+\item{timepoints}{A character vector with the names of the timepoints data structure that will be part of the final
+animation.}
+
 \item{seconds}{A numerical value specifying the duration of each transition.}
 
 \item{fps}{A numerical value specifying the number of frame in a second.}
 
-\item{dir}{A character specifying the directory path where the datasets for
-the animation are stored.}
+\item{input_dir}{A character specifying the directory path where the datasets for the animation are stored.}
 
-\item{height}{gif height in pixel.}
+\item{names}{A character vector specifying the names of the labels for creating the timeline on the top of the output
+gif or movie. The vector should match the timepoints label specified in the timepoints parameter above.}
 
-\item{width}{gif width in pixel.}
-}
-\value{
+\item{height}{output height in pixel.}
 
+\item{width}{output width in pixel.}
+
+\item{filename}{A character specifying the name of the output file, default is "animation"}
+
+\item{format}{either "gif" or "video", which respecitivley save the animation as an animated gif picture or as a
+short movie in mp4 format. Default is "gif".}
 }
 \description{
-This function creates static animated pictogram with the desired
-coloring method for assigning colors to subcellular localizations
+This function creates static animated pictogram with the desired coloring method for assigning colors to
+subcellular localizations
 }

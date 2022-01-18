@@ -2,7 +2,7 @@
 % Please edit documentation in R/main_functions.R
 \name{groupval_byloc}
 \alias{groupval_byloc}
-\title{Compute mean or median of values associated to genes for each cellular
+\title{Compute mean (or median) of values associated to genes for each cellular
 compartment}
 \usage{
 groupval_byloc(
@@ -33,7 +33,10 @@ A name of a numerical columns must also be provided as \code{col_name}
 parameter. This method computes the mean (or median) of values specified in
 the \code{col_name} column.}
 }
+\value{
+The sampled color code.
+}
 \description{
-Compute mean or median of values associated to genes for each cellular
+Compute mean (or median) of values associated to genes for each cellular
 compartment
 }

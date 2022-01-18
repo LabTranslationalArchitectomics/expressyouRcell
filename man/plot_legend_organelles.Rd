@@ -2,23 +2,17 @@
 % Please edit documentation in R/main_functions.R
 \name{plot_legend_organelles}
 \alias{plot_legend_organelles}
-\title{Plot legend of organelles in the cell}
+\title{Plot legend of cellular organelles}
 \usage{
 plot_legend_organelles(dt_legend)
 }
 \arguments{
 \item{dt_legend}{A \code{data.table} with the polygon coordinates to be
-plotted in the legend figure}
+plotted in the legend figure.}
 }
 \value{
-a ggplot object with the legend of labeled organelles
-
-A ggplot object.
+A ggplot object with the legend of labeled organelles.
 }
 \description{
-This function plots the legend
-}
-\examples{
-#plot_legend(dt_legend=legend)
-
+This function plots the legend of cellular organelles.
 }

@@ -1,13 +1,14 @@
 #' Create a legend for the animated pictures
 #'
-#' @description This function creates a legend for the animated gif files
-#' @param color_vector A vector of hex color codes
-#' @param lab_vector A vector of labels for the legend
+#' @description This function creates a legend for the animated gif files.
+#' @param color_vector A vector of hex color codes.
+#' @param lab_vector A vector of labels for the legend.
+#' @param title A vector for the legend title.
 #' @return a gtable with the legend to be added on the animated pictures
 #'
 #' @import ggplot2
 #'
-create_legend <- function(color_vector, lab_vector){
+create_legend <- function(color_vector, lab_vector, title){
 
   gb <- data.table(x=seq(1:length(color_vector)),
                    y=seq(1:length(color_vector)))
@@ -15,7 +16,7 @@ create_legend <- function(color_vector, lab_vector){
   # create legend by combing stages
   bs=40
   static_plot <- ggplot(data = gb, aes(x=x, y=y, fill=as.factor(x))) +
-    scale_fill_manual(values = rev(color_vector), name="FDR", labels=rev(lab_vector)) +
+    scale_fill_manual(values = rev(color_vector), name=title, labels=rev(lab_vector)) +
     geom_bar(stat = "identity")
   #guides(color = FALSE) +
   theme(legend.title = element_text(size=bs*0.9),
@@ -35,17 +36,21 @@ start <- Sys.time()
 #' Main function that creates animated cellular pictogram with the desired
 #' coloring method
 #'
-#' @description This function creates static animated pictogram with the desired
-#'   coloring method for assigning colors to subcellular localizations
+#' @description This function creates static animated pictogram with the desired coloring method for assigning colors to
+#'   subcellular localizations
 #' @param data List of data structures from \link[expressyouRcell]{color_cell}
+#' @param timepoints A character vector with the names of the timepoints data structure that will be part of the final
+#'   animation.
 #' @param seconds A numerical value specifying the duration of each transition.
 #' @param fps  A numerical value specifying the number of frame in a second.
-#' @param dir A character specifying the directory path where the datasets for
-#'   the animation are stored.
-#' @param height gif height in pixel.
-#' @param width gif width in pixel.
-
-#' @return
+#' @param input_dir A character specifying the directory path where the datasets for the animation are stored.
+#' @param names A character vector specifying the names of the labels for creating the timeline on the top of the output
+#'   gif or movie. The vector should match the timepoints label specified in the timepoints parameter above.
+#' @param height output height in pixel.
+#' @param width output width in pixel.
+#' @param filename A character specifying the name of the output file, default is "animation"
+#' @param format either "gif" or "video", which respecitivley save the animation as an animated gif picture or as a
+#'   short movie in mp4 format. Default is "gif".
 #'
 #' @import data.table
 #' @import gifski
@@ -55,14 +60,14 @@ start <- Sys.time()
 #'
 #' @export
 #'
-animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, width = 700, filename="animation.gif", format){
+animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 250, width = 700, filename="animation", format){
 
-  if (!dir.exists(dir)){
-    dir.create(dir, recursive = TRUE)
+  if (!dir.exists(input_dir)){
+    dir.create(input_dir, recursive = TRUE)
   }
 
-  frame_path <- file.path(dir, "frames")
-  finaldt_path <- file.path(dir, "final_dt")
+  frame_path <- file.path(input_dir, "frames")
+  finaldt_path <- file.path(input_dir, "final_dt")
 
   do.call(file.remove, list(list.files(frame_path, full.names = TRUE)))
 
@@ -78,7 +83,9 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
 
   ranges <- data$ranges
 
-  l <- create_legend(color_vector = ranges$colors, lab_vector = ranges$lab)
+  l <- create_legend(color_vector = ranges$colors,
+                     lab_vector = ranges$lab,
+                     title=data[["plot"]][[1]]$plot_env$lab_title)
   pb = txtProgressBar(min = 0, max = tot_frame*(length(stages)-1), style = 3)
 
   # for each transition
@@ -181,7 +188,7 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
       ggsave(pl, filename = file.path(frame_path, paste0(tr_n, "_", j_n, ".png")), width = width/100,
              height = height/100)
     }
-    k=k+50
+    k=k+(fps*seconds)
 
     transition=transition+1
   }
@@ -192,13 +199,13 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
 
   if (format == "gif"){
   gifski::gifski(png_files,
-                 gif_file = file.path(dir, filename),
+                 gif_file = file.path(input_dir, paste0(filename, ".gif")),
                  width = width,
                  height = height,
                  delay = seconds/tot_frame)
-  } else {
+   } else {
     if (format == "video"){
-      av::av_encode_video(input = png_files, output = file.path(dir, filename))
+      av::av_encode_video(input = png_files, output = file.path(input_dir, paste0(filename, ".mp4")))
     } else {
       stop("Output format unrecognized")
     }
@@ -209,5 +216,5 @@ animate <- function(data, timepoints, seconds, fps, dir, names, height = 250, wi
   unlink(frame_path, recursive = TRUE)
   end <- Sys.time()
   cat(paste0("Total time: ", eval(end-start), "\n"))
-  cat(paste0("saved in ", file.path(dir, paste0(filename, "\n"))))
+  cat(paste0("saved in ", file.path(input_dir, paste0(filename, "\n"))))
 }

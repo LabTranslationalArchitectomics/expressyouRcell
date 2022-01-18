@@ -11,10 +11,10 @@ map_gene_localization(gene_set, organism = "mouse")
 the genome annotation.}
 
 \item{organism}{A character vector with the name of the organism-specific
-gene annotaion. term for each gene.}
+gene annotation term for each gene.}
 }
 \value{
-A \code{data.table} with the gene ontology subcellular localization
+A \code{data.table} with the gene ontology subcellular localization.
 }
 \description{
 This function generates the \code{data.table} necessary to
@@ -26,7 +26,7 @@ this complete set of gene symbols, a gene ontology enrichment analysis is
 performed to associate a gene with a term in the cellular component
 ontology. For this purpose, only the sub-ontology of the cellular
 components is taken into consideration. This step generates the
-gene-localization data.table, which maps each gene to the locations in the
+gene-localization \code{data.table}, which maps each gene to the locations in the
 cellular structures, either cellular compartments or macromolecular
 complexes.
 }

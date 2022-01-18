@@ -2,8 +2,7 @@
 % Please edit documentation in R/color_cell.R
 \name{color_cell}
 \alias{color_cell}
-\title{Main function that creates static cellular pictogram with the desired
-coloring method}
+\title{Create static cellular pictograms}
 \usage{
 color_cell(
   timepoint_list,
@@ -21,55 +20,64 @@ color_cell(
 )
 }
 \arguments{
-\item{timepoint_list}{A list of \code{data.table}s, one for each time point.
-Each one must have at least a column named "gene_symbol".}
+\item{timepoint_list}{A list of \code{data.tables}. Each must have at least a column named "gene_symbol". Optionally,
+the list of \code{data.tables} can also contain a numerical column with i) its expression level, in terms of read
+counts, count per million of reads (CPM) or reads per kilobase of gene per million (RPKM); ii) fold-changes and
+p-values from upstream differential analyses.}
 
-\item{plot_data}{A \code{data.table} with the polygon coordinates to be
-plotted.}
+\item{plot_data}{A \code{data.table} with the polygon coordinates to be plotted. Default is generic cell pictogram
+(\code{plot_data="cell"}, or \code{plot_data="neuron"}).}
 
-\item{gene_loc_table}{A \code{data.table} with information for mapping genes
-to subcellular localizations.}
+\item{gene_loc_table}{A \code{data.table} with information for mapping genes to subcellular localizations. The
+localization of the genes can be either provided by the user or created through the \code{map_gene_localization}
+function.}
 
-\item{coloring_mode}{Either "enrichment", "mean" or "median". Default is
-"enrichment". If "enrichment" is specified, enrichment analysis restricted
-to the sub-ontology of cellular components is performed on genes input by
-the user. Colors of each subcellular compartment are based on pvalues from
-the Fisher's test, used to assess the statistical significance of the
-enrichment.
+\item{coloring_mode}{Either "enrichment", "mean" or "median". Default is "enrichment". If "enrichment" is specified,
+gene set enrichment analysis restricted to the sub-tree ontology of cellular components is performed on the list of
+gene symbols entered input by the user. The color shade of each subcellular compartment is defined by the p-values
+from the Fisher's test, used to assess the statistical significance of the enrichment.
 
-If "mean" or "median" are specified, a name of a numerical columns must
-also be provided as \code{col_name} parameter. This method computes the
-mean (or median) of values specified in the \code{col_name} column.}
+If "mean" or "median" are specified, a name of a numerical columns must also be provided as \code{col_name}
+parameter. This method computes the mean (or median) of values specified in the \code{col_name} column. The color
+of each cellular compartment is defined by the mean (or median) of the gene-specific values associated to each
+localization.}
 
-\item{col_name}{A character string with the name of the column on which the
-user wants to base the color of cellular localizations when "median" or
-"mean" are the chosen coloring method.}
+\item{col_name}{A character string with the name of the column on which the user wants to base the color of cellular
+localizations when "median" or "mean" are the chosen coloring method. Default is null.}
 
-\item{colors}{A character vector of hex color codes for palette generation.}
+\item{colors}{A list with named vectors of hex color codes for palette generation. The number of named vectors must
+match the vectors given as input with the \code{grouping_vars} parameters. Each vector should contain two color
+codes (for the starting and stopping point of the generated palettes). By default, the package automatically select
+the optimal palette based on the \code{coloring_mode} parameter}
 
-\item{group_by}{A character string with the name of the column with the
-categorical variable based on which the user can compute separated analysis
-on subset of genes grouped accordingly to the value of this variable.}
+\item{group_by}{A character string with the name of the categorical variable to group genes into separate subsets.
+The categorical variable name must be equal to a column name in the \code{data.tables} of the \code{timepoint_list}
+parameter.}
 
-\item{grouping_vars}{A vector of characters for subselecting genes belonging
-only to the specified values of the varible \code{group_by}}
+\item{grouping_vars}{A list with a named vector of characters for subselecting genes belonging only to the specified
+values of the variable \code{group_by}. The name of the vector must match the \code{group_by} parameter. The vector
+of characters must be present in the \code{data.tables} columns named as \code{group_by}.}
 
-\item{ranges}{An optional \code{data.table} with values for specified
-intervals and associated colors.}
+\item{ranges}{An optional \code{data.table} with values for specified intervals and associated colors. By default,
+the package automatically creates the most appropriate binning for the input data.}
 
-\item{thr}{a numeric value specifying the cutoff value to be applied on the
-col_name column}
+\item{thr}{A numeric value specifying the cut-off value to be applied on the \code{col_name} column.}
 
-\item{pval_col}{a character with the name of the column containing the
-statistical significance values}
+\item{pval_col}{A character with the name of the column containing the statistical significance values.}
 
-\item{pval_thr}{a numeric value with the cutoff value to be applied on the
-pval_col column}
+\item{pval_thr}{A numeric value with the cutoff value to be applied on the \code{pval_col} column.}
 }
 \value{
-
+A list containing four data structures. The first is the localization_values \code{data.table}, with six
+columns, which reports for each subcellular component: i) its name, ii) the numeric value computed during the
+colour assignment step, iiI) a numeric code for grouping the cellular localizations by colour, iv) its associated
+colour shade, the v) the identifier of #' each dataset, and vi) the grouping variable. The second data structure is
+the ranges \code{data.table}, summarising the information on the ranges (e.g. start, end, colour, and labels) used
+to categorise each subcellular localization. The third data structure is the plot list, containing the graphical
+objects of class \code{ggplot} with the resulting cellular pictograms. The fourth data structure is the list of
+final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictograms.
 }
 \description{
-This function creates static cellular pictogram with the desired
-coloring method for assigning colors to subcellular localizations
+This function creates static cellular pictograms with the chosen coloring method for assigning colors to
+subcellular localizations.
 }

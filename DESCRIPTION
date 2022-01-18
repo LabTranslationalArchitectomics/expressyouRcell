@@ -1,13 +1,13 @@
 Package: expressyouRcell
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: expressyouRcell
+Version: 0.0.1.0
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Martina",
+           family = "Paganin",
            role = c("aut", "cre"),
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: expressyouRcell is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. It gives the unique possibility of generating animations of cellular pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. 
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
