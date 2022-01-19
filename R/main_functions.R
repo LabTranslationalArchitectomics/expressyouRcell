@@ -61,10 +61,16 @@ plot_cell <- function(coords_dt){
         }
     }
 
+    bs=25
+    ecmx <- max(coords_dt[subcell_struct == "extracellular_region"]$x)-(max(coords_dt[subcell_struct == "extracellular_region"]$x)-min(coords_dt[subcell_struct == "extracellular_region"]$x))/3
+
+    ecmy <- (min(coords_dt[subcell_struct == "extracellular_region"]$y)+max(coords_dt[subcell_struct == "extracellular_region"]$y))/3
+
     p <- ggplot(coords_dt, aes(x, y, fill=comb, color=comb)) +
         scale_fill_manual(values = coords_dt[, first(color), by=comb]$V1) +
         scale_color_manual(values = rep("black", length(coords_dt[, first(color), by=comb]$V1))) +
         geom_polygon() +
+        annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2) +
         scale_y_reverse() +
         theme_void() +
         theme(legend.position = "none")
@@ -379,19 +385,38 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
         if (max(unlist(widths)) <= 8){
 
-            inf <- unlist(min_v[max_range_width])
-            sup <- unlist(max_v[max_range_width])
+            if (max(unlist(widths)) <= 1) {
 
-            if (length(inf) > 1) {
-                inf <- inf[[1]]
+                inf <- unlist(min_v[max_range_width])
+                sup <- unlist(max_v[max_range_width])
+
+                if (length(inf) > 1) {
+                    inf <- inf[[1]]
+                }
+
+                if (length(sup) > 1) {
+                    sup <- sup[[1]]
+                }
+
+                fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = 0.2), -1),
+                                              end = seq(inf, sup, by = 0.2)[-1])
+
+            } else {
+
+                inf <- unlist(min_v[max_range_width])
+                sup <- unlist(max_v[max_range_width])
+
+                if (length(inf) > 1) {
+                    inf <- inf[[1]]
+                }
+
+                if (length(sup) > 1) {
+                    sup <- sup[[1]]
+                }
+
+                fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
+                                              end = seq(inf, sup)[-1])
             }
-
-            if (length(sup) > 1) {
-                sup <- sup[[1]]
-            }
-
-            fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
-                                          end = seq(inf, sup)[-1])
 
         } else {
             w <- max(unlist(widths))
