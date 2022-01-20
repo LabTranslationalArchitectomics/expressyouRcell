@@ -9,16 +9,21 @@ A range of customizable options is provided to create cellular pictograms starti
 	- ggplot2 (>= 3.3.3),
 	- rsvg (>= 2.1),
 	- grImport2 (>= 0.2),
-	- magick (>= 2.5.2),
 	- ggpubr (>= 0.4.0),
-	- RColorBrewer (>= 1.1-2)  
+	- RColorBrewer (>= 1.1-2),
+	- gifski (>= 1.4.3-1),
+	- av (>= 0.6.0)
 	 
 * Bioconductor
 	- IRanges (>= 2.24.1),
 	- org.Mm.eg.db (>= 3.12.0),
 	- clusterProfiler (>= 3.18.0),  
-	- DOSE (>= 3.16.0),	
-	- multtest (>= 2.46.0),
+	- DOSE (>= 3.16.0),
+	- org.Mm.eg.db (>= 3.12.0),
+	- org.Hs.eg.db (>= 3.12.0),
+	- org.Rn.eg.db (>= 3.12.0),
+	- org.Dr.eg.db (>= 3.12.0),
+	- org.Sc.sgd.db (>= 3.12.0),
 
 ### Installation
 You can install expressyouRcell directly from GitHub. To do so, the devtools package is required. If not already installed on your system, run:
