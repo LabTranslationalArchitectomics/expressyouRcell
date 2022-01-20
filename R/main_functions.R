@@ -247,12 +247,18 @@ discrete_symmetric_ranges <- function(timepoint_list,
         } else {
             binsize <- width / 8
 
-            sizes <- c(1, 1.5, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000, 2000)
+            sizes <- c(1, 1.5, 2, 5, 10, 15, 20, 25, 50, 100, 200, 500, 1000, 2000)
             diff <- sizes - binsize
 
             binsize <- sizes[which(diff == min(diff[diff > 0]))]
             sup <- sup + binsize
-            inf <- round(inf/10) * 10
+            new_inf <- round(inf/10) * 10
+
+            if (new_inf > inf){
+                inf = 0
+            } else {
+                inf = new_inf
+            }
 
             fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = binsize), -1),
                                           end = seq(inf, sup, by = binsize)[-1])

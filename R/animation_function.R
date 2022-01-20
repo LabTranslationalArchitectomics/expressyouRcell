@@ -17,7 +17,7 @@ create_legend <- function(color_vector, lab_vector, title){
   bs=40
   static_plot <- ggplot(data = gb, aes(x=x, y=y, fill=as.factor(x))) +
     scale_fill_manual(values = rev(color_vector), name=title, labels=rev(lab_vector)) +
-    geom_bar(stat = "identity")
+    geom_bar(stat = "identity") +
   #guides(color = FALSE) +
   theme(legend.title = element_text(size=bs*0.9),
         legend.text = element_text(size=bs*0.9))
