@@ -9,16 +9,22 @@ A range of customizable options is provided to create cellular pictograms starti
 	- ggplot2 (>= 3.3.3),
 	- rsvg (>= 2.1),
 	- grImport2 (>= 0.2),
-	- magick (>= 2.5.2),
 	- ggpubr (>= 0.4.0),
-	- RColorBrewer (>= 1.1-2)  
+	- RColorBrewer (>= 1.1-2),
+	- gifski (>= 1.4.3-1),
+	- av (>= 0.6.0)
 	 
 * Bioconductor
 	- IRanges (>= 2.24.1),
 	- org.Mm.eg.db (>= 3.12.0),
 	- clusterProfiler (>= 3.18.0),  
-	- DOSE (>= 3.16.0),	
-	- multtest (>= 2.46.0),
+	- DOSE (>= 3.16.0),
+	- org.Mm.eg.db (>= 3.12.0),
+	- org.Hs.eg.db (>= 3.12.0),
+	- org.Rn.eg.db (>= 3.12.0),
+	- org.Dr.eg.db (>= 3.12.0),
+	- org.Sc.sgd.db (>= 3.12.0), 
+	- multtest (>= 2.46.0)
 
 ### Installation
 You can install expressyouRcell directly from GitHub. To do so, the devtools package is required. If not already installed on your system, run:
@@ -41,10 +47,10 @@ library(expressyouRcell)
 ```
 
 ## 2) Prepare your data
-expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages). For this reason, the input has to be organized as a list of ```data.table```s. For example, in case of multiple stages, each ```data.table``` should correspond to a specific time point. 
+expressyouRcell is optimized for representing multiple sets of gene expression data (e.g. multiple stages, different conditions, different tissues, etc.). For this reason, the input has to be organized as a list of ```data.table```s. For example, in case of multiple stages, each ```data.table``` should correspond to a specific time point. 
 
 Each ```data.table``` must have at least a column of gene names named precisely ```gene_symbol```. 
-The input table can also contain additional columns with values of gene expression levels (CPM or FPKM) or results from upstream differential analysis pipeline (such as fold changes and pvalues).
+The input table can also contain additional columns with values of gene expression levels (CPM or FPKM) or results from upstream differential analysis pipeline (such as fold changes and p-values).
 
 | gene_symbol | Value  |
 | :---:       |      :-:        |
@@ -54,7 +60,9 @@ The input table can also contain additional columns with values of gene expressi
 | Lypla1      | 1.1         |
 
 ## 3) Create the gene-localization table
-This step can be skipped if you want to use your own table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly ```gene_symbol```) and one with the associated information of the localization of that gene within the cell (named exactly ```subcell_struct```).
+Before computing the color shade of each region, genes have to be associated with their cellular localization within the cell structure. So, the tool needs a data structure storing information on gene localization within cellular organelles. 
+
+The user can provide a custom table with information on the localization of genes within the cellular compartments and organelles. If you provide your own table, this must contain two columns: one with gene names (named exactly ```gene_symbol```) and one with the associated information of the localization of that gene within the cell (named exactly ```subcell_struct```).
 
 Otherwise, you can create the gene-localization table with the map_gene_localization function provided within expressyouRcell. 
 
@@ -66,11 +74,6 @@ Example of usage with the annotation GTF file:
 ```
 gene_loc_table <- map_gene_localization(gene_set = paste0(utils_folder, "gencode.vM22.primary_assembly.annotation.gtf"))
 ```
-Example of usage with the list of data.table provided with the package:
-```
-gene_loc_table <- map_gene_localization(gene_set = example_list)
-```
-
 ```map_gene_localization``` returns a ```data.table``` containing for each gene its localization to a subcellular structure:
 
 | gene_symbol | subcell_struct  |
