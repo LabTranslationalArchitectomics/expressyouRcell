@@ -6,7 +6,7 @@
 \usage{
 color_cell(
   timepoint_list,
-  plot_data = "cell",
+  pictogram = "cell",
   gene_loc_table,
   coloring_mode = "enrichment",
   col_name = NULL,
@@ -25,8 +25,9 @@ the list of \code{data.tables} can also contain a numerical column with i) its e
 counts, count per million of reads (CPM) or reads per kilobase of gene per million (RPKM); ii) fold-changes and
 p-values from upstream differential analyses.}
 
-\item{plot_data}{A \code{data.table} with the polygon coordinates to be plotted. Default is generic cell pictogram
-(\code{plot_data="cell"}, or \code{plot_data="neuron"}).}
+\item{pictogram}{A character string with the name of the pictogram to be used.
+The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictogram.
+(\code{pictogram="cell"}, or \code{pictogram="neuron"}).}
 
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes to subcellular localizations. The
 localization of the genes can be either provided by the user or created through the \code{map_gene_localization}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{cell_dt}
 \alias{cell_dt}
-\title{Cell data table without cytoplasm mapping}
+\title{Cell data table}
 \format{
 A \code{data.table} with 6 columns, which are:
 \describe{

@@ -44,6 +44,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 #' @param genes A character vector of gene names.
 #' @param plot_data A \code{data.table} with the polygon coordinates to be
 #'   plotted.
+#' @param pictogram A character string with the name of the pictogram to be used.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
 #'   to subcellular localizations.
 #' @param coloring_mode If "enrichment", computes the False Discovery Rate
@@ -63,7 +64,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 #'
 #' @import data.table
 #' @export
-assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode, categorical_classes=NULL){
+assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, coloring_mode, categorical_classes=NULL){
 
     universe_set <- unique(gene_loc_table$gene_symbol)
     genes <- intersect(genes$gene_symbol, universe_set)
@@ -104,12 +105,15 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
         scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct)))) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
-        annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs) +
         scale_y_reverse() +
         guides(color = FALSE) +
         theme_void()  +
         theme(legend.title = element_text(size=bs*0.9),
               legend.text = element_text(size=bs*0.9))
+
+    if (pictogram == "neuron"){
+        p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
+    }
 
     return(list("plot"=p,
                 "localization_values"=localization_values,
@@ -125,6 +129,7 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
 #'   change values. Columns must be named "gene_symbol" and "logFC".
 #' @param plot_data A \code{data.table} with the polygon coordinates to be
 #'   plotted.
+#' @param pictogram A character string with the name of the pictogram to be used.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
 #'   to subcellular localizations.
 #' @param col_name  A character string with the name of the column on which the
@@ -148,13 +153,17 @@ assign_color_by_fdr <- function(genes, plot_data, gene_loc_table, coloring_mode,
 #' @import data.table
 #'
 #' @export
-assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, categorical_classes, coloring_mode="mean", together=FALSE){
+assign_color_by_value <- function(genes, plot_data, pictogram, gene_loc_table, col_name, categorical_classes, coloring_mode="mean", together=FALSE){
 
     gene_loc_table <- gene_loc_table[subcell_struct %in% unique(plot_data$subcell_struct)]
 
     genes_sel <- merge.data.table(genes,
                                   gene_loc_table[, c("gene_symbol", "subcell_struct")],
                                   by = "gene_symbol")
+
+    if (nrow(genes_sel)==0){
+        localization_values <- data.table(subcell_struct = "NA")
+    }
 
     if (coloring_mode == "mean"){
         localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=subcell_struct]
@@ -188,11 +197,13 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
             if(length(.categorical_classes <- which(abs(vec) > categorical_classes$start & abs(vec) <= categorical_classes$end))) .categorical_classes else NA
         }
 
-
-        localization_values$value <- categorical_classes$values[mapply(f, localization_values[, get(coloring_mode)])]
-        localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
-
-
+        if (nrow(localization_values)!=0){
+            localization_values$value <- categorical_classes$values[mapply(f, localization_values[, get(coloring_mode)])]
+            localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
+        } else {
+            localization_values$value <- "500"
+            localization_values$color_grad <- "grey90"
+        }
 
         # localization_values <- localization_values[, `:=` ("value"=categorical_classes[(get(coloring_mode)) > abs(categorical_classes[[class]][, start]) &
         #                                                                                    (get(coloring_mode)) <= abs(categorical_classes[[class]][, end]), values],
@@ -205,8 +216,10 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
             if(length(.categorical_classes <- which(vec > categorical_classes$start & vec <= categorical_classes$end))) .categorical_classes else NA
         }
 
-        localization_values$value <- categorical_classes$values[mapply(f, localization_values[, get(coloring_mode)])]
-        localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
+        if (nrow(localization_values)!=0){
+            localization_values$value <- categorical_classes$values[mapply(f, localization_values[, get(coloring_mode)])]
+            localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
+        }
     }
 
     final_dt <- merge.data.table(plot_data,
@@ -215,8 +228,14 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
                                  by.y = "subcell_struct",
                                  all = TRUE)
 
-    final_dt[, comb := factor(comb, levels = intersect(plot_data$comb, final_dt$comb))
-             ][, value := factor(value, levels = unique(localization_values$value))]
+    if (nrow(localization_values)!=0){
+        final_dt[, comb := factor(comb, levels = intersect(plot_data$comb, final_dt$comb))
+                ][, value := factor(value, levels = unique(localization_values$value))]
+    } else {
+        final_dt[, value  := 500
+                 ][, value := factor(value)
+                   ][, color_grad := "grey90"]
+    }
 
     final_dt <- final_dt[order(comb)]
 
@@ -263,7 +282,6 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
                            breaks = levels(nogreysquares$value)) +
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
-        annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs) +
         scale_y_reverse() +
         #guides(color = FALSE) +
         theme_void() +
@@ -271,6 +289,10 @@ assign_color_by_value <- function(genes, plot_data, gene_loc_table, col_name, ca
               legend.text = element_text(size=bs*0.9))
 
     p
+
+    if (pictogram == "neuron"){
+        p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
+    }
 
     return(list("plot"=p,
                 "localization_values"=localization_values,

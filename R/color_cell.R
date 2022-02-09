@@ -6,8 +6,9 @@
 #'   the list of \code{data.tables} can also contain a numerical column with i) its expression level, in terms of read
 #'   counts, count per million of reads (CPM) or reads per kilobase of gene per million (RPKM); ii) fold-changes and
 #'   p-values from upstream differential analyses.
-#' @param plot_data A \code{data.table} with the polygon coordinates to be plotted. Default is generic cell pictogram
-#'   (\code{plot_data="cell"}, or \code{plot_data="neuron"}).
+#' @param pictogram A character string with the name of the pictogram to be used.
+#' The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictogram.
+#'   (\code{pictogram="cell"}, or \code{pictogram="neuron"}).
 #' @param gene_loc_table A \code{data.table} with information for mapping genes to subcellular localizations. The
 #'   localization of the genes can be either provided by the user or created through the \code{map_gene_localization}
 #'   function.
@@ -51,7 +52,7 @@
 #' @export
 #'
 color_cell <- function(timepoint_list,
-                       plot_data="cell",
+                       pictogram="cell",
                        gene_loc_table,
                        coloring_mode='enrichment',
                        col_name=NULL,
@@ -63,13 +64,21 @@ color_cell <- function(timepoint_list,
                        pval_col=NULL,
                        pval_thr=NULL){
 
-    if (plot_data == "cell"){
+    if (all(pictogram == "cell")){
         plot_data <- cell_dt
     } else {
-        if (plot_data == "neuron") {
+        if (all(pictogram == "neuron")) {
             plot_data <- neuron_dt
         } else {
-            stop("No available pictogram with this name")
+            if (all(pictogram == "fibroblast")) {
+                plot_data <- fibroblast_dt
+            } else {
+                if (all(pictogram == "microglia")) {
+                    plot_data <- microglia_dt
+                } else {
+                    stop("No available pictogram with this name")
+                }
+            }
         }
     }
 
@@ -102,7 +111,7 @@ color_cell <- function(timepoint_list,
                             stop("You want to group your data by the \"group_by\" parameter, but some data.table does not contain a column with the name you specified and I don't know how to create this column, since some parameters are missing (check thr, pval_col, pval_thr)")
                         } else {
                             timepoint_list <- lapply(timepoint_list, function(x) x[, eval(group_by) := "="
-                                                                 ][get(col_name) <= thr & get(pval_col) <= pval_thr, eval(group_by) := '-'
+                                                                 ][get(col_name) <= -thr & get(pval_col) <= pval_thr, eval(group_by) := '-'
                                                                    ][get(col_name) >= thr & get(pval_col) <= pval_thr, eval(group_by) := '+'])
 
                         }
@@ -158,6 +167,7 @@ color_cell <- function(timepoint_list,
 
                             colored_out <- assign_color_by_value(genes = genes,
                                                                  plot_data = plot_data,
+                                                                 pictogram = pictogram,
                                                                  gene_loc_table = gene_loc_table,
                                                                  col_name = col_name,
                                                                  categorical_classes = ranges[get(group_by) == v],
@@ -197,7 +207,7 @@ color_cell <- function(timepoint_list,
                             genes <- timepoint_list[[tp]]
                         }
 
-                        ranges <- discrete_symmetric_ranges(timepoint_list,
+                        ranges <- discrete_symmetric_ranges(timepoint_list = timepoint_list,
                                                             plot_data,
                                                             gene_loc_table,
                                                             col_name,
@@ -207,12 +217,13 @@ color_cell <- function(timepoint_list,
                                                             together=TRUE)
 
                         colored_out <- assign_color_by_value(genes = genes,
-                                                              plot_data = plot_data,
-                                                              gene_loc_table = gene_loc_table,
-                                                              col_name = col_name,
-                                                              categorical_classes = ranges,
-                                                              coloring_mode = coloring_mode,
-                                                              together = TRUE)
+                                                             plot_data = plot_data,
+                                                             pictogram = pictogram,
+                                                             gene_loc_table = gene_loc_table,
+                                                             col_name = col_name,
+                                                             categorical_classes = ranges,
+                                                             coloring_mode = coloring_mode,
+                                                             together = TRUE)
 
 
                         colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp]
@@ -243,8 +254,8 @@ color_cell <- function(timepoint_list,
                         stop("You want to group your data by the \"group_by\" parameter, but some data.table does not contain a column with the name you specified and I don't know how to create this column, since some parameters are missing (check thr, pval_col, pval_thr)")
                     } else {
                         timepoint_list <- lapply(timepoint_list, function(x) x[, eval(group_by) := "="
-                        ][get(col_name) <= thr & get(pval_col) <= pval_thr, eval(group_by) := '-'
-                        ][get(col_name) >= thr & get(pval_col) <= pval_thr, eval(group_by) := '+'])
+                        ][as.numeric(get(col_name)) <= -thr & as.numeric(get(pval_col)) <= pval_thr, eval(group_by) := '-'
+                        ][as.numeric(get(col_name)) >= thr & as.numeric(get(pval_col)) <= pval_thr, eval(group_by) := '+'])
 
                     }
                 } else {
@@ -288,10 +299,11 @@ color_cell <- function(timepoint_list,
                         genes <- timepoint_list[[tp]][get(group_by) == v]
 
                         colored_out <- assign_color_by_fdr(genes = genes,
-                                                                plot_data = plot_data,
-                                                                gene_loc_table = gene_loc_table,
-                                                                categorical_classes = NULL,
-                                                                coloring_mode = coloring_mode)
+                                                           plot_data = plot_data,
+                                                           pictogram=pictogram,
+                                                           gene_loc_table = gene_loc_table,
+                                                           categorical_classes = NULL,
+                                                           coloring_mode = coloring_mode)
 
                         colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp
                                                                                                      ][, eval(group_by) := v]
@@ -326,10 +338,11 @@ color_cell <- function(timepoint_list,
                     }
 
                     colored_out <- assign_color_by_fdr(genes = genes,
-                                                        plot_data = plot_data,
-                                                        gene_loc_table = gene_loc_table,
-                                                        categorical_classes = NULL,
-                                                        coloring_mode = coloring_mode)
+                                                       plot_data = plot_data,
+                                                       pictogram=pictogram,
+                                                       gene_loc_table = gene_loc_table,
+                                                       categorical_classes = NULL,
+                                                       coloring_mode = coloring_mode)
                     colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp]
                     locdt_l[[tp]] <- colored_out[["localization_values"]]
 
