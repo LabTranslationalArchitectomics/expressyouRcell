@@ -111,9 +111,8 @@ assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, col
         theme(legend.title = element_text(size=bs*0.9),
               legend.text = element_text(size=bs*0.9))
 
-    if (pictogram == "neuron"){
-        p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
-    }
+    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
+
 
     return(list("plot"=p,
                 "localization_values"=localization_values,

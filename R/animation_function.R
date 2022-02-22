@@ -14,13 +14,13 @@ create_legend <- function(color_vector, lab_vector, title){
                    y=seq(1:length(color_vector)))
 
   # create legend by combing stages
-  bs=40
+  bs=30
   static_plot <- ggplot(data = gb, aes(x=x, y=y, fill=as.factor(x))) +
     scale_fill_manual(values = rev(color_vector), name=title, labels=rev(lab_vector)) +
     geom_bar(stat = "identity") +
   #guides(color = FALSE) +
-  theme(legend.title = element_text(size=bs*0.9),
-        legend.text = element_text(size=bs*0.9))
+  theme(legend.title = element_text(size=bs*0.5),
+        legend.text = element_text(size=bs*0.5))
   #theme(legend.text = element_text(margin = margin(r = 15, l= 4, unit = "pt"))) # + theme_void()
 
   # extract legend
@@ -166,7 +166,7 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
 
       pl <- ggpubr::ggarrange(plot + guides(fill = FALSE),
                       l,
-                      widths = c(3, 1))
+                      widths = c(5, 1))
 
 
       if (!dir.exists(frame_path)){

@@ -513,7 +513,7 @@ groupval_byloc <- function(genes, plot_data, gene_loc_table, col_name, coloring_
 
 
     if (coloring_mode == "mean"){
-        localization_values <- genes_sel[, .(mean(get(col_name), na.rm = TRUE)), by=subcell_struct]
+        localization_values <- genes_sel[, .(mean(as.numeric(get(col_name)), na.rm = TRUE)), by=subcell_struct]
         localization_values <- localization_values[order(abs(V1), decreasing = TRUE)]
         setnames(localization_values, old="V1", new=eval(coloring_mode))
     } else {
