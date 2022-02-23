@@ -4,11 +4,12 @@ cache: packages
 r_packages:
 - data.table
 - ggplot2
-- magick
 - rsvg
 - grImport2
 - ggpubr
 - RColorBrewer
+- gifski
+- av
 
 bioc_packages:
 - IRanges
