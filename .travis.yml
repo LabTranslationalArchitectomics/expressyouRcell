@@ -12,10 +12,13 @@ r_packages:
 
 bioc_packages:
 - IRanges
-- org.Mm.eg.db
-- clusterProfiler
-- multtest
 - DOSE
+- org.Mm.eg.db
+- org.Hs.eg.db
+- org.Rn.eg.db
+- org.Dr.eg.db
+- org.Sc.sgd.db
+- clusterProfiler
 
 addons:
   apt:
