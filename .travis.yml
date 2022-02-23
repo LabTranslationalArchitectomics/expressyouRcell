@@ -39,6 +39,7 @@ addons:
       - libfftw3-dev
       - cargo
       - libnlopt-dev
+      - libavfilter-dev
 
 notifications:
     email:
