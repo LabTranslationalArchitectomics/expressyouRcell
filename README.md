@@ -66,7 +66,7 @@ The user can provide a custom table with information on the localization of gene
 Otherwise, you can create the gene-localization table with the ```map_gene_localization``` function provided within expressyouRcell. 
 
 ### map_gene_localization function
-The filename of the gene annotation file used during the alignment of your sample (in GTF format) should be provided as input to this function. On the complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+The filename of the gene annotation file used during the alignment of your samples (in GTF format) should be provided as input to this function. On the complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
 
 Example of usage with the annotation GTF file:
 ```
