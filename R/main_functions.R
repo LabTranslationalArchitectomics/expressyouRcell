@@ -69,9 +69,7 @@ plot_cell <- function(coords_dt){
         }
     }
 
-    ecmx <- max(coords_dt[subcell_struct == "extracellular_region"]$x)-
-        (max(coords_dt[subcell_struct == "extracellular_region"]$x)-
-             min(coords_dt[subcell_struct == "extracellular_region"]$x))/3
+    ecmx <- (max(coords_dt[subcell_struct == "extracellular_region"]$x)-(min(coords_dt[subcell_struct == "extracellular_region"]$x)))/2
 
     ecmy <- (min(coords_dt[subcell_struct == "extracellular_region"]$y)+
                  max(coords_dt[subcell_struct == "extracellular_region"]$y))/3
@@ -87,6 +85,17 @@ plot_cell <- function(coords_dt){
         theme(legend.position = "none")
 
     return(p)
+}
+
+
+available_pictograms <- function() {
+    p_list <- list()
+    pictograms <- c("cell", "neuron", "fibroblast", "microglia")
+    for (d in pictograms){
+        p_list[[d]] <- plot_cell(d)
+    }
+
+    do.call(ggpubr::ggarrange, c(p_list, ncol=2, nrow=2))
 }
 
 #' Create table for mapping genes to subcellular localization
