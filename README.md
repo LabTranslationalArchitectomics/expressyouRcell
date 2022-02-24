@@ -121,7 +121,7 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 ```
 
 
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img2.png" width="450" height="380">
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="450" height="380">
 
 #### 2) Generate multiple pictograms, one for each group of genes
 expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generate separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` figures for each category. 
