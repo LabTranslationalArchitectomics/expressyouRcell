@@ -169,6 +169,7 @@ example_list_output <- color_cell(timepoint_list = example_list,
                                   colors = list("+" = c("#eaf3ea", "#307e2d"),
                                                 "-" = c("#f3eaea", "#7e302d")))
 
+example_list_output$plot$`brain_p3_rs-`
 example_list_output$plot$`brain_p5_rs-`
 
 ```
@@ -178,6 +179,8 @@ If  data have not been previously organized into distinct classes of genes, __ex
 * `thr` to specify the cutoff value to be applied on the `col_name` column,
 * `pval_col` to specify the column containing the statistical significance values,
 * `pval_thr` to specify the cutoff value  to be applied on the `pval_col` column.
+
+### Gene set enrichment anlaysis
 
 # Print and save your results 
 
