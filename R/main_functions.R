@@ -87,17 +87,6 @@ plot_cell <- function(coords_dt){
     return(p)
 }
 
-
-available_pictograms <- function() {
-    p_list <- list()
-    pictograms <- c("cell", "neuron", "fibroblast", "microglia")
-    for (d in pictograms){
-        p_list[[d]] <- plot_cell(d)
-    }
-
-    do.call(ggpubr::ggarrange, c(p_list, ncol=2, nrow=2))
-}
-
 #' Create table for mapping genes to subcellular localization
 #'
 #' @description This function generates the \code{data.table} necessary to
