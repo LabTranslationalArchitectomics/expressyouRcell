@@ -133,6 +133,8 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
                                            gene_loc_table = gene_loc_table,
                                            coloring_mode = "mean",
                                            col_name = "logFC")
+
+example_list_output_together$plot$brain_p3_rs
 ```
 
 When also the `grouping_vars` parameter is set to its null default value, no subselection of categorical value is performed and all genes are selected for the creation of a single cellular pictogram.
@@ -150,6 +152,7 @@ example_list_output <- color_cell(timepoint_list = example_list,
                                   coloring_mode = "mean",
                                   group_by = "class",
                                   col_name = "logFC")
+example_list_output$plot$`brain_p5_rs+`
 ```
 
 The additional parameter `grouping_vars` can be specified to subselect genes associated only to a subset of specified categories (e.g. in case of DEGs classification, “up” and “down”). For instance, when the logFC values are used for defining the color shade of the cellular regions and organelles, it may be desirable to include only differentially expressed genes with the `grouping_vars`. As displayed in the example below, the `grouping_vars` parameter takes as input a list with a named character vector. The vector name must match the `group_by` parameter, and the vector items (e.g. classes "+" and "-") must be present in the `timepoint_list` *data.tables* columns named as `group_by`.
@@ -165,6 +168,9 @@ example_list_output <- color_cell(timepoint_list = example_list,
                                   col_name = "logFC",
                                   colors = list("+" = c("#eaf3ea", "#307e2d"),
                                                 "-" = c("#f3eaea", "#7e302d")))
+
+example_list_output$plot$`brain_p5_rs-`
+
 ```
 
 If  data have not been previously organized into distinct classes of genes, __expressyouRcell__ can perform this step. To do so, the user has to provide the tool with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
