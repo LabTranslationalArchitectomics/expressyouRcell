@@ -107,7 +107,7 @@ If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are fir
 expressyouRcell can handle your output in two main different manners, according to a potential classification of the genes (e.g. “down-regulated” and “up-regulated” in case of differential analysis).  This can be achieved with different combinations of the optional parameters ```group_by``` and ```grouping_vars``` in the ```color_cell``` function.
 
 #### 1) Generate a single pictogram for all the genes  
-If you do not want to discriminate genes by defined categories, you can set the ```group_by``` parameter to its default null value. In this case, no grouping by classification value is performed, and values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictograms. 
+If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictograms. 
 However, to avoid poorly informative pictograms, it is recommended to include only differentially expressed genes with the ```grouping_vars```, in particular when the logFC values are used for defining the color shade of the cellular regions.
 
 The following lines will then output the cellular pictograms in the picture below.
