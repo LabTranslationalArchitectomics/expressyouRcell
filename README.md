@@ -110,7 +110,7 @@ expressyouRcell can handle your output in two main different manners, according 
 If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictograms. 
 However, to avoid poorly informative pictograms, it is recommended to include only differentially expressed genes with the ```grouping_vars``` (i.e. discarding genes detected as invariant following differential analysis), in particular when the logFC values are used for defining the color shade of the cellular regions.
 
-The following lines will then output the cellular pictograms in the picture below.
+For example, the following lines will then output a cellular pictogram for all the genes at the second stage provided in the example_list, regardless any classification. The cellular components colors are based on the logFC values computed in an upstream differential analysis.
 
 ```
 example_list_output_together <- color_cell(timepoint_list = example_list,
@@ -121,7 +121,7 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 ```
 
 
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="450" height="380">
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="950" height="450">
 
 #### 2) Generate multiple pictograms, one for each group of genes
 expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generate separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` figures for each category. 
@@ -153,21 +153,19 @@ example_list_output <- color_cell(timepoint_list = example_list,
                                                 "-" = c("#f3eaea", "#7e302d")))
 ```
 
-![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img1.png?raw=true)
+The following pictogram show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the mean of logFC values of genes localizing in a cellular compartment/organelle. 
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig2.png" width="950" height="450">
 
 If your data have not been previously organized into distinct classes of genes, expressyouRcell can perform this step for you. To do so, you have to provide the tool with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
 * ```thr``` to specify the cutoff value to be applied on the ```col_name``` column, 
 * ```pval_col``` to specify the column containing the statistical significance values,
 * ```pval_thr``` to specify the cutoff value  to be applied on the ```pval_col``` column.
 
-
-
 ### Enrichment based p-value
 Enrichment analysis restricted to the sub-ontology of cellular components is performed on genes input by the user. Colors of each subcellular compartment are based on pvalues from the Fisher’s test, used to assess the statistical significance of the enrichment.
 Also in this case, it is possible to selectively visualize only genes belonging to distinct classes by providing the ```group_by``` parameter with the name of the column with the categorical variable (e.g. “class”) on which you have previously stored the gene classification. Otherwise, if you do not want to discriminate genes by defined categories, you can set the ```group_by``` parameter to null. As previously described, the additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot, otherwise the default value of this parameter is null and all the genes will be considered regardless any classification.
 
 For example, the following lines will generate two distinct cellular pictograms (for the specified classes '+' and '-') for each time point in your list, as can be seen in the picture below.
-
 
 ```
 example_list_output_together_enr <- color_cell(timepoint_list = example_list,
@@ -177,8 +175,8 @@ example_list_output_together_enr <- color_cell(timepoint_list = example_list,
                                                group_by = "class",
                                                grouping_vars = c("+", "-"))
 ```
-
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/readme_img3.png">
+The following pictogram show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the significance of the enrichment for genes localizing in a cellular compartment/organelle. 
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig3.png" width="950" height="450">
 
 ## Print and save your results
 The main function ```color_cell``` finally returns a list containing three items:
@@ -212,6 +210,16 @@ The other input parameters are:
 
 For each transition, the function creates a set of temporary frames with intermediate color shades which will then be merged together in a single animated picture or short movie. The gifski and av packages are respecitvely used to produce the gif picture or the movie. 
 
-As a final step, the function saves in the specified folder the movie (in mp4 format) or animated picture (gif format). 
+As a final step, the function saves the movie (in mp4 format) or animated picture (gif format) in the specified folder. 
+The following lines create the animated picture reported below. The input data consists of the data structured obtained as output by the  ```color_cell``` function used in the previous steps. You have to specify the timepoint you want to include in the final animated picture (e.g "brain_p3_rs-"  and "brain_p5_rs-"). Seconds between each transition and fps (e.g. the number of frames per second: the higher this value, the smoother the visual transition. Keep in mind that this will also increase the amount of processing time necessary to create the final figure). For this specific example, only down regulated genes have been selected to create the animated pictogram between the two timepoints included in the ```example_list_output``` data structure.
+```
+animate(data = example_list_output,
+        timepoints = c("brain_p3_rs-", "brain_p5_rs-"),
+        seconds = 3, fps = 5,
+        input_dir = getwd(), height = 400, width = 900,
+        filename = "brainp35",
+        names = c("p3", "p5"),
+        format = "gif")
+ ```
 
-![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/latroup.gif?raw=true)
+![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/brainp35.gif?raw=true, width="950" height="450")
