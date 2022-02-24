@@ -108,7 +108,7 @@ expressyouRcell can handle your output in two main different manners, according 
 
 #### 1) Generate a single pictogram for all the genes  
 If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictograms. 
-However, to avoid poorly informative pictograms, it is recommended to include only differentially expressed genes with the ```grouping_vars```, in particular when the logFC values are used for defining the color shade of the cellular regions.
+However, to avoid poorly informative pictograms, it is recommended to include only differentially expressed genes with the ```grouping_vars``` (i.e. discarding genes detected as invariant following differential analysis), in particular when the logFC values are used for defining the color shade of the cellular regions.
 
 The following lines will then output the cellular pictograms in the picture below.
 
