@@ -30,14 +30,16 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
+          options(repos = c(getOption("repos"), BiocManager::repositories()))
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
-      - name: Install Biobase
-        if: matrix.r-version == 'release'
+      - name: Query dependencies
         run: |
-          remotes::install_cran("BiocManager")
-          BiocManager::install("Biobase", version = remotes::bioc_version())
+          install.packages(c('remotes', 'BiocManager'))
+          options(repos = c(getOption("repos"), BiocManager::repositories()))
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
         shell: Rscript {0}
