@@ -20,13 +20,14 @@ jobs:
     strategy:
       matrix:
         r-version: ['3.6.3', '4.1.1']
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up R ${{ matrix.r-version }}
         uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
         with:
           r-version: ${{ matrix.r-version }}
-       - name: Query dependencies
+      - name: Query dependencies
         run: |
           install.packages(c('remotes', 'BiocManager'))
           options(repos = c(getOption("repos"), BiocManager::repositories()))
@@ -34,10 +35,10 @@ jobs:
         shell: Rscript {0}
       - name: Install dependencies
         run: |
-          options(repos = c(getOption("repos"), BiocManager::repositories()))
+          install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
+
