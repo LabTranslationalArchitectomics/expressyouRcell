@@ -27,19 +27,18 @@ jobs:
         uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
         with:
           r-version: ${{ matrix.r-version }}
+       - name: Query dependencies
+        run: |
+          install.packages(c('remotes', 'BiocManager'))
+          options(repos = c(getOption("repos"), BiocManager::repositories()))
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+        shell: Rscript {0}
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
           options(repos = c(getOption("repos"), BiocManager::repositories()))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-        shell: Rscript {0}
-      - name: Query dependencies
-        run: |
-          install.packages(c('remotes', 'BiocManager'))
-          options(repos = c(getOption("repos"), BiocManager::repositories()))
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
         shell: Rscript {0}
