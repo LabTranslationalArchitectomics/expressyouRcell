@@ -14,7 +14,7 @@ Description: expressyouRcell is a unique and easy-to-use R package which provide
     providing a convenient and intuitive method for visualizing and understanding time course variations 
     in cellular compartments. A range of customizable options is 
     provided to create cellular pictograms starting from your data! :)
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
