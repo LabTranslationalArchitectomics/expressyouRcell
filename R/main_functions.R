@@ -124,6 +124,8 @@ available_pictograms <- function() {
 #' @import org.Sc.sgd.db
 #' @import DOSE
 #' @import clusterProfiler
+#' @import rtracklayer
+#' @import stringr
 #'
 #' @details A gene annotatation file, in GTF format is required as input. On
 #'   this complete set of gene symbols, a gene ontology enrichment analysis is
