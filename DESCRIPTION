@@ -1,15 +1,20 @@
 Package: expressyouRcell
+Type: Package
 Title: expressyouRcell
-Version: 0.0.1.0
-Authors@R: 
-    person(given = "Martina",
-           family = "Paganin",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: expressyouRcell is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. It gives the unique possibility of generating animations of cellular pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. 
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+Version: 0.1.1
+Authors@R: c(
+    person("Martina", "Paganin", email = "martina.paganin95@gmail.com", role = c("aut", "cre")),
+    person("Fabio", "Lauria", email = "fab.lauria.88@gmail.com", role = "aut"),
+    person("Gabriella", "Viero", email = "gabriella.viero@cnr.it", role = "aut"))
+Maintainer: The package maintainer <martina.paganin95@gmail.com>
+Description: expressyouRcell is a unique and easy-to-use R package which provides an 
+    intuitive approach for visualizing and presenting multi-dimensional variations of 
+    gene expression levels across time and space. This tool gives the possibility of 
+    generating animations of pictographic representations of cells, or pictograms, 
+    providing a convenient and intuitive method for visualizing and understanding time course variations 
+    in cellular compartments. A range of customizable options is 
+    provided to create cellular pictograms starting from your data! :)
+License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -30,6 +35,6 @@ Imports:
 	gifski (>= 1.4.3-1),
 	av (>= 0.6.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown

@@ -69,7 +69,8 @@ plot_cell <- function(coords_dt){
         }
     }
 
-    ecmx <- (max(coords_dt[subcell_struct == "extracellular_region"]$x)-(min(coords_dt[subcell_struct == "extracellular_region"]$x)))/2
+    ecmx <- min(coords_dt[subcell_struct == "extracellular_region"]$x) + (max(coords_dt[subcell_struct == "extracellular_region"]$x)-
+                 min(coords_dt[subcell_struct == "extracellular_region"]$x))/1.5
 
     ecmy <- (min(coords_dt[subcell_struct == "extracellular_region"]$y)+
                  max(coords_dt[subcell_struct == "extracellular_region"]$y))/3
@@ -85,6 +86,24 @@ plot_cell <- function(coords_dt){
         theme(legend.position = "none")
 
     return(p)
+}
+
+#' Plot available cellular pictograms
+#' @description This function plots the outline of the all the availables cell type.
+#' @examples available_pictograms()
+#'
+#' @import ggplot2
+#'
+#' @export
+available_pictograms <- function() {
+    p_list <- list()
+    pictograms <- c("cell","fibroblast", "microglia", "neuron")
+    for (d in pictograms){
+        p_list[[d]] <- plot_cell(d)
+    }
+
+    do.call(ggpubr::ggarrange, c(p_list,
+                                 ncol=2, nrow=2))
 }
 
 #' Create table for mapping genes to subcellular localization
