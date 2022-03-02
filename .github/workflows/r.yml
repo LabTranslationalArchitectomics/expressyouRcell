@@ -35,3 +35,9 @@ jobs:
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
+      - name: Install Biobase
+        if: matrix.r-version == 'release'
+        run: |
+          remotes::install_cran("BiocManager")
+          BiocManager::install("Biobase", version = remotes::bioc_version())
+        shell: Rscript {0}
