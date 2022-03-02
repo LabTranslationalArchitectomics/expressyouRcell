@@ -1,3 +1,5 @@
+[![R](https://github.com/gittina/expressyouRcell/actions/workflows/r.yml/badge.svg)](https://github.com/gittina/expressyouRcell/actions/workflows/r.yml)
+
 # expressyouRcell
 expressyouRcell is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. This tool gives the possibility of generating animations of pictographic representations of cells, or pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. 
 A range of customizable options is provided to create cellular pictograms starting from your data! :)
