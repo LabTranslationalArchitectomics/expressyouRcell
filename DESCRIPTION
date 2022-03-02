@@ -1,7 +1,7 @@
 Package: expressyouRcell
 Type: Package
 Title: expressyouRcell
-Version: 0.1.1
+Version: 1.0.0
 Authors@R: c(
     person("Martina", "Paganin", email = "martina.paganin95@gmail.com", role = c("aut", "cre")),
     person("Fabio", "Lauria", email = "fab.lauria.88@gmail.com", role = "aut"),
