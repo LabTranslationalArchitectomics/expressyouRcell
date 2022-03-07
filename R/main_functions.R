@@ -25,7 +25,7 @@ plot_legend_organelles <- function(dt_legend){
                  y=text_labels$y,
                  label=text_labels$names,
                  hjust = 0,
-                 size=0.6*bs) +
+                 size=0.2*bs) +
         coord_cartesian(xlim = c(90,400)) +
         scale_y_reverse() +
         theme_void() +
@@ -49,19 +49,23 @@ plot_legend_organelles <- function(dt_legend){
 #' @import ggplot2
 #'
 #' @export
-plot_cell <- function(coords_dt){
+plot_cell <- function(coords_dt, legend=TRUE){
 
     if (all(coords_dt == "cell")){
         coords_dt <- cell_dt
+        w <- c(3,1)
     } else {
         if (all(coords_dt == "neuron")) {
                 coords_dt <- neuron_dt
+                w <- c(4,1)
         } else {
             if (all(coords_dt == "fibroblast")) {
                 coords_dt <- fibroblast_dt
+                w <- c(3,1)
             } else {
                 if (all(coords_dt == "microglia")) {
                     coords_dt <- microglia_dt
+                    w <- c(2,1)
                 } else {
                     stop("No available pictogram with this name")
                 }
@@ -84,6 +88,11 @@ plot_cell <- function(coords_dt){
         scale_y_reverse() +
         theme_void() +
         theme(legend.position = "none")
+
+    if (legend==TRUE){
+        l <- plot_legend_organelles(dt_legend=legend_dt)
+        p <- ggpubr::ggarrange(p, l, widths = w)
+    }
 
     return(p)
 }

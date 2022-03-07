@@ -4,7 +4,7 @@
 \alias{plot_cell}
 \title{Plot outline of a cellular pictogram.}
 \usage{
-plot_cell(coords_dt)
+plot_cell(coords_dt, legend = TRUE)
 }
 \arguments{
 \item{coords_dt}{A \code{data.table} with the polygon coordinates to be
