@@ -43,6 +43,7 @@ plot_legend_organelles <- function(dt_legend){
 #' A ggplot object with default colors for the specified cell is then given as output.
 #' @param coords_dt A \code{data.table} with the polygon coordinates to be
 #'   plotted.
+#' @param legend A boolean value for choosing to plot the legend or not.
 #' @return a ggplot object with the cell figure with default colors.
 #' @examples plot_cell(coords_dt="neuron")
 #'
