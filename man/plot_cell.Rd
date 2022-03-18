@@ -9,6 +9,8 @@ plot_cell(coords_dt, legend = TRUE)
 \arguments{
 \item{coords_dt}{A \code{data.table} with the polygon coordinates to be
 plotted.}
+
+\item{legend}{A boolean value for choosing to plot the legend or not.}
 }
 \value{
 a ggplot object with the cell figure with default colors.
