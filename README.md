@@ -224,4 +224,4 @@ animate(data = example_list_output,
         format = "gif")
  ```
 
-![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/brainp35.gif?raw=true, width="950" height="450")
+![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/brainp35.gif)
