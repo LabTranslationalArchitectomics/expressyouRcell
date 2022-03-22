@@ -38,6 +38,7 @@
 #' @param thr A numeric value specifying the cut-off value to be applied on the \code{col_name} column.
 #' @param pval_col A character with the name of the column containing the statistical significance values.
 #' @param pval_thr A numeric value with the cutoff value to be applied on the \code{pval_col} column.
+#' @param legend A boolean value for choosing to plot the legend or not.
 #' @return A list containing four data structures. The first is the localization_values \code{data.table}, with six
 #'   columns, which reports for each subcellular component: i) its name, ii) the numeric value computed during the
 #'   colour assignment step, iiI) a numeric code for grouping the cellular localizations by colour, iv) its associated
@@ -46,6 +47,7 @@
 #'   to categorise each subcellular localization. The third data structure is the plot list, containing the graphical
 #'   objects of class \code{ggplot} with the resulting cellular pictograms. The fourth data structure is the list of
 #'   final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictograms.
+#'
 #'
 #' @import data.table
 #'
@@ -62,19 +64,24 @@ color_cell <- function(timepoint_list,
                        ranges=NULL,
                        thr=NULL,
                        pval_col=NULL,
-                       pval_thr=NULL){
+                       pval_thr=NULL,
+                       legend=FALSE){
 
     if (all(pictogram == "cell")){
         plot_data <- cell_dt
+        w <- c(3,1)
     } else {
         if (all(pictogram == "neuron")) {
             plot_data <- neuron_dt
+            w <- c(4,1)
         } else {
             if (all(pictogram == "fibroblast")) {
                 plot_data <- fibroblast_dt
+                w <- c(3,1)
             } else {
                 if (all(pictogram == "microglia")) {
                     plot_data <- microglia_dt
+                    w <- c(2,1)
                 } else {
                     stop("No available pictogram with this name")
                 }
@@ -239,7 +246,16 @@ color_cell <- function(timepoint_list,
 
                 output[["localization_values"]] <- rbindlist(locdt_l)
                 output[["ranges"]] <- ranges
-                output[["plot"]]<- plot_l
+
+                if (legend == TRUE){
+                    output[["plot"]]<- lapply(plot_l,
+                                              function(x) ggarrange(x,
+                                                                    plot_legend_organelles(dt_legend = legend_dt),
+                                                                    widths = w))
+                } else {
+                    output[["plot"]]<- plot_l
+                }
+
                 output[["final_dt"]]<- finaldt_l
 
                 return(output)
@@ -354,7 +370,14 @@ color_cell <- function(timepoint_list,
 
             output[["localization_values"]] <- rbindlist(locdt_l)
             output[["ranges"]] <- colored_out$ranges
-            output[["plot"]]<- plot_l
+            if (legend == TRUE){
+                output[["plot"]]<- lapply(plot_l,
+                                          function(x) ggarrange(x,
+                                                                plot_legend_organelles(dt_legend = legend_dt),
+                                                                widths = w))
+            } else {
+                output[["plot"]]<- plot_l
+            }
             output[["final_dt"]]<- finaldt_l
 
             return(output)

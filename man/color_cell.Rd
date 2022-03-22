@@ -16,7 +16,8 @@ color_cell(
   ranges = NULL,
   thr = NULL,
   pval_col = NULL,
-  pval_thr = NULL
+  pval_thr = NULL,
+  legend = FALSE
 )
 }
 \arguments{
@@ -67,6 +68,8 @@ the package automatically creates the most appropriate binning for the input dat
 \item{pval_col}{A character with the name of the column containing the statistical significance values.}
 
 \item{pval_thr}{A numeric value with the cutoff value to be applied on the \code{pval_col} column.}
+
+\item{legend}{A boolean value for choosing to plot the legend or not.}
 }
 \value{
 A list containing four data structures. The first is the localization_values \code{data.table}, with six
