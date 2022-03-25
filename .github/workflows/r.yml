@@ -14,12 +14,7 @@ on:
   pull_request:
     branches: [ master ]
     
-jobs:      
-  envsetting:
-    runs-on: ubuntu-latest
-    env:
-      PKG_CONFIG_PATH: $HOME/ffmpeg_build/lib/pkgconfig
-  
+jobs:          
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -30,7 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: FedericoCarboni/setup-ffmpeg@v1
-        id: setup-ffmpeg            
+        id: setup-ffmpeg         
+        env:
+          PKG_CONFIG_PATH: $HOME/ffmpeg_build/lib/pkgconfig
           
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v2
