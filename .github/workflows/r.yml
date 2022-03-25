@@ -25,7 +25,8 @@ jobs:
       - name:  Install
         run: |
          if [ "$RUNNER_OS" == "Linux" ]; then
-              sudo apt install ffmpeg           
+              run apt-get update
+              sudo apt-get install ffmpeg           
          else
               echo "$RUNNER_OS not supported"
               exit 1
