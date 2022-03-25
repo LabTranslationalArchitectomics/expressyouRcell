@@ -15,13 +15,16 @@ on:
     branches: [ master ]
    
 
+
+  
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        r-version: ['4.0.3']
-        os: [ubuntu-latest, windows-latest]
+       matrix:
+         r-version: ['4.0.3']
+         os: [ubuntu-latest, windows-latest]
         
     if: matrix.os == 'ubuntu-latest'
     steps:
