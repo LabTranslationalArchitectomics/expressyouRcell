@@ -30,6 +30,10 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -y libavfilter-dev
         
+      - name: check path 
+        if: runner.os == 'macOS'
+        run: echo $PATH
+        
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: rcmdcheck
