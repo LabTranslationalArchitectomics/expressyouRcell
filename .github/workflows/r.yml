@@ -32,7 +32,16 @@ jobs:
         
       - name: check path 
         if: runner.os == 'macOS'
-        run: echo $PATH
+        run: 
+          brew update
+          brew tap homebrew/cask
+          brew tap homebrew/cask-fonts
+          brew search font-
+          brew search font- | less
+          brew search nerd-font | less
+          brew cask install font-fira-code
+          brew cask install font-daddytimemono-nerd-font
+          for $font in Arial ; brew cask install $font ; end
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
