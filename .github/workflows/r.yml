@@ -34,7 +34,6 @@ jobs:
         if: runner.os == 'macOS'
         run: 
           brew tap homebrew/cask-fonts
-          brew search font- | grep arial
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
