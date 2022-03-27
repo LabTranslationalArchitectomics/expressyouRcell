@@ -43,13 +43,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |          
           brew tap homebrew/cask-fonts
-          brew install --cask font-arial
-       
-      - name: check mac library
-        if: runner.os == 'macOS'
-        run: | 
-          otool -L exefile
-        
+          brew install --cask font-arial        
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
