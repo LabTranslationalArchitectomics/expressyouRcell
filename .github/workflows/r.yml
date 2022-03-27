@@ -37,6 +37,7 @@ jobs:
           brew install --cask font-arial
           
           R --version
+          whereis R
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
