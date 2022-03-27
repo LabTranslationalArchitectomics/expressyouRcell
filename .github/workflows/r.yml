@@ -32,9 +32,9 @@ jobs:
         
       - name: Install Arial font
         if: runner.os == 'macOS'
-        run: 
+        run: |
           brew tap homebrew/cask-fonts
-          brew search font- 
+          brew cask installfont-arial
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
