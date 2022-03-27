@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
        matrix:
-         r-version: ['4.0.3']
+         r-version: ['4.0.3', '4.1.1']
          os: [ubuntu-latest, windows-latest, macOS-latest]
     
     steps:
