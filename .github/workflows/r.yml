@@ -44,6 +44,11 @@ jobs:
         run: |          
           brew tap homebrew/cask-fonts
           brew install --cask font-arial
+       
+      - name: check mac library
+        if: runner.os == 'macOS'
+        run: | 
+          otool -L exefile
         
         
       - uses: r-lib/actions/setup-r-dependencies@v2
