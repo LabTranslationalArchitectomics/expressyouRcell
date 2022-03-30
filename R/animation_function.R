@@ -85,7 +85,7 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
 
   l <- create_legend(color_vector = ranges$colors,
                      lab_vector = ranges$lab,
-                     title=data[["plot"]][[1]]$plot_env$lab_title)
+                     title=data$legend_label)
   pb = txtProgressBar(min = 0, max = tot_frame*(length(stages)-1), style = 3)
 
   # for each transition

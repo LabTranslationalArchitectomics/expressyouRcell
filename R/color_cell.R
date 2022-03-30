@@ -246,6 +246,7 @@ color_cell <- function(timepoint_list,
 
                 output[["localization_values"]] <- rbindlist(locdt_l)
                 output[["ranges"]] <- ranges
+                output[["legend_label"]] <- colored_out[["lab_title"]]
 
                 if (legend == TRUE){
                     output[["plot"]]<- lapply(plot_l,
@@ -370,6 +371,7 @@ color_cell <- function(timepoint_list,
 
             output[["localization_values"]] <- rbindlist(locdt_l)
             output[["ranges"]] <- colored_out$ranges
+            output[["legend_label"]] <- colored_out[["lab_title"]]
             if (legend == TRUE){
                 output[["plot"]]<- lapply(plot_l,
                                           function(x) ggarrange(x,

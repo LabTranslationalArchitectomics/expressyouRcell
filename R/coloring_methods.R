@@ -115,6 +115,7 @@ assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, col
 
 
     return(list("plot"=p,
+                "lab_title"="FDR",
                 "localization_values"=localization_values,
                 "final_dt"=final_dt,
                 "ranges" = categorical_classes))
@@ -294,6 +295,7 @@ assign_color_by_value <- function(genes, plot_data, pictogram, gene_loc_table, c
     }
 
     return(list("plot"=p,
+                "lab_title"=lab_title,
                 "localization_values"=localization_values,
                 "final_dt"=final_dt,
                 "ranges" = categorical_classes))
