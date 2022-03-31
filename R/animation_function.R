@@ -57,10 +57,11 @@ start <- Sys.time()
 #' @import av
 #' @import ggpubr
 #' @import ggplot2
+#' @import gridExtra
 #'
 #' @export
 #'
-animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 250, width = 700, filename="animation", format){
+animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 25, width = 30, filename="animation", format){
 
   if (!dir.exists(input_dir)){
     dir.create(input_dir, recursive = TRUE)
@@ -123,7 +124,7 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
       temp <- together[, c("subcell_struct", "x","y","pol","color","comb",paste0("V", j),"value"), with=FALSE]
       setnames(temp, old=paste0("V", j), new="color_grad")
 
-      bs=25
+      bs=30
 
       xmin <- min(temp$x)+20
       xmax <- max(temp$x)-20
@@ -142,9 +143,11 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
       xminf <- xmin
       xmaxf <- xminf+(trans_l*(i-1))+(frame_l*(j))
 
-      ecmx <- max(temp[subcell_struct == "extracellular_region"]$x)-(max(temp[subcell_struct == "extracellular_region"]$x)-min(temp[subcell_struct == "extracellular_region"]$x))/3
+      ecmx <- min(temp[subcell_struct == "extracellular_region"]$x) + (max(temp[subcell_struct == "extracellular_region"]$x)-
+                                                                              min(temp[subcell_struct == "extracellular_region"]$x))/1.5
 
-      ecmy <- (min(temp[subcell_struct == "extracellular_region"]$y)+max(temp[subcell_struct == "extracellular_region"]$y))/3
+      ecmy <- (min(temp[subcell_struct == "extracellular_region"]$y)+
+                 max(temp[subcell_struct == "extracellular_region"]$y))/3
 
       plot <- ggplot(data=temp,
                   aes(x, y)) +
@@ -157,16 +160,36 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
         guides(color = FALSE, fill=FALSE) +
         theme_void()  +
         geom_text(data=labels, aes(x=xmin_trans, y=y, label=name), size=0.2*bs) +
-        annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2) +
+        annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2, angle=90) +
         geom_segment(aes(x=xminf, y=ymin-100, xend=xmaxf, yend=ymin-100), size = 0.2*bs, lineend = "butt", color="darkgrey") +
         geom_point(data = labels, aes(xmin_trans, y-50), size = 0.2*bs, shape=19, color="grey20") +
         theme(legend.title = element_text(size=bs*0.9),
               legend.text = element_text(size=bs*0.9),
               plot.title = element_text(size=bs*0.9))
 
-      pl <- ggpubr::ggarrange(plot + guides(fill = FALSE),
-                      l,
-                      widths = c(5, 1))
+      if (all(data$cell_type == "cell")){
+        w <- c(3,1)
+      } else {
+        if (all(data$cell_type == "neuron")) {
+          w <- c(4,1)
+        } else {
+          if (all(data$cell_type == "fibroblast")) {
+            w <- c(3,1)
+          } else {
+            if (all(data$cell_type == "microglia")) {
+              w <- c(2,1)
+            } else {
+              stop("No available pictogram with this name")
+            }
+          }
+        }
+      }
+
+      pl <- grid.arrange(plot + guides(fill = FALSE), l, ncol=2, widths=w)
+
+      # pl <- ggpubr::ggarrange(plot + guides(fill = FALSE),
+      #                 l,
+      #                 widths = w)
 
 
       if (!dir.exists(frame_path)){
@@ -185,8 +208,9 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
         j_n <- j
       }
 
-      ggsave(pl, filename = file.path(frame_path, paste0(tr_n, "_", j_n, ".png")), width = width/100,
-             height = height/100)
+      ggsave(pl, filename = file.path(frame_path, paste0(tr_n, "_", j_n, ".png")),
+             width = width,
+             height = height)
     }
     k=k+(fps*seconds)
 
