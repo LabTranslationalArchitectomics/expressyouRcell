@@ -259,6 +259,7 @@ color_cell <- function(timepoint_list,
 
                 output[["final_dt"]]<- finaldt_l
                 output[["cell_type"]]<- pictogram
+                output[["timepoint_list"]] <- timepoint_list
 
                 return(output)
             }
@@ -383,6 +384,7 @@ color_cell <- function(timepoint_list,
             }
             output[["final_dt"]]<- finaldt_l
             output[["cell_type"]]<- pictogram
+            output[["timepoint_list"]] <- timepoint_list
 
             return(output)
 
