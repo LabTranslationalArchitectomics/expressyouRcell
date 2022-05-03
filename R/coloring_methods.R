@@ -72,8 +72,8 @@ assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, col
     if (is.null(categorical_classes)){
         categorical_classes <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
                                           end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
-                                          values = seq(1:7),
-                                          colors = c("#222c57", "#323059", "#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
+                                          values = seq(1:5),
+                                          colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
                                           #5364b0
 
         )[, lab := paste("<", .SD[, end]), by=values]
