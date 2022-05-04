@@ -38,6 +38,10 @@ jobs:
       - name: install ffmpeg
         if: runner.os == 'Linux'
         run: sudo apt-get install -y libavfilter-dev 
+       
+      - name: install latex
+        if: runner.os == 'Linux'
+        run: sudo apt-get install texlive-latex-base
                                
       - name: Install Arial font
         if: runner.os == 'macOS'
