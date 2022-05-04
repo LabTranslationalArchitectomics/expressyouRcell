@@ -422,11 +422,12 @@ discrete_symmetric_ranges <- function(timepoint_list,
                 }
             }
 
-            max_v[[c]] <- ceiling(max(abs(groupedval), na.rm = TRUE))
-            min_v[[c]] <- floor(min(abs(groupedval), na.rm = TRUE))
+            if (!is.null(groupedval)){
+                max_v[[c]] <- ceiling(max(abs(groupedval), na.rm = TRUE))
+                min_v[[c]] <- floor(min(abs(groupedval), na.rm = TRUE))
 
-            widths[[c]] <- abs(max_v[[c]]-min_v[[c]])
-
+                widths[[c]] <- abs(max_v[[c]]-min_v[[c]])
+            }
         }
 
         max_range_width <- which(widths == max(unlist(widths)))
@@ -483,7 +484,11 @@ discrete_symmetric_ranges <- function(timepoint_list,
                                           end = seq(inf, sup, by = binsize)[-1])
         }
 
-        for (c in unlist(grouping_vars)){
+        if (length(widths) > length(colors)){
+            stop("Check that colors and grouping vars parameters match.")
+        }
+
+        for (c in names(widths)){
             #cat(c)
             colfunc <- colorRampPalette(colors[[c]])
 
