@@ -45,7 +45,9 @@ jobs:
        
       - name: install rlang
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y r-cran-rlang
+        run: |
+          sudo apt-get update -y 
+          sudo apt-get install -y r-cran-rlang
                                
       - name: Install Arial font
         if: runner.os == 'macOS'
