@@ -57,7 +57,7 @@ jobs:
      
       - name: Install biocparallel
         if: runner.os == 'Windows'
-        run: if (!requireNamespace("BiocManager", quietly = TRUE))
+        run: |
           install.packages("BiocManager")
           BiocManager::install("BiocParallel")
         
