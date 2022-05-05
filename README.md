@@ -123,7 +123,7 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 ```
 
 
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="950" height="450">
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="1000" height="450">
 
 #### 2) Generate multiple pictograms, one for each group of genes
 expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generate separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` figures for each category. 
@@ -156,7 +156,7 @@ example_list_output <- color_cell(timepoint_list = example_list,
 ```
 
 The following pictogram show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the mean of logFC values of genes localizing in a cellular compartment/organelle. 
- <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig2.png" width="950" height="450">
+ <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig2.png" width="1000" height="450">
 
 If your data have not been previously organized into distinct classes of genes, expressyouRcell can perform this step for you. To do so, you have to provide the tool with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
 * ```thr``` to specify the cutoff value to be applied on the ```col_name``` column, 
