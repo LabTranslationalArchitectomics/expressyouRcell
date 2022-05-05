@@ -54,6 +54,12 @@ jobs:
         run: |          
           brew tap homebrew/cask-fonts
           brew install --cask font-arial        
+     
+      - name: Install biocparallel
+        if: runner.os == 'Windows'
+        run: if (!requireNamespace("BiocManager", quietly = TRUE))
+          install.packages("BiocManager")
+          BiocManager::install("BiocParallel")
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -67,7 +73,7 @@ jobs:
         run: |
           install.packages(c('remotes', 'BiocManager'), INSTALL_opts="--no-multiarch")
           options(repos = c(getOption("repos"), BiocManager::repositories()))
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)          
         shell: Rscript {0}
       - name: Install dependencies
         run: |
