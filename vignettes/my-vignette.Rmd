@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # Overview
 
-__expressyouRcell__ is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. This tool gives the possibility of generating animations of pictographic representations of cells, or pictograms, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. A range of customizable options is provided to create cellular pictograms starting from users's data.
+__expressyouRcell__ is a unique and easy-to-use R package which provides an intuitive approach for visualizing and presenting multi-dimensional variations of gene expression levels across time and space. This tool gives the possibility of generating animations of pictographic representations of cells, or pictographs, providing a convenient and intuitive method for visualizing and understanding time course variations in cellular compartments. A range of customizable options is provided to create cellular pictographs starting from users's data.
 
 # Before starting
 
@@ -100,16 +100,23 @@ head(gene_loc_table[subcell_struct=="membrane"])
 ```
 
 
-# Choose and color the cellular pictogram
+# Choose and color the cellular pictograph
 
-## Visualize pictogram with default colors
-The `plot_cell` function allows the user to visualize the chosen cellular map with the default colors, based on the *data.tables* containing the graphical information (coordinates and colors for the cellular organelles). The user can specify the character strings "cell" or "neuron" to choose between a generic cellular pictogram or a neuron pictogram.
+## Visualize pictograph with default colors
+The `plot_cell` function allows the user to visualize the chosen cellular map with the default colors, based on the *data.tables* containing the graphical information (coordinates and colors for the cellular organelles). The user can specify the character strings "cell", "neuron", "microglia", or "fibroblast" to choose between a generic cellular pictograph or a neuron pictograph. The available_pictograms() function can be used to get an overview on the different types of pictographs offered by our tool. 
 
-```{r eval=TRUE, fig.height=3.5, fig.width=7, message=FALSE, warning=FALSE}
+
+```{r eval=TRUE, fig.height=5, fig.width=8, message=FALSE, warning=FALSE}
+available_pictograms()
+
+```
+
+```{r eval=TRUE, fig.height=4.5, fig.width=10, message=FALSE, warning=FALSE}
+
 plot_cell(coords_dt = "neuron")
 ```
 
-## Visualising gene expression data to the cellular pictogram
+## Visualising gene expression data to the cellular pictograph
 The main function is called `color_cell` and needs at least three mandatory input parameters.
 
 * A list of *data.tables*, each corresponding to a time point and must have at least a column named `external_gene_name` with gene symbols.
@@ -124,8 +131,8 @@ If `coloring_method` is equal to `mean` or `median`,  genes are first grouped ac
 __expressyouRcell__ can handle the output in two main different manners, according to a potential classification of the genes (e.g. “down-regulated” and “up-regulated” in case of differential analysis). 
 This can be achieved with different combinations of the optional parameters `group_by` and `grouping_vars` in the `color_cell` function.
 
-#### 1) Generate a single pictogram for all the genes 
-If the `group_by` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. 
+#### 1) Generate a single pictograph for all the genes 
+If the `group_by` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictograph. 
 
 ```{r, eval=TRUE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
 example_list_output_together <- color_cell(timepoint_list = example_list,
@@ -137,11 +144,11 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 example_list_output_together$plot$brain_p3_rs
 ```
 
-When also the `grouping_vars` parameter is set to its null default value, no subselection of categorical value is performed and all genes are selected for the creation of a single cellular pictogram.
+When also the `grouping_vars` parameter is set to its null default value, no subselection of categorical value is performed and all genes are selected for the creation of a single cellular pictograph.
 
-If genes have been previously classified into distinct groups according to categorical variables (e.g. “down-regulated” and “up-regulated”), the `grouping_vars` parameter can be used to include only some specific categories of genes for the creation of a single cellular pictogram.
+If genes have been previously classified into distinct groups according to categorical variables (e.g. “down-regulated” and “up-regulated”), the `grouping_vars` parameter can be used to include only some specific categories of genes for the creation of a single cellular pictograph.
 
-#### 2) Generate multiple pictograms, one for each group of genes
+#### 2) Generate multiple pictographs, one for each group of genes
 If the `group_by` parameter is set to a non-null value, __expressyouRcell__ separates genes into subsets and outputs multiple `ggplot` objects, one for each category (e.g. either "invariant", up-" or "down-regulated" genes). 
 To select this analysis, the user must specify as the `group_by` parameter the name of a column with the categorical variable (e.g. “class”) on which the user has previously stored the gene classification. 
 
@@ -188,18 +195,18 @@ The main function `color_cell` finally returns a list containing four items:
 
 * `localization_values`: a *data.table* with six columns, reporting respectively the subcellular structure with its name, the numeric value computed during the colour assignment step, a numeric code for grouping the cellular localizations by colour with their associated colour shades, and the identifier of each dataset in the user's input data list.
 * `ranges`: a *data.table* summarizing the necessary information (e.g. start, end, color and labels) for each range into which subcellular localization values have been assigned. 
-* `plot`: a list of `ggplot` objects with the resulting cellular pictograms, coloured accordingly to the user's input data.
-* `final_dt`: the  *data.table* with the coordinates and colors for all the organelles which is used by `ggplot` to create the cellular pictograms.
+* `plot`: a list of `ggplot` objects with the resulting cellular pictographs, coloured accordingly to the user's input data.
+* `final_dt`: the  *data.table* with the coordinates and colors for all the organelles which is used by `ggplot` to create the cellular pictographs.
 
-So, static cellular pictograms can be printed by accessing the `plot` item stored within the final list returned by the `color_cell` function.
+So, static cellular pictographs can be printed by accessing the `plot` item stored within the final list returned by the `color_cell` function.
 
 ```{r, eval=TRUE, fig.height=3, fig.width=8, message=FALSE, warning=FALSE}
 example_list_output_together[["plot"]][["brain_p3_rs"]]
 ```
 
-# Dynamic cellular pictogram creation 
+# Dynamic cellular pictograph creation 
 
-expressyouRcell allows to generate dynamic representations of cellular pictograms to visualize changes across time. This is particularly useful when the user’s input data consists of multiple sets of gene expression data (e.g. multiple stages).
+expressyouRcell allows to generate dynamic representations of cellular pictographs to visualize changes across time. This is particularly useful when the user’s input data consists of multiple sets of gene expression data (e.g. multiple stages).
 In this step, the data structure obtained from the `color_cell` function is required as input to the function which creates a short movie or an animated picture. This function requires as input a list with time point labels, the transition duration (in seconds), and the number of frames to be created for each transition between time points. The user can also specify additional parameters, such as the animation sizes, the output directory and filename. A vector of labels is required as input to create the timeline. For each transition, the function creates a set of temporary frames with intermediate color shades which will then be merged together in a single animated picture or short movie. The `gifski` and `av` packages are respectively used to produce the gif picture or the movie. 
 
 ```{r eval=FALSE, fig.height=3, fig.width=8, message=FALSE, warning=FALSE, include=TRUE}

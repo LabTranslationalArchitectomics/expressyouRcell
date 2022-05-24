@@ -109,7 +109,7 @@ available_pictograms <- function() {
     p_list <- list()
     pictograms <- c("cell","fibroblast", "microglia", "neuron")
     for (d in pictograms){
-        p_list[[d]] <- plot_cell(d)
+        p_list[[d]] <- plot_cell(d, legend = FALSE)
     }
 
     do.call(ggpubr::ggarrange, c(p_list,
