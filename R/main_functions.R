@@ -127,11 +127,6 @@ available_pictograms <- function() {
 #' @return A \code{data.table} with the gene ontology subcellular localization.
 #'
 #' @import data.table
-#' @import org.Mm.eg.db
-#' @import org.Hs.eg.db
-#' @import org.Rn.eg.db
-#' @import org.Dr.eg.db
-#' @import org.Sc.sgd.db
 #' @import DOSE
 #' @import clusterProfiler
 #' @import rtracklayer
@@ -148,25 +143,61 @@ available_pictograms <- function() {
 #'
 #' @export
 #'
-map_gene_localization <- function(gene_set, organism="mouse"){
+map_gene_localization <- function(gene_set, organism){
+
+    if (is.null(organism)){
+        stop("Organism information is missing")
+    }
 
     if (organism=="human"){
+        check_dep <- require("org.Hs.eg.db")
+
+        if (!check_dep){
+            install.packages("org.Hs.eg.db")
+            library("org.Hs.eg.db")
+        }
+
         OrgDb_chosen="org.Hs.eg.db"
     }
 
     if (organism=="mouse"){
+
+        check_dep <- require("org.Hs.eg.db")
+
+        if (!check_dep){
+            install.packages("org.Mm.eg.db")
+            library("org.Mm.eg.db")
+        }
         OrgDb_chosen="org.Mm.eg.db"
     }
 
     if (organism=="rat"){
+        check_dep <- require("org.Rn.eg.db")
+
+        if (!check_dep){
+            install.packages("org.Rn.eg.db")
+            library("org.Rn.eg.db")
+        }
         OrgDb_chosen="org.Rn.eg.db"
     }
 
     if (organism=="zebrafish"){
+        check_dep <- require("org.Hs.eg.db")
+
+        if (!check_dep){
+            install.packages("org.Dr.eg.db")
+            library("org.Dr.eg.db")
+        }
         OrgDb_chosen="org.Dr.eg.db"
     }
 
     if (organism=="yeast"){
+        check_dep <- require("org.Hs.eg.db")
+
+        if (!check_dep){
+            install.packages("org.Sc.sgd.db")
+            library("org.Sc.sgd.db")
+        }
         OrgDb_chosen="org.Sc.sgd.db"
     }
 
@@ -281,9 +312,14 @@ discrete_symmetric_ranges <- function(timepoint_list,
         width <- abs(sup - inf)
 
         if (width <= 8){
-            fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
-                                          end = seq(inf, sup)[-1])
 
+            if(width == 1){
+                fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = 0.1), -1),
+                                              end = seq(inf, sup, by = 0.1)[-1])
+            } else {
+                fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
+                                              end = seq(inf, sup)[-1])
+            }
         } else {
             binsize <- width / 8
 

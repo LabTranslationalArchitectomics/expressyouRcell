@@ -98,6 +98,8 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
 
     t1[color_grad == "grey90", color_grad := "#E5E5E5"]
     t2[color_grad == "grey90", color_grad := "#E5E5E5"]
+    t1[color_grad == "white", color_grad := "#FFFFFF"]
+    t2[color_grad == "white", color_grad := "#FFFFFF"]
 
     together <- cbind(t1, color2 = t2[, color_grad])[, combine := toupper(paste0(color_grad, color2))]
 
