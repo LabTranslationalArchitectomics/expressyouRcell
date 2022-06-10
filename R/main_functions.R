@@ -150,11 +150,11 @@ map_gene_localization <- function(gene_set, organism){
     }
 
     if (organism=="human"){
-        check_dep <- require("org.Hs.eg.db")
+        check_dep <- requireNamespace("org.Hs.eg.db")
 
         if (!check_dep){
             install.packages("org.Hs.eg.db")
-            library("org.Hs.eg.db")
+            #library("org.Hs.eg.db")
         }
 
         OrgDb_chosen="org.Hs.eg.db"
@@ -162,41 +162,41 @@ map_gene_localization <- function(gene_set, organism){
 
     if (organism=="mouse"){
 
-        check_dep <- require("org.Hs.eg.db")
+        check_dep <- requireNamespace("org.Hs.eg.db")
 
         if (!check_dep){
             install.packages("org.Mm.eg.db")
-            library("org.Mm.eg.db")
+            #library("org.Mm.eg.db")
         }
         OrgDb_chosen="org.Mm.eg.db"
     }
 
     if (organism=="rat"){
-        check_dep <- require("org.Rn.eg.db")
+        check_dep <- requireNamespace("org.Rn.eg.db")
 
         if (!check_dep){
             install.packages("org.Rn.eg.db")
-            library("org.Rn.eg.db")
+            #library("org.Rn.eg.db")
         }
         OrgDb_chosen="org.Rn.eg.db"
     }
 
     if (organism=="zebrafish"){
-        check_dep <- require("org.Hs.eg.db")
+        check_dep <- requireNamespace("org.Hs.eg.db")
 
         if (!check_dep){
             install.packages("org.Dr.eg.db")
-            library("org.Dr.eg.db")
+            #library("org.Dr.eg.db")
         }
         OrgDb_chosen="org.Dr.eg.db"
     }
 
     if (organism=="yeast"){
-        check_dep <- require("org.Hs.eg.db")
+        check_dep <- requireNamespace("org.Hs.eg.db")
 
         if (!check_dep){
             install.packages("org.Sc.sgd.db")
-            library("org.Sc.sgd.db")
+            #library("org.Sc.sgd.db")
         }
         OrgDb_chosen="org.Sc.sgd.db"
     }
