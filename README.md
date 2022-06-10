@@ -18,7 +18,6 @@ A range of customizable options is provided to create cellular pictograms starti
 	 
 * Bioconductor
 	- IRanges (>= 2.24.1),
-	- org.Mm.eg.db (>= 3.12.0),
 	- clusterProfiler (>= 3.18.0),  
 	- DOSE (>= 3.16.0),
 	- org.Mm.eg.db (>= 3.12.0),
