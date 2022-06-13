@@ -123,7 +123,11 @@ available_pictograms <- function() {
 #' @param gene_set A character vector with the gtf file path with
 #'   the genome annotation.
 #' @param  organism A character vector with the name of the organism-specific
-#'   gene annotation term for each gene.
+#'   gene annotation term for each gene. Available organisms are: "Homo.sapiens" or "Hs",
+#'   "Mus.musculus" or "Mm",
+#'   "Rattus.norvegicus" or "Rn"
+#'   "Danio.rerio" or "Dr",
+#'   "Saccharomyces.cerevisiae" or "Sc".
 #' @return A \code{data.table} with the gene ontology subcellular localization.
 #'
 #' @import data.table
@@ -143,60 +147,62 @@ available_pictograms <- function() {
 #'
 #' @export
 #'
+#'
 map_gene_localization <- function(gene_set, organism){
 
     if (is.null(organism)){
         stop("Organism information is missing")
     }
 
-    if (organism=="human"){
+
+    if (organism=="Homo.sapiens" | organism=="Hs"){
         check_dep <- requireNamespace("org.Hs.eg.db")
 
         if (!check_dep){
-            install.packages("org.Hs.eg.db")
-            #library("org.Hs.eg.db")
+            BiocManager::install("org.Hs.eg.db")
+            require("org.Hs.eg.db")
         }
 
         OrgDb_chosen="org.Hs.eg.db"
     }
 
-    if (organism=="mouse"){
+    if (organism=="Mus.musculus" | organism=="Mm"){
 
-        check_dep <- requireNamespace("org.Hs.eg.db")
+        check_dep <- requireNamespace("org.Mm.eg.db")
 
         if (!check_dep){
-            install.packages("org.Mm.eg.db")
-            #library("org.Mm.eg.db")
+            BiocManager::install("org.Mm.eg.db")
+            require("org.Mm.eg.db")
         }
         OrgDb_chosen="org.Mm.eg.db"
     }
 
-    if (organism=="rat"){
-        check_dep <- requireNamespace("org.Rn.eg.db")
+    if (organism=="Rattus.norvegicus" | organism=="Rn"){
+        check_dep <- require("org.Rn.eg.db")
 
         if (!check_dep){
-            install.packages("org.Rn.eg.db")
-            #library("org.Rn.eg.db")
+            BiocManager::install("org.Rn.eg.db")
+            require("org.Rn.eg.db")
         }
         OrgDb_chosen="org.Rn.eg.db"
     }
 
-    if (organism=="zebrafish"){
-        check_dep <- requireNamespace("org.Hs.eg.db")
+    if (organism=="Danio.rerio" | organism=="Dr"){
+        check_dep <- requireNamespace("org.Dr.eg.db")
 
         if (!check_dep){
-            install.packages("org.Dr.eg.db")
-            #library("org.Dr.eg.db")
+            BiocManager::install("org.Dr.eg.db")
+            require("org.Dr.eg.db")
         }
         OrgDb_chosen="org.Dr.eg.db"
     }
 
-    if (organism=="yeast"){
-        check_dep <- requireNamespace("org.Hs.eg.db")
+    if (organism=="Saccharomyces.cerevisiae" | organism=="Sc"){
+        check_dep <- requireNamespace("org.Sc.sgd.db")
 
         if (!check_dep){
-            install.packages("org.Sc.sgd.db")
-            #library("org.Sc.sgd.db")
+            BiocManager::install("org.Sc.sgd.db")
+            require("org.Sc.sgd.db")
         }
         OrgDb_chosen="org.Sc.sgd.db"
     }

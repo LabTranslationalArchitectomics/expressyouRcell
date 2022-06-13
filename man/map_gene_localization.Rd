@@ -11,7 +11,11 @@ map_gene_localization(gene_set, organism)
 the genome annotation.}
 
 \item{organism}{A character vector with the name of the organism-specific
-gene annotation term for each gene.}
+gene annotation term for each gene. Available organisms are: "Homo.sapiens" or "Hs",
+"Mus.musculus" or "Mm",
+"Rattus.norvegicus" or "Rn"
+"Danio.rerio" or "Dr",
+"Saccharomyces.cerevisiae" or "Sc".}
 }
 \value{
 A \code{data.table} with the gene ontology subcellular localization.
