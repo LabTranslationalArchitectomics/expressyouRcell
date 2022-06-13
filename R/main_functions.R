@@ -157,11 +157,11 @@ map_gene_localization <- function(gene_set, organism){
 
 
     if (organism=="Homo.sapiens" | organism=="Hs"){
-        check_dep <- requireNamespace("org.Hs.eg.db")
+        check_dep <- require("org.Hs.eg.db")
 
         if (!check_dep){
             BiocManager::install("org.Hs.eg.db")
-            requireNamespace("org.Hs.eg.db")
+            require("org.Hs.eg.db")
         }
 
         OrgDb_chosen="org.Hs.eg.db"
@@ -169,41 +169,41 @@ map_gene_localization <- function(gene_set, organism){
 
     if (organism=="Mus.musculus" | organism=="Mm"){
 
-        check_dep <- requireNamespace("org.Mm.eg.db")
+        check_dep <- require("org.Mm.eg.db")
 
         if (!check_dep){
             BiocManager::install("org.Mm.eg.db")
-            requireNamespace("org.Mm.eg.db")
+            require("org.Mm.eg.db")
         }
         OrgDb_chosen="org.Mm.eg.db"
     }
 
     if (organism=="Rattus.norvegicus" | organism=="Rn"){
-        check_dep <- requireNamespace("org.Rn.eg.db")
+        check_dep <- require("org.Rn.eg.db")
 
         if (!check_dep){
             BiocManager::install("org.Rn.eg.db")
-            requireNamespace("org.Rn.eg.db")
+            require("org.Rn.eg.db")
         }
         OrgDb_chosen="org.Rn.eg.db"
     }
 
     if (organism=="Danio.rerio" | organism=="Dr"){
-        check_dep <- requireNamespace("org.Dr.eg.db")
+        check_dep <- require("org.Dr.eg.db")
 
         if (!check_dep){
             BiocManager::install("org.Dr.eg.db")
-            requireNamespace("org.Dr.eg.db")
+            require("org.Dr.eg.db")
         }
         OrgDb_chosen="org.Dr.eg.db"
     }
 
     if (organism=="Saccharomyces.cerevisiae" | organism=="Sc"){
-        check_dep <- requireNamespace("org.Sc.sgd.db")
+        check_dep <- require("org.Sc.sgd.db")
 
         if (!check_dep){
             BiocManager::install("org.Sc.sgd.db")
-            requireNamespace("org.Sc.sgd.db")
+            require("org.Sc.sgd.db")
         }
         OrgDb_chosen="org.Sc.sgd.db"
     }
