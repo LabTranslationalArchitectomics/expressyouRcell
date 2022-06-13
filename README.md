@@ -19,7 +19,11 @@ A range of customizable options is provided to create cellular pictograms starti
 * Bioconductor
 	- IRanges (>= 2.24.1),
 	- clusterProfiler (>= 3.18.0),  
-	- DOSE (>= 3.16.0),
+	- DOSE (>= 3.16.0)
+
+* Additional and optional dependencies
+One of the function provided within the package requires genome wide annotation databases for some organisms.
+
 	- org.Mm.eg.db (>= 3.12.0),
 	- org.Hs.eg.db (>= 3.12.0),
 	- org.Rn.eg.db (>= 3.12.0),
@@ -67,11 +71,11 @@ The user can provide a custom table with information on the localization of gene
 Otherwise, you can create the gene-localization table with the ```map_gene_localization``` function provided within expressyouRcell. 
 
 ### map_gene_localization function
-The filename of the gene annotation file used during the alignment of your samples (in GTF format) should be provided as input to this function. On the complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+The filename of the gene annotation file used during the alignment of your samples (in GTF format) should be provided as input to this function. Additionally, the function requires also the name of the organism. Available organisms are: Homo.sapiens, Mus.musculus, Rattus.norvegicus, Danio.rerio and Saccharomyces.cerevisiae. On the complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
 
 Example of usage with the annotation GTF file:
 ```
-gene_loc_table <- map_gene_localization(gene_set = "gencode.vM22.primary_assembly.annotation.gtf"))
+gene_loc_table <- map_gene_localization(gene_set = "gencode.vM22.primary_assembly.annotation.gtf"), organism="Mm")
 ```
 ```map_gene_localization``` returns a ```data.table``` containing for each gene its localization to a subcellular structure:
 
@@ -85,6 +89,9 @@ gene_loc_table <- map_gene_localization(gene_set = "gencode.vM22.primary_assembl
 
 
 ## 4) Choose and color the cellular pictogram and color 
+
+### available_pictographs function
+This function allows the user to visualize the available cellular pictographs with default colors. 
 
 ### plot_cell function
 This function simply allows the user to visualize the chosen cellular map with default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
@@ -108,8 +115,8 @@ If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are fir
 expressyouRcell can handle your output in two main different manners, according to a potential classification of the genes (e.g. “down-regulated” and “up-regulated” in case of differential analysis).  This can be achieved with different combinations of the optional parameters ```group_by``` and ```grouping_vars``` in the ```color_cell``` function.
 
 #### 1) Generate a single pictogram for all the genes  
-If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictograms. 
-However, to avoid poorly informative pictograms, it is recommended to include only differentially expressed genes with the ```grouping_vars``` (i.e. discarding genes detected as invariant following differential analysis), in particular when the logFC values are used for defining the color shade of the cellular regions.
+If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictographs. 
+However, to avoid poorly informative pictographs, it is recommended to include only differentially expressed genes with the ```grouping_vars``` (i.e. discarding genes detected as invariant following differential analysis), in particular when the logFC values are used for defining the color shade of the cellular regions.
 
 For example, the following lines will then output a cellular pictogram for all the genes at the second stage provided in the example_list, regardless any classification. The cellular components colors are based on the logFC values computed in an upstream differential analysis.
 
@@ -121,10 +128,9 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
                                            col_name = "logFC")
 ```
 
-
  <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="1000" height="450">
 
-#### 2) Generate multiple pictograms, one for each group of genes
+#### 2) Generate multiple pictographms, one for each group of genes
 expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generate separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` figures for each category. 
 To select this analysis, you must specify a non-null value for the ```group_by``` parameter. To select this analysis, you must specify as the ```group_by```  parameter the name of the column reporting the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. 
 
@@ -140,7 +146,7 @@ example_list_output <- color_cell(timepoint_list = example_list,
 The additional parameter ```grouping_vars``` can be specified to subselect genes associated only to a subset of specified categories (e.g. in case of DEGs classification, “up” and “down”). Default value of this parameter is null. In this case, all the genes are selected and their corresponding values are averaged for each subcellular localization, regardless any classification. 
 However, in some cases you may desire to select only a subset of genes, and discard others, such as genes detected as invariant following a differential analysis. For instance, when the logFC values are used for defining the color shade of the cellular regions and organelles, it may be desirable to include only differentially expressed genes with the `grouping_vars`. As displayed in the example below, the `grouping_vars` parameter takes as input a list with a named character vector. The vector name must match the `group_by` parameter, and the vector items (e.g. classes "+" and "-") must be present in the `timepoint_list` *data.tables* columns named as `group_by`.
 
-For example, the following lines will generate two distinct cellular pictograms (for the specified classes '+' and '-') for each time point in your list, as can be seen in the picture below.
+For example, the following lines will generate two distinct cellular pictographs (for the specified classes '+' and '-') for each time point in your list, as can be seen in the picture below.
 
 ```
 example_list_output <- color_cell(timepoint_list = example_list,
@@ -194,8 +200,6 @@ ggsave(example_list_output_together_cpm[["plot"]][["plot_brain_p3_rs"]],
 	width = 10,
 	height = 4)
 ```
-
-
 
 ## animate function
 If you want to visualize how your gene expression data change across multiple variables, you can use expressyouRcell to generate a dynamic representations of cellular pictograms. This is particularly useful when your input data consists of multiple datasets, such as gene expression data measured at multiple stages.
