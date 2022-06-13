@@ -135,6 +135,7 @@ available_pictograms <- function() {
 #' @import clusterProfiler
 #' @import rtracklayer
 #' @import stringr
+#' @import BiocManager
 #'
 #' @details A gene annotatation file, in GTF format is required as input. On
 #'   this complete set of gene symbols, a gene ontology enrichment analysis is
