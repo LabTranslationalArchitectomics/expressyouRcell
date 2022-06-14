@@ -183,7 +183,7 @@ map_gene_localization <- function(gene_set, organism){
 
         if (!check_dep){
             BiocManager::install("org.Rn.eg.db")
-            require("org.Rn.eg.db")
+            BiocManager::available("org.Rn.eg.db")
         }
         OrgDb_chosen="org.Rn.eg.db"
     }

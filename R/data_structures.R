@@ -87,3 +87,15 @@
 #' \item{class}{a string that uniquely identify the subpolygon}
 #' }
 "example_list"
+
+#' @title Example of gene_localization table created from a mus musculus genome annotation (GENCODE v.22)
+#'
+#' @description An example gene_localization table.
+#'
+#' @format A \code{data.table}s with 3 columns, which are:
+#' \describe{
+#' \item{ID}{the gene ontology term identifier}
+#' \item{subcell_struct}{the subcellular structure name}
+#' \item{gene_symbol}{the gene name}
+#' }
+"gene_loc_table_mm22"
