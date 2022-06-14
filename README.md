@@ -22,13 +22,13 @@ A range of customizable options is provided to create cellular pictograms starti
 	- DOSE (>= 3.16.0)
 
 * Additional and optional dependencies
-One of the function provided within the package requires genome wide annotation databases for some organisms.
+One of the function provided within the package requires genome wide annotation databases for some organisms. Depending on which organisms you're working on, expressyouRcell download the chosen one, if necessary. The available organisms, and related optional dependencies are:
 
-	- org.Mm.eg.db (>= 3.12.0),
-	- org.Hs.eg.db (>= 3.12.0),
-	- org.Rn.eg.db (>= 3.12.0),
-	- org.Dr.eg.db (>= 3.12.0),
-	- org.Sc.sgd.db (>= 3.12.0)
+	- Mus musculus: org.Mm.eg.db (>= 3.12.0),
+	- Homo sapeiens: org.Hs.eg.db (>= 3.12.0),
+	- Rattus norvegicus: org.Rn.eg.db (>= 3.12.0),
+	- Danio rerio: org.Dr.eg.db (>= 3.12.0),
+	- Saccharomyces cerevisiae: org.Sc.sgd.db (>= 3.12.0)
 
 ### Installation
 You can install expressyouRcell directly from GitHub. To do so, the devtools package is required. If not already installed on your system, run:
@@ -63,6 +63,8 @@ The input table can also contain additional columns with values of gene expressi
 | Sox17       | -2.5         |
 | Lypla1      | 1.1         |
 
+Please, have a look at the organizaion of example input data by peering into the  ```example_list``` data structure provided within expressyouRcell.
+
 ## 3) Create the gene-localization table
 Before computing the color shade of each region, genes have to be associated with their cellular localization within the cell structure. So, the tool needs a data structure storing information on gene localization within cellular organelles. 
 
@@ -75,7 +77,7 @@ The filename of the gene annotation file used during the alignment of your sampl
 
 Example of usage with the annotation GTF file:
 ```
-gene_loc_table <- map_gene_localization(gene_set = "gencode.vM22.primary_assembly.annotation.gtf"), organism="Mm")
+gene_loc_table <- map_gene_localization(gene_set = "yourpath/gencode.vM22.primary_assembly.annotation.gtf"), organism="Mm")
 ```
 ```map_gene_localization``` returns a ```data.table``` containing for each gene its localization to a subcellular structure:
 
@@ -87,11 +89,15 @@ gene_loc_table <- map_gene_localization(gene_set = "gencode.vM22.primary_assembl
 | Sox17       | nucleus         |
 | Lypla1      | nucleus         |
 
+We provide you with an example of ```gene_localization``` table generated through the ```map_gene_localization``` function. We suggest you to try the following examples by using this data structure for mapping genes into subcellular localizations.
 
-## 4) Choose and color the cellular pictogram and color 
+## 4) Choose and color the cellular pictograph and color 
 
 ### available_pictographs function
 This function allows the user to visualize the available cellular pictographs with default colors. 
+```
+available_pictographs()
+```
 
 ### plot_cell function
 This function simply allows the user to visualize the chosen cellular map with default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
@@ -114,16 +120,16 @@ If  ```coloring_method``` is equal to ```mean``` or ```median```,  genes are fir
 
 expressyouRcell can handle your output in two main different manners, according to a potential classification of the genes (e.g. “down-regulated” and “up-regulated” in case of differential analysis).  This can be achieved with different combinations of the optional parameters ```group_by``` and ```grouping_vars``` in the ```color_cell``` function.
 
-#### 1) Generate a single pictogram for all the genes  
-If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictogram. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictographs. 
+#### 1) Generate a single pictograph for all the genes  
+If the ```group_by``` parameter is set to its default null value, no grouping by classification value is performed, and genes are visualized together on a single cellular pictograph. In this case, values of genes mapped to each subcellular localization are averaged regardless their classification and plotted together on the cellular pictographs. 
 However, to avoid poorly informative pictographs, it is recommended to include only differentially expressed genes with the ```grouping_vars``` (i.e. discarding genes detected as invariant following differential analysis), in particular when the logFC values are used for defining the color shade of the cellular regions.
 
-For example, the following lines will then output a cellular pictogram for all the genes at the second stage provided in the example_list, regardless any classification. The cellular components colors are based on the logFC values computed in an upstream differential analysis.
+For example, the following lines will then output a cellular pictograph for all the genes at the second stage provided in the example_list, regardless any classification. The cellular components colors are based on the logFC values computed in an upstream differential analysis.
 
 ```
 example_list_output_together <- color_cell(timepoint_list = example_list,
-                                           pictogram = "neuron",
-                                           gene_loc_table = gene_loc_table,
+                                           pictograph = "neuron",
+                                           gene_loc_table = gene_loc_table_mm22,
                                            coloring_mode = "mean",
                                            col_name = "logFC")
 ```
@@ -136,8 +142,8 @@ To select this analysis, you must specify a non-null value for the ```group_by``
 
 ```
 example_list_output <- color_cell(timepoint_list = example_list,
-                                  pictogram = "neuron",
-                                  gene_loc_table = gene_loc_table,
+                                  pictograph = "neuron",
+                                  gene_loc_table = gene_loc_table_mm22,
                                   coloring_mode = "mean",
                                   group_by = "class",
                                   col_name = "logFC")
@@ -150,8 +156,8 @@ For example, the following lines will generate two distinct cellular pictographs
 
 ```
 example_list_output <- color_cell(timepoint_list = example_list,
-                                  pictogram = "neuron",
-                                  gene_loc_table = gene_loc_table,
+                                  pictograph = "neuron",
+                                  gene_loc_table = gene_loc_table_mm22,
                                   coloring_mode = "mean",
                                   group_by = "class",
                                   grouping_vars = list("class"=c("+","-")),
@@ -160,7 +166,7 @@ example_list_output <- color_cell(timepoint_list = example_list,
                                                 "-" = c("#f3eaea", "#7e302d")))
 ```
 
-The following pictogram show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the mean of logFC values of genes localizing in a cellular compartment/organelle. 
+The following pictograph show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the mean of logFC values of genes localizing in a cellular compartment/organelle. 
  <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig2.png" width="1000" height="450">
 
 If your data have not been previously organized into distinct classes of genes, expressyouRcell can perform this step for you. To do so, you have to provide the tool with some additional parameters, such as the cutoff values for the identification of significant differentially expressed genes:
@@ -172,26 +178,26 @@ If your data have not been previously organized into distinct classes of genes, 
 Enrichment analysis restricted to the sub-ontology of cellular components is performed on genes input by the user. Colors of each subcellular compartment are based on pvalues from the Fisher’s test, used to assess the statistical significance of the enrichment.
 Also in this case, it is possible to selectively visualize only genes belonging to distinct classes by providing the ```group_by``` parameter with the name of the column with the categorical variable (e.g. “class”) on which you have previously stored the gene classification. Otherwise, if you do not want to discriminate genes by defined categories, you can set the ```group_by``` parameter to null. As previously described, the additional parameter ```grouping_vars``` can be specified to subselect the categories you are interested to plot, otherwise the default value of this parameter is null and all the genes will be considered regardless any classification.
 
-For example, the following lines will generate two distinct cellular pictograms (for the specified classes '+' and '-') for each time point in your list, as can be seen in the picture below.
+For example, the following lines will generate two distinct cellular pictographs (for the specified classes '+' and '-') for each time point in your list, as can be seen in the picture below.
 
 ```
 example_list_output_together_enr <- color_cell(timepoint_list = example_list,
                                                plot_data = "neuron",
-                                               gene_loc_table = gene_loc_table,
+                                               gene_loc_table = gene_loc_table_mm22,
                                                coloring_mode = "enrichment",
                                                group_by = "class",
                                                grouping_vars = c("+", "-"))
 ```
-The following pictogram show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the significance of the enrichment for genes localizing in a cellular compartment/organelle. 
+The following pictograph show the localization of a subset of up-regulated genes at the second stage provided in the example_list. Color shades are based on the significance of the enrichment for genes localizing in a cellular compartment/organelle. 
  <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig3.png" width="950" height="450">
 
 ## Print and save your results
 The main function ```color_cell``` finally returns a list containing three items:
 * ```localization_values```: a ```data.table``` with five columns, reporting respectively the subcellular structure with its associated value, a numeric code for grouping the cellular localizations by colour with their associated colour shades, and the identifier of each time point.
 * ```ranges```: a ```data.table``` summarizing the necessary information (e.g. start, end, color and labels) for each range into which subcellular localization values have been assigned. 
-* ```plot```: a list of ```ggplot``` objects with the resulting cellular pictograms, coloured accordingly to your input data.
+* ```plot```: a list of ```ggplot``` objects with the resulting cellular pictographs, coloured accordingly to your input data.
 
-So, to save your results you can simply print the pictograms as you prefer by accessing the ```plot``` item within the final list returned by ```color_cell```.
+So, to save your results you can simply print the pictographs as you prefer by accessing the ```plot``` item within the final list returned by ```color_cell```.
 
 ```    
 ggsave(example_list_output_together_cpm[["plot"]][["plot_brain_p3_rs"]],
@@ -202,7 +208,7 @@ ggsave(example_list_output_together_cpm[["plot"]][["plot_brain_p3_rs"]],
 ```
 
 ## animate function
-If you want to visualize how your gene expression data change across multiple variables, you can use expressyouRcell to generate a dynamic representations of cellular pictograms. This is particularly useful when your input data consists of multiple datasets, such as gene expression data measured at multiple stages.
+If you want to visualize how your gene expression data change across multiple variables, you can use expressyouRcell to generate a dynamic representations of cellular pictographs. This is particularly useful when your input data consists of multiple datasets, such as gene expression data measured at multiple stages.
 This function takes as input the data structure obtained from the ```color_cell``` function.  
 
 The other input parameters are:
@@ -216,7 +222,7 @@ The other input parameters are:
 For each transition, the function creates a set of temporary frames with intermediate color shades which will then be merged together in a single animated picture or short movie. The gifski and av packages are respecitvely used to produce the gif picture or the movie. 
 
 As a final step, the function saves the movie (in mp4 format) or animated picture (gif format) in the specified folder. 
-The following lines create the animated picture reported below. The input data consists of the data structured obtained as output by the  ```color_cell``` function used in the previous steps. You have to specify the timepoint you want to include in the final animated picture (e.g "brain_p3_rs-"  and "brain_p5_rs-"). Seconds between each transition and fps (e.g. the number of frames per second: the higher this value, the smoother the visual transition. Keep in mind that this will also increase the amount of processing time necessary to create the final figure). For this specific example, only down regulated genes have been selected to create the animated pictogram between the two timepoints included in the ```example_list_output``` data structure.
+The following lines create the animated picture reported below. The input data consists of the data structured obtained as output by the  ```color_cell``` function used in the previous steps. You have to specify the timepoint you want to include in the final animated picture (e.g "brain_p3_rs-"  and "brain_p5_rs-"). Seconds between each transition and fps (e.g. the number of frames per second: the higher this value, the smoother the visual transition. Keep in mind that this will also increase the amount of processing time necessary to create the final figure). For this specific example, only down regulated genes have been selected to create the animated pictograph between the two timepoints included in the ```example_list_output``` data structure.
 ```
 animate(data = example_list_output,
         timepoints = c("brain_p3_rs-", "brain_p5_rs-"),
