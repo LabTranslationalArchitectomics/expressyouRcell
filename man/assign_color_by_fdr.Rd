@@ -9,7 +9,7 @@ enrichment.}
 assign_color_by_fdr(
   genes,
   plot_data,
-  pictogram,
+  pictograph,
   gene_loc_table,
   coloring_mode,
   categorical_classes = NULL
@@ -21,7 +21,7 @@ assign_color_by_fdr(
 \item{plot_data}{A \code{data.table} with the polygon coordinates to be
 plotted.}
 
-\item{pictogram}{A character string with the name of the pictogram to be used.}
+\item{pictograph}{A character string with the name of the pictograph to be used.}
 
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes
 to subcellular localizations.}

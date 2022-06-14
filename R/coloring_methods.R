@@ -44,7 +44,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 #' @param genes A character vector of gene names.
 #' @param plot_data A \code{data.table} with the polygon coordinates to be
 #'   plotted.
-#' @param pictogram A character string with the name of the pictogram to be used.
+#' @param pictograph A character string with the name of the pictograph to be used.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
 #'   to subcellular localizations.
 #' @param coloring_mode If "enrichment", computes the False Discovery Rate
@@ -64,7 +64,7 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 #'
 #' @import data.table
 #' @export
-assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, coloring_mode, categorical_classes=NULL){
+assign_color_by_fdr <- function(genes, plot_data, pictograph, gene_loc_table, coloring_mode, categorical_classes=NULL){
 
     universe_set <- unique(gene_loc_table$gene_symbol)
     genes <- intersect(genes$gene_symbol, universe_set)
@@ -129,7 +129,7 @@ assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, col
 #'   change values. Columns must be named "gene_symbol" and "logFC".
 #' @param plot_data A \code{data.table} with the polygon coordinates to be
 #'   plotted.
-#' @param pictogram A character string with the name of the pictogram to be used.
+#' @param pictograph A character string with the name of the pictograph to be used.
 #' @param gene_loc_table A \code{data.table} with information for mapping genes
 #'   to subcellular localizations.
 #' @param col_name  A character string with the name of the column on which the
@@ -153,7 +153,7 @@ assign_color_by_fdr <- function(genes, plot_data, pictogram, gene_loc_table, col
 #' @import data.table
 #'
 #' @export
-assign_color_by_value <- function(genes, plot_data, pictogram, gene_loc_table, col_name, categorical_classes, coloring_mode="mean", together=FALSE){
+assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, col_name, categorical_classes, coloring_mode="mean", together=FALSE){
 
     gene_loc_table <- gene_loc_table[subcell_struct %in% unique(plot_data$subcell_struct)]
 
@@ -290,7 +290,7 @@ assign_color_by_value <- function(genes, plot_data, pictogram, gene_loc_table, c
 
     p
 
-    if (pictogram == "neuron"){
+    if (pictograph == "neuron"){
         p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
     }
 

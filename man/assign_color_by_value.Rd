@@ -7,7 +7,7 @@
 assign_color_by_value(
   genes,
   plot_data,
-  pictogram,
+  pictograph,
   gene_loc_table,
   col_name,
   categorical_classes,
@@ -22,7 +22,7 @@ change values. Columns must be named "gene_symbol" and "logFC".}
 \item{plot_data}{A \code{data.table} with the polygon coordinates to be
 plotted.}
 
-\item{pictogram}{A character string with the name of the pictogram to be used.}
+\item{pictograph}{A character string with the name of the pictograph to be used.}
 
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes
 to subcellular localizations.}
