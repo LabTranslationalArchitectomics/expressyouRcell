@@ -103,11 +103,11 @@ head(gene_loc_table[subcell_struct=="membrane"])
 # Choose and color the cellular pictograph
 
 ## Visualize pictograph with default colors
-The `plot_cell` function allows the user to visualize the chosen cellular map with the default colors, based on the *data.tables* containing the graphical information (coordinates and colors for the cellular organelles). The user can specify the character strings "cell", "neuron", "microglia", or "fibroblast" to choose between a generic cellular pictograph or a neuron pictograph. The available_pictograms() function can be used to get an overview on the different types of pictographs offered by our tool. 
+The `plot_cell` function allows the user to visualize the chosen cellular map with the default colors, based on the *data.tables* containing the graphical information (coordinates and colors for the cellular organelles). The user can specify the character strings "cell", "neuron", "microglia", or "fibroblast" to choose between a generic cellular pictograph or a neuron pictograph. The available_pictographs() function can be used to get an overview on the different types of pictographs offered by our tool. 
 
 
 ```{r eval=TRUE, fig.height=5, fig.width=8, message=FALSE, warning=FALSE}
-available_pictograms()
+available_pictographs()
 
 ```
 
@@ -136,7 +136,7 @@ If the `group_by` parameter is set to its default null value, no grouping by cla
 
 ```{r, eval=TRUE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
 example_list_output_together <- color_cell(timepoint_list = example_list,
-                                           pictogram = "neuron",
+                                           pictograph = "neuron",
                                            gene_loc_table = gene_loc_table,
                                            coloring_mode = "mean",
                                            col_name = "logFC")
@@ -154,7 +154,7 @@ To select this analysis, the user must specify as the `group_by` parameter the n
 
 ```{r, eval=TRUE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
 example_list_output <- color_cell(timepoint_list = example_list,
-                                  pictogram = "neuron",
+                                  pictograph = "neuron",
                                   gene_loc_table = gene_loc_table,
                                   coloring_mode = "mean",
                                   group_by = "class",
@@ -167,7 +167,7 @@ The additional parameter `grouping_vars` can be specified to subselect genes ass
 
 ```{r, eval=TRUE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
 example_list_output <- color_cell(timepoint_list = example_list,
-                                  pictogram = "neuron",
+                                  pictograph = "neuron",
                                   gene_loc_table = gene_loc_table,
                                   coloring_mode = "mean",
                                   group_by = "class",

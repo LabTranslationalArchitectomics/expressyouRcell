@@ -33,10 +33,10 @@ create_legend <- function(color_vector, lab_vector, title){
 start <- Sys.time()
 
 
-#' Main function that creates animated cellular pictogram with the desired
+#' Main function that creates animated cellular pictograph with the desired
 #' coloring method
 #'
-#' @description This function creates static animated pictogram with the desired coloring method for assigning colors to
+#' @description This function creates static animated pictograph with the desired coloring method for assigning colors to
 #'   subcellular localizations
 #' @param data List of data structures from \link[expressyouRcell]{color_cell}
 #' @param timepoints A character vector with the names of the timepoints data structure that will be part of the final
@@ -181,7 +181,7 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 2
             if (all(data$cell_type == "microglia")) {
               w <- c(2,1)
             } else {
-              stop("No available pictogram with this name")
+              stop("No available pictograph with this name")
             }
           }
         }

@@ -2,11 +2,11 @@
 % Please edit documentation in R/color_cell.R
 \name{color_cell}
 \alias{color_cell}
-\title{Create static cellular pictograms}
+\title{Create static cellular pictographs}
 \usage{
 color_cell(
   timepoint_list,
-  pictogram = "cell",
+  pictograph = "cell",
   gene_loc_table,
   coloring_mode = "enrichment",
   col_name = NULL,
@@ -26,9 +26,9 @@ the list of \code{data.tables} can also contain a numerical column with i) its e
 counts, count per million of reads (CPM) or reads per kilobase of gene per million (RPKM); ii) fold-changes and
 p-values from upstream differential analyses.}
 
-\item{pictogram}{A character string with the name of the pictogram to be used.
-The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictogram.
-(\code{pictogram="cell"}, or \code{pictogram="neuron"}).}
+\item{pictograph}{A character string with the name of the pictograph to be used.
+The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictograph.
+(\code{pictograph="cell"}, or \code{pictograph="neuron"}).}
 
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes to subcellular localizations. The
 localization of the genes can be either provided by the user or created through the \code{map_gene_localization}
@@ -78,10 +78,10 @@ colour assignment step, iiI) a numeric code for grouping the cellular localizati
 colour shade, the v) the identifier of #' each dataset, and vi) the grouping variable. The second data structure is
 the ranges \code{data.table}, summarising the information on the ranges (e.g. start, end, colour, and labels) used
 to categorise each subcellular localization. The third data structure is the plot list, containing the graphical
-objects of class \code{ggplot} with the resulting cellular pictograms. The fourth data structure is the list of
-final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictograms.
+objects of class \code{ggplot} with the resulting cellular pictographs. The fourth data structure is the list of
+final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictographs.
 }
 \description{
-This function creates static cellular pictograms with the chosen coloring method for assigning colors to
+This function creates static cellular pictographs with the chosen coloring method for assigning colors to
 subcellular localizations.
 }

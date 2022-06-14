@@ -3,7 +3,7 @@
 export(animate)
 export(assign_color_by_fdr)
 export(assign_color_by_value)
-export(available_pictograms)
+export(available_pictographs)
 export(color_cell)
 export(create_cell_dt)
 export(create_legend_dt)

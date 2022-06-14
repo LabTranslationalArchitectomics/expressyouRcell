@@ -2,7 +2,7 @@
 % Please edit documentation in R/animation_function.R
 \name{animate}
 \alias{animate}
-\title{Main function that creates animated cellular pictogram with the desired
+\title{Main function that creates animated cellular pictograph with the desired
 coloring method}
 \usage{
 animate(
@@ -43,6 +43,6 @@ gif or movie. The vector should match the timepoints label specified in the time
 short movie in mp4 format. Default is "gif".}
 }
 \description{
-This function creates static animated pictogram with the desired coloring method for assigning colors to
+This function creates static animated pictograph with the desired coloring method for assigning colors to
 subcellular localizations
 }

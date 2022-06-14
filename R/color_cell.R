@@ -1,14 +1,14 @@
-#' Create static cellular pictograms
+#' Create static cellular pictographs
 #'
-#' @description This function creates static cellular pictograms with the chosen coloring method for assigning colors to
+#' @description This function creates static cellular pictographs with the chosen coloring method for assigning colors to
 #'   subcellular localizations.
 #' @param timepoint_list A list of \code{data.tables}. Each must have at least a column named "gene_symbol". Optionally,
 #'   the list of \code{data.tables} can also contain a numerical column with i) its expression level, in terms of read
 #'   counts, count per million of reads (CPM) or reads per kilobase of gene per million (RPKM); ii) fold-changes and
 #'   p-values from upstream differential analyses.
-#' @param pictogram A character string with the name of the pictogram to be used.
-#' The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictogram.
-#'   (\code{pictogram="cell"}, or \code{pictogram="neuron"}).
+#' @param pictograph A character string with the name of the pictograph to be used.
+#' The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictograph.
+#'   (\code{pictograph="cell"}, or \code{pictograph="neuron"}).
 #' @param gene_loc_table A \code{data.table} with information for mapping genes to subcellular localizations. The
 #'   localization of the genes can be either provided by the user or created through the \code{map_gene_localization}
 #'   function.
@@ -45,8 +45,8 @@
 #'   colour shade, the v) the identifier of #' each dataset, and vi) the grouping variable. The second data structure is
 #'   the ranges \code{data.table}, summarising the information on the ranges (e.g. start, end, colour, and labels) used
 #'   to categorise each subcellular localization. The third data structure is the plot list, containing the graphical
-#'   objects of class \code{ggplot} with the resulting cellular pictograms. The fourth data structure is the list of
-#'   final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictograms.
+#'   objects of class \code{ggplot} with the resulting cellular pictographs. The fourth data structure is the list of
+#'   final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictographs.
 #'
 #'
 #' @import data.table
@@ -54,7 +54,7 @@
 #' @export
 #'
 color_cell <- function(timepoint_list,
-                       pictogram="cell",
+                       pictograph="cell",
                        gene_loc_table,
                        coloring_mode='enrichment',
                        col_name=NULL,
@@ -67,23 +67,23 @@ color_cell <- function(timepoint_list,
                        pval_thr=NULL,
                        legend=FALSE){
 
-    if (all(pictogram == "cell")){
+    if (all(pictograph == "cell")){
         plot_data <- cell_dt
         w <- c(3,1)
     } else {
-        if (all(pictogram == "neuron")) {
+        if (all(pictograph == "neuron")) {
             plot_data <- neuron_dt
             w <- c(4,1)
         } else {
-            if (all(pictogram == "fibroblast")) {
+            if (all(pictograph == "fibroblast")) {
                 plot_data <- fibroblast_dt
                 w <- c(3,1)
             } else {
-                if (all(pictogram == "microglia")) {
+                if (all(pictograph == "microglia")) {
                     plot_data <- microglia_dt
                     w <- c(2,1)
                 } else {
-                    stop("No available pictogram with this name")
+                    stop("No available pictograph with this name")
                 }
             }
         }
@@ -156,7 +156,7 @@ color_cell <- function(timepoint_list,
                 locdt_l <- plot_l <- finaldt_l <- list()
                 for (tp in names(timepoint_list)){
 
-                    cat(paste0("Creating cell pictogram for stage: ", tp, "\n"))
+                    cat(paste0("Creating cell pictograph for stage: ", tp, "\n"))
 
                     if (!is.null(group_by)){
                         # create a separate plot for each category
@@ -180,7 +180,7 @@ color_cell <- function(timepoint_list,
 
                             colored_out <- assign_color_by_value(genes = genes,
                                                                  plot_data = plot_data,
-                                                                 pictogram = pictogram,
+                                                                 pictograph = pictograph,
                                                                  gene_loc_table = gene_loc_table,
                                                                  col_name = col_name,
                                                                  categorical_classes = ranges[get(group_by) == v],
@@ -231,7 +231,7 @@ color_cell <- function(timepoint_list,
 
                         colored_out <- assign_color_by_value(genes = genes,
                                                              plot_data = plot_data,
-                                                             pictogram = pictogram,
+                                                             pictograph = pictograph,
                                                              gene_loc_table = gene_loc_table,
                                                              col_name = col_name,
                                                              categorical_classes = ranges,
@@ -264,7 +264,7 @@ color_cell <- function(timepoint_list,
                 }
 
                 output[["final_dt"]]<- finaldt_l
-                output[["cell_type"]]<- pictogram
+                output[["cell_type"]]<- pictograph
                 output[["timepoint_list"]] <- timepoint_list
 
                 return(output)
@@ -309,7 +309,7 @@ color_cell <- function(timepoint_list,
             locdt_l <- plot_l <- finaldt_l <- list()
             for (tp in names(timepoint_list)){
 
-                cat(paste0("Creating cell pictogram for stage: ", tp, "\n"))
+                cat(paste0("Creating cell pictograph for stage: ", tp, "\n"))
 
                 if (!is.null(group_by)){
                     # create a separate plot for each category
@@ -325,7 +325,7 @@ color_cell <- function(timepoint_list,
 
                         colored_out <- assign_color_by_fdr(genes = genes,
                                                            plot_data = plot_data,
-                                                           pictogram=pictogram,
+                                                           pictograph=pictograph,
                                                            gene_loc_table = gene_loc_table,
                                                            categorical_classes = NULL,
                                                            coloring_mode = coloring_mode)
@@ -364,7 +364,7 @@ color_cell <- function(timepoint_list,
 
                     colored_out <- assign_color_by_fdr(genes = genes,
                                                        plot_data = plot_data,
-                                                       pictogram=pictogram,
+                                                       pictograph=pictograph,
                                                        gene_loc_table = gene_loc_table,
                                                        categorical_classes = NULL,
                                                        coloring_mode = coloring_mode)
@@ -389,7 +389,7 @@ color_cell <- function(timepoint_list,
                 output[["plot"]]<- plot_l
             }
             output[["final_dt"]]<- finaldt_l
-            output[["cell_type"]]<- pictogram
+            output[["cell_type"]]<- pictograph
             output[["timepoint_list"]] <- timepoint_list
 
             return(output)
