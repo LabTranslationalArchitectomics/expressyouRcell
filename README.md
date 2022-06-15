@@ -46,8 +46,7 @@ install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE
 
 Please note: to install expressyouRcell generating the vignette replace the last command with:
 ```
-install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE, 
-		build_opts = c("--no-resave-data", "--no-manual"))
+install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE, build_vignettes = TRUE)
 ```
 
 ### Getting help
