@@ -1,8 +1,16 @@
 ---
 title: "expressyouRcell"
-author: "Martina Paganin"
+
+author:
+    - Martina Paganin (martina.paganin@unitn.it)
+    - Toma Tebaldi (toma.tebaldi@gmail.com)
+    - Fabio Lauria (fabio.lauria@ibf.cnr.it)
+    - Gabriella Viero (gabriella.viero@cnr.it)
+    
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+    rmarkdown::html_vignette:
+        toc: true
 vignette: >
   %\VignetteIndexEntry{expressyouRcell}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,6 +24,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+<style>
+body {
+text-align: justify}
+</style>
 
 # Overview
 
@@ -111,7 +123,7 @@ available_pictographs()
 
 ```
 
-```{r eval=TRUE, fig.height=4.5, fig.width=10, message=FALSE, warning=FALSE}
+```{r eval=TRUE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
 
 plot_cell(coords_dt = "neuron")
 ```

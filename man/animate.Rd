@@ -12,8 +12,8 @@ animate(
   fps,
   input_dir,
   names,
-  height = 25,
-  width = 30,
+  height = 6,
+  width = 10,
   filename = "animation",
   format
 )

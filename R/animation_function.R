@@ -61,7 +61,7 @@ start <- Sys.time()
 #'
 #' @export
 #'
-animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 25, width = 30, filename="animation", format){
+animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 6, width = 10, filename="animation", format){
 
   if (!dir.exists(input_dir)){
     dir.create(input_dir, recursive = TRUE)
