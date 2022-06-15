@@ -50,6 +50,20 @@ install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE
 		build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
+### Getting help
+The following sections illustrate how to make use of expressyouRcell by introducing all functions included in the package and reporting most of the data structures and graphical outputs generated with the default options. Similar information are reported in the vignette returned by
+
+browseVignettes("expressyouRcell")
+For additional examples and further details about the meaning and usage of all parameters in a function run
+
+?function_name
+or
+
+help(package = expressyouRcell)
+A complete reference manual is available here.
+
+Bugs and errors can be reported at the issues page on GitHub. Before filing new issues, please read the documentation and take a look at currently open and already closed discussions.
+
 ## 1) Load the package
 To load expressyouRcell run:
 ```
