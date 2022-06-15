@@ -111,7 +111,7 @@ plot_cell(coords_dt = "neuron")
 The main function is called ```color_cell``` and needs at least three mandatory input parameters.
 * A list of one or multiple ```data.table```s, each must have at least a column named ```external_gene_name``` with gene symbols.
 * The name of the chosen cellular map. This allows the package to load the  ```data.table``` necessary for drawing the cellular map. This data structures contains ```x``` and ```y``` coordinates, subcellular structure labels and associated default colors.
-* The gene localization mapping table. This is the ```data.table``` storing for each gene the mapping to a subcellular localization according to the cellular component gene ontology. As explained above, this table can be either provided by the user or created through the dedicated ```map_gene_localization``` function.
+* The gene localization mapping table. This is the ```data.table``` storing for each gene its subcellular localization according to the cellular component gene ontology. As explained above, this table can be either provided by the user or created through the dedicated ```map_gene_localization``` function.
 
 Different options for assigning colors to subcellular localizations can be chosen through the ```coloring_method``` parameter. 
 
@@ -182,7 +182,7 @@ For example, the following lines will generate two distinct cellular pictographs
 
 ```
 example_list_output_together_enr <- color_cell(timepoint_list = example_list,
-                                               plot_data = "neuron",
+                                               pictograph = "neuron",
                                                gene_loc_table = gene_loc_table_mm22,
                                                coloring_mode = "enrichment",
                                                group_by = "class",
