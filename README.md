@@ -254,3 +254,13 @@ animate(data = example_list_output,
  ```
 
 ![alt text](https://github.com/gittina/expressyouRcell/blob/master/vignettes/brainp35.gif)
+
+
+# Contacts 
+martina.paganin@unitn.it
+
+fabio.lauria@ibf.cnr.it
+
+toma.tebaldi@gmail.com
+
+gabriella.viero@cnr.it
