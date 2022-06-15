@@ -246,7 +246,7 @@ The following lines create the animated picture reported below. The input data c
 animate(data = example_list_output,
         timepoints = c("brain_p3_rs-", "brain_p5_rs-"),
         seconds = 3, fps = 5,
-        input_dir = getwd(), height = 400, width = 900,
+        input_dir = getwd(), height = 4, width = 9,
         filename = "brainp35",
         names = c("p3", "p5"),
         format = "gif")
