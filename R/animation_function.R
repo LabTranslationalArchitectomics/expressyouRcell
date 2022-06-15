@@ -160,7 +160,7 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 6
         geom_polygon(aes(subgroup=comb, color=temp$color_grad), fill=temp$color_grad)  +
         scale_y_reverse() +
         guides(color = FALSE, fill=FALSE) +
-        theme_void()  +
+        theme_void(base_size = bs)  +
         geom_text(data=labels, aes(x=xmin_trans, y=y, label=name), size=0.2*bs) +
         annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2, angle=90) +
         geom_segment(aes(x=xminf, y=ymin-100, xend=xmaxf, yend=ymin-100), size = 0.2*bs, lineend = "butt", color="darkgrey") +
@@ -226,8 +226,8 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 6
   if (format == "gif"){
   gifski::gifski(png_files,
                  gif_file = file.path(input_dir, paste0(filename, ".gif")),
-                 width = width,
-                 height = height,
+                 width = width*300,
+                 height = height*300,
                  delay = seconds/tot_frame)
    } else {
     if (format == "video"){

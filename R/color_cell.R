@@ -89,7 +89,7 @@ color_cell <- function(timepoint_list,
         }
     }
 
-    if (!all(lapply(timepoint_list, function(x) inherits(x, "data.table")))){
+    if (suppressWarnings(!all(lapply(timepoint_list, function(x) inherits(x, "data.table"))))){
         dt <- lapply(timepoint_list, function(x) inherits(x, "data.table"))
         not_dt <- names(dt[dt==FALSE])
         timepoint_list <- lapply(timepoint_list, function(x) data.table(x))
