@@ -44,6 +44,12 @@ library(devtools)
 install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE)
 ```
 
+Please note: to install expressyouRcell generating the vignette replace the last command with:
+```
+install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE, 
+		build_opts = c("--no-resave-data", "--no-manual"))
+```
+
 ## 1) Load the package
 To load expressyouRcell run:
 ```
