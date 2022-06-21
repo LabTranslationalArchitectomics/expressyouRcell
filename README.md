@@ -41,12 +41,12 @@ Otherwise, load devtools and install expressyouRcell by:
 
 ```
 library(devtools)
-install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE)
+install_github("https://github.com/LabTranslationalArchitectomics/expressyouRcell", dependencies = TRUE)
 ```
 
 Please note: to install expressyouRcell generating the vignette replace the last command with:
 ```
-install_github("https://github.com/gittina/expressyouRcell", dependencies = TRUE, build_vignettes = TRUE)
+install_github("https://github.com/LabTranslationalArchitectomics/expressyouRcell", dependencies = TRUE, build_vignettes = TRUE)
 ```
 
 ### Getting help
