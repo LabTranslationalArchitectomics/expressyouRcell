@@ -187,7 +187,8 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 6
         }
       }
 
-      pl <- grid.arrange(plot + guides(fill = FALSE), l, ncol=2, widths=w)
+      #pl <- grid.arrange(plot + guides(fill = FALSE), l, ncol=2, widths=w)
+      pl <- arrangeGrob(plot, l, ncol=2, widths=w)
 
       # pl <- ggpubr::ggarrange(plot + guides(fill = FALSE),
       #                 l,
@@ -231,7 +232,7 @@ animate <- function(data, timepoints, seconds, fps, input_dir, names, height = 6
                  delay = seconds/tot_frame)
    } else {
     if (format == "video"){
-      av::av_encode_video(input = png_files, output = file.path(input_dir, paste0(filename, ".mp4")))
+      av::av_encode_video(input = png_files, output = file.path(input_dir, paste0(filename, ".mp4")), verbose = FALSE)
     } else {
       stop("Output format unrecognized")
     }
