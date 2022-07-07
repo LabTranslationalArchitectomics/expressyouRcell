@@ -33,8 +33,8 @@
 #' @param grouping_vars A list with a named vector of characters for subselecting genes belonging only to the specified
 #'   values of the variable \code{group_by}. The name of the vector must match the \code{group_by} parameter. The vector
 #'   of characters must be present in the \code{data.tables} columns named as \code{group_by}.
-#' @param ranges An optional \code{data.table} with values for specified intervals and associated colors. By default,
-#'   the package automatically creates the most appropriate binning for the input data.
+#' @param enr_color_ranges An optional vector of color shades for defining the significance of the enrichment analysis.
+#' This parameter works with the "enrichment" option of the \code{coloring_mode} parameter. Example of usage: c("palegreen", "palegreen4"), or c("white", "darkblue").
 #' @param thr A numeric value specifying the cut-off value to be applied on the \code{col_name} column.
 #' @param pval_col A character with the name of the column containing the statistical significance values.
 #' @param pval_thr A numeric value with the cutoff value to be applied on the \code{pval_col} column.
@@ -61,7 +61,7 @@ color_cell <- function(timepoint_list,
                        colors=NULL,
                        group_by=NULL,
                        grouping_vars=NULL,
-                       ranges=NULL,
+                       enr_color_ranges=NULL,
                        thr=NULL,
                        pval_col=NULL,
                        pval_thr=NULL,
@@ -323,11 +323,40 @@ color_cell <- function(timepoint_list,
                     for (v in unlist(grouping_vars)){
                         genes <- timepoint_list[[tp]][get(group_by) == v]
 
+                        if (is.null(enr_color_ranges)){
+                            default_ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
+                                                         end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
+                                                         values = seq(1:5),
+                                                         colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
+                                                         )[, lab := paste("<", .SD[, end]), by=values]
+
+                            enr_ranges <- default_ranges[, lab := paste("<", .SD[, end]), by=values]
+                        } else {
+                            start <- enr_color_ranges[1]
+                            end <- enr_color_ranges[2]
+
+                            if (start=="white" | start=="#FFFFFF"){
+                                col <- colorRampPalette(c(start, end))(5)
+                                col <- col[-1]
+                            } else {
+                                col <- colorRampPalette(c(start, end))(4)
+                            }
+
+
+                            ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
+                                                 end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
+                                                 values = seq(1:5),
+                                                 colors = c(rev(col), "grey90")
+                                                 )[, lab := paste("<", .SD[, end]), by=values]
+
+                            enr_ranges <- ranges[, lab := paste("<", .SD[, end]), by=values]
+                        }
+
                         colored_out <- assign_color_by_fdr(genes = genes,
                                                            plot_data = plot_data,
                                                            pictograph=pictograph,
                                                            gene_loc_table = gene_loc_table,
-                                                           categorical_classes = NULL,
+                                                           categorical_classes = enr_ranges,
                                                            coloring_mode = coloring_mode)
 
                         colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp
@@ -362,11 +391,40 @@ color_cell <- function(timepoint_list,
                         genes <- timepoint_list[[tp]]
                     }
 
+                    if (is.null(enr_color_ranges)){
+                        default_ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
+                                                     end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
+                                                     values = seq(1:5),
+                                                     colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
+                                                     )[, lab := paste("<", .SD[, end]), by=values]
+
+                        enr_color_ranges <- default_ranges[, lab := paste("<", .SD[, end]), by=values]
+                    } else {
+                        start <- enr_color_ranges[1]
+                        end <- enr_color_ranges[2]
+
+                        if (start=="white" | start=="#FFFFFF"){
+                            col <- colorRampPalette(c(start, end))(5)
+                            col <- col[-1]
+                        } else {
+                            col <- colorRampPalette(c(start, end))(4)
+                        }
+
+
+                        ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
+                                             end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
+                                             values = seq(1:5),
+                                             colors = c(rev(col), "grey90")
+                                             )[, lab := paste("<", .SD[, end]), by=values]
+
+                        enr_ranges <- ranges[, lab := paste("<", .SD[, end]), by=values]
+                    }
+
                     colored_out <- assign_color_by_fdr(genes = genes,
                                                        plot_data = plot_data,
                                                        pictograph=pictograph,
                                                        gene_loc_table = gene_loc_table,
-                                                       categorical_classes = NULL,
+                                                       categorical_classes = enr_ranges,
                                                        coloring_mode = coloring_mode)
                     colored_out[["localization_values"]] <- colored_out[["localization_values"]][, time_point := tp]
                     locdt_l[[tp]] <- colored_out[["localization_values"]]

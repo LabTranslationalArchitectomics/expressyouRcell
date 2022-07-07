@@ -13,7 +13,7 @@ color_cell(
   colors = NULL,
   group_by = NULL,
   grouping_vars = NULL,
-  ranges = NULL,
+  enr_color_ranges = NULL,
   thr = NULL,
   pval_col = NULL,
   pval_thr = NULL,
@@ -60,8 +60,8 @@ parameter.}
 values of the variable \code{group_by}. The name of the vector must match the \code{group_by} parameter. The vector
 of characters must be present in the \code{data.tables} columns named as \code{group_by}.}
 
-\item{ranges}{An optional \code{data.table} with values for specified intervals and associated colors. By default,
-the package automatically creates the most appropriate binning for the input data.}
+\item{enr_color_ranges}{An optional vector of color shades for defining the significance of the enrichment analysis.
+This parameter works with the "enrichment" option of the \code{coloring_mode} parameter. Example of usage: c("palegreen", "palegreen4"), or c("white", "darkblue").}
 
 \item{thr}{A numeric value specifying the cut-off value to be applied on the \code{col_name} column.}
 

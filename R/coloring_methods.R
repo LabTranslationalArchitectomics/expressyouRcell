@@ -69,18 +69,6 @@ assign_color_by_fdr <- function(genes, plot_data, pictograph, gene_loc_table, co
     universe_set <- unique(gene_loc_table$gene_symbol)
     genes <- intersect(genes$gene_symbol, universe_set)
 
-    if (is.null(categorical_classes)){
-        categorical_classes <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
-                                          end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
-                                          values = seq(1:5),
-                                          colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
-                                          #5364b0
-
-        )[, lab := paste("<", .SD[, end]), by=values]
-
-        categorical_classes <- categorical_classes[, lab := paste("<", .SD[, end]), by=values]
-    }
-
     res <- compute_enrichment(genes=genes,
                               plot_data,
                               universe_set = universe_set,
