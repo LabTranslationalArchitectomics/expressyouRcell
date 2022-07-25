@@ -19,7 +19,8 @@ A range of customizable options is provided to create cellular pictograms starti
 * Bioconductor
 	- IRanges (>= 2.24.1),
 	- clusterProfiler (>= 3.18.0),  
-	- DOSE (>= 3.16.0)
+	- DOSE (>= 3.16.0),
+	- rtracklayer (>= 1.50.0)
 
 * Additional and optional dependencies
 One of the function provided within the package requires genome wide annotation databases for some organisms. Depending on which organisms you're working on, expressyouRcell download the chosen one, if necessary. The available organisms, and related optional dependencies are:
