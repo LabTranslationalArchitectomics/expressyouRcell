@@ -259,7 +259,9 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
     ecmy <- (min(final_dt[subcell_struct == "extracellular_region"]$y)+max(final_dt[subcell_struct == "extracellular_region"]$y))/3
 
     bs = 25
-    p <- ggplot(final_dt, aes(x, y, color=value, fill=value)) +
+    p <- ggplot(final_dt, aes(x, y, fill=value)) +
+        geom_polygon(aes(subgroup=comb), color="black") +
+        scale_y_reverse() +
         scale_fill_manual(values = colors.spe,
                           name = lab_title,
                           labels = lab.spe,
@@ -267,10 +269,8 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
         scale_color_manual(values = rep("black", length(unique(final_dt$subcell_struct))),
                            name = lab_title,
                            labels = lab.spe,
-                           breaks = levels(nogreysquares$value)) +
-        scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
-        geom_polygon(aes(subgroup=comb)) +
-        scale_y_reverse() +
+                           breaks = levels(nogreysquares$value)
+                          ) +
         #guides(color = FALSE) +
         theme_void() +
         theme(legend.title = element_text(size=bs*0.9),
