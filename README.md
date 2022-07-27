@@ -93,7 +93,11 @@ The user can provide a custom table with information on the localization of gene
 Otherwise, you can create the gene-localization table with the ```map_gene_localization``` function provided within expressyouRcell. 
 
 ### map_gene_localization function
-The filename of the gene annotation file used during the alignment of your samples (in GTF format) should be provided as input to this function. Additionally, the function requires also the name of the organism. Available organisms are: Homo.sapiens, Mus.musculus, Rattus.norvegicus, Danio.rerio and Saccharomyces.cerevisiae. On the complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
+The filename of the gene annotation file used during the alignment of your samples (a gene transfer format file, i.e. GTF) should be provided as input to this function. The GTF file can be downloaded from https://www.gencodegenes.org/.
+
+Additionally, the function requires also the name of the organism. Available organisms are: Homo.sapiens, Mus.musculus, Rattus.norvegicus, Danio.rerio and Saccharomyces.cerevisiae. 
+
+On the complete set of gene symbols, a gene ontology enrichment analysis is performed to associate a gene with a term in the cellular component ontology. For this purpose, only the sub-ontology of the cellular components is taken into consideration. This function generates the gene-localization table, which maps each gene to the locations in the cellular structures, either cellular compartments or macromolecular complexes. 
 
 Example of usage with the annotation GTF file:
 ```
@@ -109,7 +113,8 @@ gene_loc_table <- map_gene_localization(gene_set = "yourpath/gencode.vM22.primar
 | Sox17       | nucleus         |
 | Lypla1      | nucleus         |
 
-We provide you with an example of ```gene_localization``` table generated through the ```map_gene_localization``` function. We suggest you to try the following examples by using this data structure for mapping genes into subcellular localizations.
+We provide you with an example of ```gene_localization``` table generated through the ```map_gene_localization``` function. This ```gene_localization``` table is based on the mouse genome annotation M22 which can be found in GENCODE (https://www.gencodegenes.org/mouse/release_M22.html).  
+We suggest you to try the following examples by using this data structure for mapping genes into subcellular localizations.
 
 ## 4) Choose and color the cellular pictograph and color 
 
