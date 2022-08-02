@@ -94,7 +94,7 @@ assign_color_by_fdr <- function(genes, plot_data, pictograph, gene_loc_table, co
         scale_size_manual(values = rep(0.005, length(final_dt[, first(color_grad), by=subcell_struct]$V1))) +
         geom_polygon(aes(subgroup=comb)) +
         scale_y_reverse() +
-        guides(color = FALSE) +
+        guides(color = "none") +
         theme_void()  +
         theme(legend.title = element_text(size=bs*0.9),
               legend.text = element_text(size=bs*0.9))

@@ -330,7 +330,7 @@ color_cell <- function(timepoint_list,
                                                          colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
                                                          )[, lab := paste("<", .SD[, end]), by=values]
 
-                            enr_ranges <- default_ranges[, lab := paste("<", .SD[, end]), by=values]
+                            enr_color_ranges <- default_ranges
                         } else {
                             start <- enr_color_ranges[1]
                             end <- enr_color_ranges[2]
@@ -349,7 +349,7 @@ color_cell <- function(timepoint_list,
                                                  colors = c(rev(col), "grey90")
                                                  )[, lab := paste("<", .SD[, end]), by=values]
 
-                            enr_ranges <- ranges[, lab := paste("<", .SD[, end]), by=values]
+                            enr_color_ranges <- ranges
                         }
 
                         colored_out <- assign_color_by_fdr(genes = genes,
@@ -397,8 +397,7 @@ color_cell <- function(timepoint_list,
                                                      values = seq(1:5),
                                                      colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey90")
                                                      )[, lab := paste("<", .SD[, end]), by=values]
-
-                        enr_color_ranges <- default_ranges[, lab := paste("<", .SD[, end]), by=values]
+                        enr_ranges <- default_ranges
                     } else {
                         start <- enr_color_ranges[1]
                         end <- enr_color_ranges[2]
@@ -417,7 +416,7 @@ color_cell <- function(timepoint_list,
                                              colors = c(rev(col), "grey90")
                                              )[, lab := paste("<", .SD[, end]), by=values]
 
-                        enr_ranges <- ranges[, lab := paste("<", .SD[, end]), by=values]
+                        enr_ranges <- ranges
                     }
 
                     colored_out <- assign_color_by_fdr(genes = genes,
