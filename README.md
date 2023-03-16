@@ -101,7 +101,7 @@ On the complete set of gene symbols, a gene ontology enrichment analysis is perf
 
 Example of usage with the annotation GTF file:
 ```
-gene_loc_table <- map_gene_localization(gene_set = "yourpath/gencode.vM22.primary_assembly.annotation.gtf"), organism="Mm")
+gene_loc_table <- map_gene_localization(gene_set = "yourpath/gencode.vM22.primary_assembly.annotation.gtf", organism="Mm")
 ```
 ```map_gene_localization``` returns a ```data.table``` containing for each gene its localization to a subcellular structure:
 
@@ -135,8 +135,10 @@ plot_cell(coords_dt = "neuron")
 ## color_cell
 The main function is called ```color_cell``` and needs at least three mandatory input parameters.
 * A list of one or multiple ```data.table```s, each must have at least a column named ```external_gene_name``` with gene symbols.
-* The name of the chosen cellular map. This allows the package to load the  ```data.table``` necessary for drawing the cellular map. This data structures contains ```x``` and ```y``` coordinates, subcellular structure labels and associated default colors.
+* A name of the chosen cellular map, or in alternative, a vector with multiple names of cellular types. For each cellular names, the package will load the corresponding  ```data.table```, which is necessary to draw the cellular map. The ```data.table``` structures contains ```x``` and ```y``` coordinates, subcellular structure labels and associated default colors.
 * The gene localization mapping table. This is the ```data.table``` storing for each gene its subcellular localization according to the cellular component gene ontology. As explained above, this table can be either provided by the user or created through the dedicated ```map_gene_localization``` function.
+
+Other optional parameters are available to choose whether the legend should be also displayed (i.e., ```legend```), or whether the data should be gene-wise centered and scaled (i.e., ```scaling```). In general, normalized counts (e.g., cpm, tpm or fpkm) are preferred as input data for gene expression values, but the ```scaling``` parameter allows to further normalize gene expression values on the rows.
 
 Different options for assigning colors to subcellular localizations can be chosen through the ```coloring_method``` parameter. 
 
@@ -161,7 +163,7 @@ example_list_output_together <- color_cell(timepoint_list = example_list,
 
  <img src="https://github.com/gittina/expressyouRcell/blob/master/vignettes/fig1.png" width="1000" height="450">
 
-#### 2) Generate multiple pictographms, one for each group of genes
+#### 2) Generate multiple pictographs, one for each group of genes
 expressyouRcell allows you to selectively visualize only genes belonging to distinct classes (e.g. either "up-" or "down-regulated" genes) and generate separate plots for each of the specified categories of genes. In this case, separate analysis for each subset of genes can be performed, and expressyouRcell will then output single ```ggplot``` figures for each category. 
 To select this analysis, you must specify a non-null value for the ```group_by``` parameter. To select this analysis, you must specify as the ```group_by```  parameter the name of the column reporting the categorical variable (e.g. “class”) on which you have previuoly stored the gene classification. 
 

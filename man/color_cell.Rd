@@ -17,7 +17,8 @@ color_cell(
   thr = NULL,
   pval_col = NULL,
   pval_thr = NULL,
-  legend = FALSE
+  legend = FALSE,
+  scaling = FALSE
 )
 }
 \arguments{
@@ -26,9 +27,12 @@ the list of \code{data.tables} can also contain a numerical column with i) its e
 counts, count per million of reads (CPM) or reads per kilobase of gene per million (RPKM); ii) fold-changes and
 p-values from upstream differential analyses.}
 
-\item{pictograph}{A character string with the name of the pictograph to be used.
-The corresponding \code{data.table} with the polygon coordinates is loaded automaticaly. Default is generic cell pictograph.
-(\code{pictograph="cell"}, or \code{pictograph="neuron"}).}
+\item{pictograph}{A character string, or a vector with multiple character strings, with the names of the pictographs
+to be used.
+Currently available pictographs are named "cell", "neuron", "microglia", "fibroblast".
+The corresponding \code{data.table} with the polygon coordinates is loaded automatically.
+Default value is generic cell pictograph ("cell").
+Paraemeter values can be in the form of (\code{pictograph="cell"}, or \code{pictograph=c("cell","neuron")}).}
 
 \item{gene_loc_table}{A \code{data.table} with information for mapping genes to subcellular localizations. The
 localization of the genes can be either provided by the user or created through the \code{map_gene_localization}
@@ -69,7 +73,9 @@ This parameter works with the "enrichment" option of the \code{coloring_mode} pa
 
 \item{pval_thr}{A numeric value with the cutoff value to be applied on the \code{pval_col} column.}
 
-\item{legend}{A boolean value for choosing to plot the legend or not.}
+\item{legend}{A boolean value for choosing to plot the legend or not. Default is false.}
+
+\item{scaling}{A  boolean value for choosing whether to scale values by row, or not. Default is false.}
 }
 \value{
 A list containing four data structures. The first is the localization_values \code{data.table}, with six
@@ -80,6 +86,7 @@ the ranges \code{data.table}, summarising the information on the ranges (e.g. st
 to categorise each subcellular localization. The third data structure is the plot list, containing the graphical
 objects of class \code{ggplot} with the resulting cellular pictographs. The fourth data structure is the list of
 final_dt \code{data.table}, with the datasets used to plot the resulting cellular pictographs.
+When multiple cell types are assigned to the pictograph parameter, the function return a single ggplot object for the arranged multiple cell type in the \code{merged_cells} item.
 }
 \description{
 This function creates static cellular pictographs with the chosen coloring method for assigning colors to

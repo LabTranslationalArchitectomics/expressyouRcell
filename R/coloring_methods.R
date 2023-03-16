@@ -12,7 +12,8 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
 
         test <- fisher.test(matrix(c(LY, RY, LN, RN), 2, 2), alternative="greater")
 
-        row <- data.table(subcell_struct = t, enr = test$estimate, pval = test$p.value)
+        row <- data.table(subcell_struct = t, enr = test$estimate, pval = test$p.value,
+                          genes=paste0(intersect(my_list, list_interest), collapse = ","))
         localization_values <- rbind(localization_values, row)
     }
 
@@ -97,7 +98,8 @@ assign_color_by_fdr <- function(genes, plot_data, pictograph, gene_loc_table, co
         guides(color = "none") +
         theme_void()  +
         theme(legend.title = element_text(size=bs*0.9),
-              legend.text = element_text(size=bs*0.9))
+              legend.text = element_text(size=bs*0.9),
+              plot.background = element_rect(fill = "white", linetype = "blank"))
 
     p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
 
@@ -190,7 +192,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
             localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
         } else {
             localization_values$value <- "500"
-            localization_values$color_grad <- "grey90"
+            localization_values$color_grad <- "grey50"
         }
 
         # localization_values <- localization_values[, `:=` ("value"=categorical_classes[(get(coloring_mode)) > abs(categorical_classes[[class]][, start]) &
@@ -222,7 +224,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
     } else {
         final_dt[, value  := 500
                  ][, value := factor(value)
-                   ][, color_grad := "grey90"]
+                   ][, color_grad := "grey50"]
     }
 
     final_dt <- final_dt[order(comb)]
@@ -243,15 +245,15 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
     lab <- as.expression(sapply(categorical_classes$lab, function(x) x))
     lab.spe <- lab[sort(as.numeric(unique(as.vector(final_dt$value))), decreasing = dec)]
 
-    na_val <- max(as.numeric(final_dt$value), na.rm = TRUE)
+    na_val <- max(as.numeric(as.character(final_dt$value)), na.rm = TRUE)
     final_dt <- final_dt[is.na(value), value := as.factor(na_val + 1)
-                         ][is.na(color_grad), color_grad := "grey90"]
+                         ][is.na(color_grad), color_grad := "grey50"]
 
     if (length(levels(plot_data$subcell_struct)) > length(localization_values$subcell_struct)){
-        colors.spe <- c(colors.spe,  "grey90")
+        colors.spe <- c(colors.spe,  "grey50")
     }
 
-    nogreysquares <- copy(final_dt[color_grad != "grey90"])
+    nogreysquares <- copy(final_dt[color_grad != "grey50"])
     nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
     ecmx <- max(final_dt[subcell_struct == "extracellular_region"]$x)-(max(final_dt[subcell_struct == "extracellular_region"]$x)-min(final_dt[subcell_struct == "extracellular_region"]$x))/3
@@ -274,13 +276,13 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
         #guides(color = FALSE) +
         theme_void() +
         theme(legend.title = element_text(size=bs*0.9),
-              legend.text = element_text(size=bs*0.9))
+              legend.text = element_text(size=bs*0.9),
+              plot.background = element_rect(fill = "white", linetype = "blank"))
 
     p
 
-    if (pictograph == "neuron"){
-        p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
-    }
+    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
+
 
     return(list("plot"=p,
                 "lab_title"=lab_title,

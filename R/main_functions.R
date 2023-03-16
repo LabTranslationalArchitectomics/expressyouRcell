@@ -68,7 +68,12 @@ plot_cell <- function(coords_dt, legend=TRUE){
                     coords_dt <- microglia_dt
                     w <- c(2,1)
                 } else {
-                    stop("No available pictograph with this name")
+                    if (all(coords_dt == "lymphocite")) {
+                        coords_dt <- lymphocite_dt
+                        w <- c(2,1)
+                    } else {
+                        stop("No available pictograph with this name")
+                    }
                 }
             }
         }
@@ -224,6 +229,7 @@ map_gene_localization <- function(gene_set, organism){
 
     ensembl_entrez <- bitr(annotation_gene_names, fromType="SYMBOL", toType=c("ENTREZID"), OrgDb=OrgDb_chosen, drop=T)
 
+    entrez <- mapIds(get(OrgDb_chosen), annotation_gene_names, 'ENTREZID', 'SYMBOL')
 
     cc_complete <- as.data.table(as.data.frame(enrichGO(gene = ensembl_entrez[,2],
                                                         OrgDb=OrgDb_chosen,

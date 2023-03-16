@@ -32,7 +32,9 @@ Imports:
 	rtracklayer (>= 1.50.0),
 	stringr (>= 1.4.0),
 	gridExtra (>= 2.3),
-	BiocManager (>= 1.30.10)
+	BiocManager (>= 1.30.10),
+	patchwork (>= 1.1.2.9000),
+	rlist (>= 0.4.6.2)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
