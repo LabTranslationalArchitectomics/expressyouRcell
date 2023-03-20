@@ -58,7 +58,7 @@
 #' }
 "microglia_dt"
 
-#' @title Lymphocite data table
+#' @title Lymphocyte data table
 #'
 #' @description A \code{data.table} containing the information for plotting the cell structure.
 #'
@@ -71,7 +71,7 @@
 #' \item{color}{the value to fill the polygon in an example}
 #' \item{comb}{a string that uniquely identify the subpolygon}
 #' }
-"lymphocite_dt"
+"lymphocyte_dt"
 
 #' @title Legend for neuron plot data table
 #'

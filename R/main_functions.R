@@ -68,11 +68,16 @@ plot_cell <- function(coords_dt, legend=TRUE){
                     coords_dt <- microglia_dt
                     w <- c(2,1)
                 } else {
-                    if (all(coords_dt == "lymphocite")) {
-                        coords_dt <- lymphocite_dt
+                    if (all(coords_dt == "lymphocyte")) {
+                        coords_dt <- lymphocyte_dt
                         w <- c(2,1)
                     } else {
-                        stop("No available pictograph with this name")
+                        if (all(coords_dt == "macrophage")){
+                            coords_dt <- macrophage_dt
+                            w <- c(2,1)
+                        } else {
+                            stop("No available pictograph with this name")
+                        }
                     }
                 }
             }
@@ -90,7 +95,7 @@ plot_cell <- function(coords_dt, legend=TRUE){
         scale_fill_manual(values = coords_dt[, first(color), by=comb]$V1) +
         scale_color_manual(values = rep("black", length(coords_dt[, first(color), by=comb]$V1))) +
         geom_polygon() +
-        annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2) +
+        annotate("text", x=ecmx, y=ecmy, label="ECM", size=bs*0.2, angle=90) +
         scale_y_reverse() +
         theme_void() +
         theme(legend.position = "none")
@@ -108,17 +113,20 @@ plot_cell <- function(coords_dt, legend=TRUE){
 #' @examples available_pictographs()
 #'
 #' @import ggplot2
+#' @import patchwork
+#' @import stringr
 #'
 #' @export
 available_pictographs <- function() {
     p_list <- list()
-    pictographs <- c("cell","fibroblast", "microglia", "neuron")
+    pictographs <- c("cell","microglia", "fibroblast",  "macrophage", "neuron","lymphocyte")
     for (d in pictographs){
-        p_list[[d]] <- plot_cell(d, legend = FALSE)
+        p_list[[d]] <- plot_cell(d, legend = FALSE) +
+            ggtitle(stringr::str_to_title(d)) +
+            coord_fixed()
     }
 
-    do.call(ggpubr::ggarrange, c(p_list,
-                                 ncol=2, nrow=2))
+    patchwork::wrap_plots(p_list) + plot_layout(ncol = 2, nrow = 3)
 }
 
 #' Create table for mapping genes to subcellular localization

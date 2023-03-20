@@ -29,7 +29,7 @@ p-values from upstream differential analyses.}
 
 \item{pictograph}{A character string, or a vector with multiple character strings, with the names of the pictographs
 to be used.
-Currently available pictographs are named "cell", "neuron", "microglia", "fibroblast".
+Currently available pictographs are named "cell", "neuron", "microglia", "fibroblast", "macrophage" and "lymphocyte".
 The corresponding \code{data.table} with the polygon coordinates is loaded automatically.
 Default value is generic cell pictograph ("cell").
 Paraemeter values can be in the form of (\code{pictograph="cell"}, or \code{pictograph=c("cell","neuron")}).}

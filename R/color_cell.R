@@ -8,7 +8,7 @@
 #'   p-values from upstream differential analyses.
 #' @param pictograph A character string, or a vector with multiple character strings, with the names of the pictographs
 #'   to be used.
-#'   Currently available pictographs are named "cell", "neuron", "microglia", "fibroblast".
+#'   Currently available pictographs are named "cell", "neuron", "microglia", "fibroblast", "macrophage" and "lymphocyte".
 #'   The corresponding \code{data.table} with the polygon coordinates is loaded automatically.
 #'   Default value is generic cell pictograph ("cell").
 #'   Paraemeter values can be in the form of (\code{pictograph="cell"}, or \code{pictograph=c("cell","neuron")}).
@@ -80,11 +80,6 @@ color_cell <- function(timepoint_list,
         timepoint_list <- lapply(timepoint_list, function(x) data.table(x))
     }
 
-    if (all(unlist(lapply(timepoint_list, function(x) x[, get(col_name)]-floor(x[, get(col_name)])==0)))) {
-        warning("Integer values have been detected in the input data. For more reliable results, we strongly suggest you to scale your data before proceeding with the pictographic visulation.")
-    }
-
-
     if (!inherits(timepoint_list, "list")){
         tmp_timepoint_list <- list()
         tmp_timepoint_list[["1"]] <- timepoint_list
@@ -115,7 +110,17 @@ color_cell <- function(timepoint_list,
                         plot_data <- microglia_dt
                         w <- c(2,1)
                     } else {
-                        stop(paste0("No available pictograph defined as:", p))
+                        if (all(p == "macrophage")) {
+                            plot_data <- macrophage_dt
+                            w <- c(3,1)
+                        } else {
+                            if (all(p == "lymphocyte")) {
+                                plot_data <- lymphocyte_dt
+                                w <- c(3,1)
+                            } else {
+                                stop(paste0("No available pictograph defined as:", p))
+                            }
+                        }
                     }
                 }
             }
@@ -124,6 +129,11 @@ color_cell <- function(timepoint_list,
         widths_list[[p]] <- w
 
         if (coloring_mode == 'mean' || coloring_mode == 'median'){
+
+            if (all(unlist(lapply(timepoint_list, function(x) x[, get(col_name)]-floor(x[, get(col_name)])==0)))) {
+                warning("Integer values have been detected in the input data. For more reliable results, we strongly suggest you to scale your data before proceeding with the pictographic visulation.")
+            }
+
             if (is.null(col_name)){
                 stop("ERROR: col_name parameter is missing")
                 #cat("ERROR: col_name parameter is missing")
@@ -495,7 +505,7 @@ color_cell <- function(timepoint_list,
         merged_list <- list()
         timepoints <- names(cell_diagram[[1]]$plot)
         for (tp in timepoints){
-            merged <- patchwork::wrap_plots(lapply(cell_diagram, function(x) x[["plot"]][[tp]]))
+            merged <- patchwork::wrap_plots(lapply(cell_diagram, function(x) x[["plot"]][[tp]]+coord_fixed()))
             merged_list[[paste0(tp, "_merged")]] <- merged
         }
         cell_diagram[["merged_cells"]] <- merged_list

@@ -125,7 +125,7 @@ available_pictographs()
 ```
 
 ### plot_cell function
-This function simply allows the user to visualize the chosen cellular map with default colors. The function requires as input the data.table with the graphical information (coordinates and colors for the cellular organelles). 
+This function simply allows the user to visualize the chosen cellular map with default colors. The function requires as input the name of a cellular pictographs (one among those displayed by the ```available_pictographs()``` function). The ```plot_cell``` function will automatically load the corresponding ```data.table``` where the graphical information are stored (coordinates and default colors for the cellular organelles). 
 
 Example of usage:
 ```

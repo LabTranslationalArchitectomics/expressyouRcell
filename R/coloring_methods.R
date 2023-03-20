@@ -101,7 +101,7 @@ assign_color_by_fdr <- function(genes, plot_data, pictograph, gene_loc_table, co
               legend.text = element_text(size=bs*0.9),
               plot.background = element_rect(fill = "white", linetype = "blank"))
 
-    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
+    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs, angle=90)
 
 
     return(list("plot"=p,
@@ -281,7 +281,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
 
     p
 
-    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs)
+    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs, angle=90)
 
 
     return(list("plot"=p,
