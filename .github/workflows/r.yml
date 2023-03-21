@@ -70,11 +70,12 @@ jobs:
           options(repos = c(getOption("repos"), BiocManager::repositories()))
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)          
         shell: Rscript {0}
+      - name: Install Dependencies - patchwork
+        run: Rscript -e 'devtools::install_github("thomasp85/patchwork")'
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck","pandoc", "rlang", "vctrs", "processx", "devtools"), INSTALL_opts="--no-multiarch")
+          install.packages(c("remotes", "rcmdcheck","pandoc", "rlang", "vctrs", "processx"), INSTALL_opts="--no-multiarch")
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_github("thomasp85/patchwork")
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-multiarch"), error_on = "error")
