@@ -18,10 +18,10 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     }
 
     localization_values <- localization_values[order(pval, decreasing = FALSE)]
-    localization_values <- localization_values[, `:=` ("value"=categorical_classes[pval > categorical_classes$start &
-                                                                                       pval <= categorical_classes$end, values],
-                                                       "color_grad"=categorical_classes[pval > categorical_classes$start &
-                                                                                           pval <= categorical_classes$end, colors]), by=subcell_struct]
+    localization_values <- localization_values[, `:=` ("value"=categorical_classes[pval >= categorical_classes$start &
+                                                                                       pval < categorical_classes$end, values],
+                                                       "color_grad"=categorical_classes[pval >= categorical_classes$start &
+                                                                                           pval < categorical_classes$end, colors]), by=subcell_struct]
 
     final_dt <- merge.data.table(plot_data,
                                  localization_values[, c("subcell_struct", "color_grad", "value")],

@@ -43,6 +43,8 @@
 #' @param pval_thr A numeric value with the cutoff value to be applied on the \code{pval_col} column.
 #' @param legend A boolean value for choosing to plot the legend or not. Default is false.
 #' @param scaling A  boolean value for choosing whether to scale values by row, or not. Default is false.
+#' @param scale_libsize A  boolean value for choosing whether to scale values by library size (cpm), or not. Default is false.
+#'
 #' @return A list containing four data structures. The first is the localization_values \code{data.table}, with six
 #'   columns, which reports for each subcellular component: i) its name, ii) the numeric value computed during the
 #'   colour assignment step, iiI) a numeric code for grouping the cellular localizations by colour, iv) its associated
@@ -72,7 +74,8 @@ color_cell <- function(timepoint_list,
                        pval_col=NULL,
                        pval_thr=NULL,
                        legend=FALSE,
-                       scaling=FALSE){
+                       scaling=FALSE,
+                       scale_libsize=FALSE){
 
     if (suppressWarnings(!all(lapply(timepoint_list, function(x) inherits(x, "data.table"))))){
         dt <- lapply(timepoint_list, function(x) inherits(x, "data.table"))
@@ -131,7 +134,7 @@ color_cell <- function(timepoint_list,
         if (coloring_mode == 'mean' || coloring_mode == 'median'){
 
             if (all(unlist(lapply(timepoint_list, function(x) x[, get(col_name)]-floor(x[, get(col_name)])==0)))) {
-                warning("Integer values have been detected in the input data. For more reliable results, we strongly suggest you to scale your data before proceeding with the pictographic visulation.")
+                warning("Integer values have been detected in the input data. For more reliable results, we strongly suggest you to scale your data before proceeding with the pictographic visulization.")
             }
 
             if (is.null(col_name)){
@@ -184,7 +187,34 @@ color_cell <- function(timepoint_list,
                         tobescaled_allcols <- data.frame(tobescaled_allcols)
                         rownames(tobescaled_allcols) <- timepoint_list[[1]]$gene_symbol
                         scaled_allcols <- scale(t(tobescaled_allcols), center = TRUE, scale = TRUE)
+
+                        scaled_tp_list <- list()
+                        for (tp in colnames(scaled_allcols)){
+                            scaled_tp_list[[tp]] <- data.table(scaled_allcols, keep.rownames = "gene_symbol"
+                            )[, c("gene_symbol", tp), with=FALSE]
+
+                        }
+                        timepoint_list <- scaled_tp_list
                     }
+
+                    if (scale_libsize==TRUE){
+                        tobescaled_allcols <- list.cbind(lapply(timepoint_list, function(x) x[, get(col_name)]))
+                        tobescaled_allcols <- data.frame(tobescaled_allcols)
+                        rownames(tobescaled_allcols) <- timepoint_list[[1]]$gene_symbol
+                        scaled_allcols <- tobescaled_allcols/colSums(tobescaled_allcols)
+
+                        scaled_tp_list <- list()
+                        for (tp in colnames(scaled_allcols)){
+                            scaled_tp_list[[tp]] <- data.table(scaled_allcols, keep.rownames = "gene_symbol"
+                            )[, c("gene_symbol", tp), with=FALSE]
+
+                        }
+                        timepoint_list <- scaled_tp_list
+                    }
+
+
+
+
 
                     locdt_l <- plot_l <- finaldt_l <- list()
                     for (tp in names(timepoint_list)){
@@ -201,13 +231,20 @@ color_cell <- function(timepoint_list,
 
                             grouped_out <- list()
 
-                            ranges <-  discrete_symmetric_ranges(timepoint_list = timepoint_list,
-                                                                 plot_data = plot_data,
-                                                                 gene_loc_table = gene_loc_table,
-                                                                 col_name = col_name,
-                                                                 grouping_vars = grouping_vars,
-                                                                 colors = colors,
-                                                                 coloring_mode = coloring_mode)
+
+                            if (is.null(enr_color_ranges)){
+                                ranges <-  discrete_symmetric_ranges(timepoint_list = timepoint_list,
+                                                                     plot_data = plot_data,
+                                                                     gene_loc_table = gene_loc_table,
+                                                                     col_name = col_name,
+                                                                     grouping_vars = grouping_vars,
+                                                                     colors = colors,
+                                                                     coloring_mode = coloring_mode)
+                            } else {
+                                    ranges <- enr_color_ranges
+                            }
+
+
                             for (v in unlist(grouping_vars)){
                                 genes <- timepoint_list[[tp]][get(group_by) == v]
 
@@ -253,14 +290,18 @@ color_cell <- function(timepoint_list,
                                 genes <- timepoint_list[[tp]]
                             }
 
-                            ranges <- discrete_symmetric_ranges(timepoint_list = timepoint_list,
-                                                                plot_data,
-                                                                gene_loc_table,
-                                                                col_name,
-                                                                grouping_vars,
-                                                                colors,
-                                                                coloring_mode,
-                                                                together=TRUE)
+                            if (is.null(enr_color_ranges)){
+                                ranges <- discrete_symmetric_ranges(timepoint_list = timepoint_list,
+                                                                    plot_data,
+                                                                    gene_loc_table,
+                                                                    col_name,
+                                                                    grouping_vars,
+                                                                    colors,
+                                                                    coloring_mode,
+                                                                    together=TRUE)
+                            } else {
+                                ranges <- enr_color_ranges
+                            }
 
                             colored_out <- assign_color_by_value(genes = genes,
                                                                  plot_data = plot_data,

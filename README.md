@@ -138,7 +138,12 @@ The main function is called ```color_cell``` and needs at least three mandatory 
 * A name of the chosen cellular map, or in alternative, a vector with multiple names of cellular types. For each cellular names, the package will load the corresponding  ```data.table```, which is necessary to draw the cellular map. The ```data.table``` structures contains ```x``` and ```y``` coordinates, subcellular structure labels and associated default colors.
 * The gene localization mapping table. This is the ```data.table``` storing for each gene its subcellular localization according to the cellular component gene ontology. As explained above, this table can be either provided by the user or created through the dedicated ```map_gene_localization``` function.
 
-Other optional parameters are available to choose whether the legend should be also displayed (i.e., ```legend```), or whether the data should be gene-wise centered and scaled (i.e., ```scaling```). In general, normalized counts (e.g., cpm, tpm or fpkm) are preferred as input data for gene expression values, but the ```scaling``` parameter allows to further normalize gene expression values on the rows.
+Other optional parameters are available to further personlize the output or to handle heterogeneous input sources.
+* The ```legend``` parameter allows the user to choose whether the legend should be also displayed;
+* the ```scaling``` parameter allows the user to center and scale gene expression levels row-wise by computing gene-specific Z-scores;
+* the ```scale_libsize``` parameter scales gene expression values for the library size (e.g., cpm).
+
+In general, normalized counts (e.g., cpm, tpm or fpkm) are preferred as input data for gene expression values, but the ```scaling``` parameter allows to further normalize gene expression values on the rows.
 
 Different options for assigning colors to subcellular localizations can be chosen through the ```coloring_method``` parameter. 
 

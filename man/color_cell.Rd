@@ -18,7 +18,8 @@ color_cell(
   pval_col = NULL,
   pval_thr = NULL,
   legend = FALSE,
-  scaling = FALSE
+  scaling = FALSE,
+  scale_libsize = FALSE
 )
 }
 \arguments{
@@ -76,6 +77,8 @@ This parameter works with the "enrichment" option of the \code{coloring_mode} pa
 \item{legend}{A boolean value for choosing to plot the legend or not. Default is false.}
 
 \item{scaling}{A  boolean value for choosing whether to scale values by row, or not. Default is false.}
+
+\item{scale_libsize}{A  boolean value for choosing whether to scale values by library size (cpm), or not. Default is false.}
 }
 \value{
 A list containing four data structures. The first is the localization_values \code{data.table}, with six
