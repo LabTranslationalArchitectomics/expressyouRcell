@@ -2,7 +2,16 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     localization_values <- data.table()
     # for each subcellular component computes FDR
     for (t in unique(plot_data$subcell_struct)){
-        list_interest <- intersect(gene_loc_table[subcell_struct == t]$gene_symbol, universe_set)
+
+        if (t=="receptor") {
+            list_interest <- intersect(gene_loc_table[subcell_struct %like% "T_cell receptor complex" |
+                                                          subcell_struct %like% "B_cell receptor complex"]$gene_symbol,
+                                       universe_set)
+        } else {
+            list_interest <- intersect(gene_loc_table[subcell_struct == t]$gene_symbol, universe_set)
+        }
+
+
         my_list <- genes
 
         LY <- length(intersect(my_list, list_interest))
@@ -18,6 +27,9 @@ compute_enrichment <- function(genes, plot_data, gene_loc_table, universe_set, c
     }
 
     localization_values <- localization_values[order(pval, decreasing = FALSE)]
+
+    categorical_classes[end == 1, end := 1.0001]
+
     localization_values <- localization_values[, `:=` ("value"=categorical_classes[pval >= categorical_classes$start &
                                                                                        pval < categorical_classes$end, values],
                                                        "color_grad"=categorical_classes[pval >= categorical_classes$start &

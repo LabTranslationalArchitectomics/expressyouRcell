@@ -29,7 +29,7 @@ plot_legend_organelles <- function(dt_legend){
         coord_cartesian(xlim = c(90,400)) +
         scale_y_reverse() +
         theme_void() +
-        theme(legend.position = "none")
+        theme(legend.position = "none", plot.background = element_rect(fill = "white", linetype = "blank"))
     return(p)
 }
 
@@ -99,7 +99,7 @@ plot_cell <- function(dt_name, legend=TRUE){
 
         scale_y_reverse() +
         theme_void() +
-        theme(legend.position = "none")
+        theme(legend.position = "none", plot.background = element_rect(fill = "white", linetype = "blank"))
 
     if (dt_name == "lymphocyte"){
         p <- p +
