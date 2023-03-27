@@ -58,7 +58,7 @@ jobs:
         
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: rcmdcheck
       - uses: r-lib/actions/check-r-package@v2
       - name: Set up R  ${{ matrix.config.r }}
         uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
