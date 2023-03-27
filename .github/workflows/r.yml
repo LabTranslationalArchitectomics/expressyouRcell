@@ -74,7 +74,8 @@ jobs:
         run: Rscript -e 'devtools::install_github("thomasp85/patchwork")'
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck","pandoc", "rlang", "vctrs", "processx"), INSTALL_opts="--no-multiarch")
+          install.packages(c("remotes", "rcmdcheck","pandoc", "rlang", "vctrs", "processx", "devtools"), INSTALL_opts="--no-multiarch")
+          devtools::install_github("thomasp85/patchwork")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check
