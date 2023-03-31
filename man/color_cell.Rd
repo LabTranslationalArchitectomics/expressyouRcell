@@ -9,6 +9,7 @@ color_cell(
   pictograph = "cell",
   gene_loc_table,
   coloring_mode = "enrichment",
+  data_type = NULL,
   col_name = NULL,
   colors = NULL,
   group_by = NULL,
@@ -48,6 +49,8 @@ If "mean" or "median" are specified, a name of a numerical columns must also be 
 parameter. This method computes the mean (or median) of values specified in the \code{col_name} column. The color
 of each cellular compartment is defined by the mean (or median) of the gene-specific values associated to each
 localization.}
+
+\item{data_type}{Either "gexp" or "diffanalysis".}
 
 \item{col_name}{A character string with the name of the column on which the user wants to base the color of cellular
 localizations when "median" or "mean" are the chosen coloring method. Default is null.}

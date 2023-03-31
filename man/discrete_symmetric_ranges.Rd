@@ -12,6 +12,7 @@ discrete_symmetric_ranges(
   grouping_vars,
   colors,
   coloring_mode,
+  data_type,
   together = FALSE
 )
 }

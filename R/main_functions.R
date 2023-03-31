@@ -298,6 +298,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
                                       grouping_vars,
                                       colors,
                                       coloring_mode,
+                                      data_type,
                                       together=FALSE){
 
     dtlist <- list()
@@ -351,8 +352,13 @@ discrete_symmetric_ranges <- function(timepoint_list,
                 fixed_ranges_dt <- data.table(start = head(seq(inf, sup, by = 0.1), -1),
                                               end = seq(inf, sup, by = 0.1)[-1])
             } else {
-                fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
-                                              end = seq(inf, sup)[-1])
+                if (width != 0){
+                    fixed_ranges_dt <- data.table(start = head(seq(inf, sup), -1),
+                                                  end = seq(inf, sup)[-1])
+                } else {
+                    fixed_ranges_dt <- data.table(start = inf-1,
+                                                  end = sup+1)
+                }
             }
         } else {
             binsize <- width / 8
@@ -375,7 +381,7 @@ discrete_symmetric_ranges <- function(timepoint_list,
 
         }
 
-        if (!all(fixed_ranges_dt$start>=0)){
+        if (!all(fixed_ranges_dt$start>=0) & data_type =="diffanalysis"){
             # I am plotting down and up together in the same plot
             # and I need to remove zero ranges and have two color scales, green and red
             fixed_ranges_dt_o <- copy(fixed_ranges_dt)

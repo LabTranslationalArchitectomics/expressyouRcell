@@ -24,6 +24,7 @@
 #'   parameter. This method computes the mean (or median) of values specified in the \code{col_name} column. The color
 #'   of each cellular compartment is defined by the mean (or median) of the gene-specific values associated to each
 #'   localization.
+#' @param data_type Either "gexp" or "diffanalysis".
 #' @param col_name A character string with the name of the column on which the user wants to base the color of cellular
 #'   localizations when "median" or "mean" are the chosen coloring method. Default is null.
 #' @param colors A list with named vectors of hex color codes for palette generation. The number of named vectors must
@@ -65,6 +66,7 @@ color_cell <- function(timepoint_list,
                        pictograph="cell",
                        gene_loc_table,
                        coloring_mode='enrichment',
+                       data_type=NULL,
                        col_name=NULL,
                        colors=NULL,
                        group_by=NULL,
@@ -81,6 +83,10 @@ color_cell <- function(timepoint_list,
         dt <- lapply(timepoint_list, function(x) inherits(x, "data.table"))
         not_dt <- names(dt[dt==FALSE])
         timepoint_list <- lapply(timepoint_list, function(x) data.table(x))
+    }
+
+    if (is.null(data_type)){
+        stop("Parameter data_type detected as null. Please, specify either gexp or diffanalysis.")
     }
 
     if (!inherits(timepoint_list, "list")){
@@ -186,13 +192,13 @@ color_cell <- function(timepoint_list,
                         tobescaled_allcols <- list.cbind(lapply(timepoint_list, function(x) x[, get(col_name)]))
                         tobescaled_allcols <- data.frame(tobescaled_allcols)
                         rownames(tobescaled_allcols) <- timepoint_list[[1]]$gene_symbol
-                        scaled_allcols <- scale(t(tobescaled_allcols), center = TRUE, scale = TRUE)
+                        scaled_allcols <- t(scale(t(tobescaled_allcols), center = TRUE, scale = TRUE))
 
                         scaled_tp_list <- list()
                         for (tp in colnames(scaled_allcols)){
                             scaled_tp_list[[tp]] <- data.table(scaled_allcols, keep.rownames = "gene_symbol"
-                            )[, c("gene_symbol", tp), with=FALSE]
-
+                                                               )[, c("gene_symbol", tp), with=FALSE]
+                            setnames(scaled_tp_list[[tp]], tp, col_name)
                         }
                         timepoint_list <- scaled_tp_list
                     }
@@ -207,6 +213,7 @@ color_cell <- function(timepoint_list,
                         for (tp in colnames(scaled_allcols)){
                             scaled_tp_list[[tp]] <- data.table(scaled_allcols, keep.rownames = "gene_symbol"
                             )[, c("gene_symbol", tp), with=FALSE]
+                            scaled_tp_list[[tp]] <- setnames(scaled_tp_list[[tp]], tp, col_name)
 
                         }
                         timepoint_list <- scaled_tp_list
@@ -239,7 +246,8 @@ color_cell <- function(timepoint_list,
                                                                      col_name = col_name,
                                                                      grouping_vars = grouping_vars,
                                                                      colors = colors,
-                                                                     coloring_mode = coloring_mode)
+                                                                     coloring_mode = coloring_mode,
+                                                                     data_type=data_type)
                             } else {
                                     ranges <- enr_color_ranges
                             }
@@ -298,6 +306,7 @@ color_cell <- function(timepoint_list,
                                                                     grouping_vars,
                                                                     colors,
                                                                     coloring_mode,
+                                                                    data_type,
                                                                     together=TRUE)
                             } else {
                                 ranges <- enr_color_ranges
@@ -403,7 +412,7 @@ color_cell <- function(timepoint_list,
                                 default_ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
                                                              end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
                                                              values = seq(1:5),
-                                                             colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey50")
+                                                             colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "e5e5e5")
                                                              )[, lab := paste("<", .SD[, end]), by=values]
 
                                 enr_ranges <- default_ranges
@@ -423,7 +432,7 @@ color_cell <- function(timepoint_list,
                                 ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
                                                      end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
                                                      values = seq(1:5),
-                                                     colors = c(rev(col), "grey50")
+                                                     colors = c(rev(col), "#C2C2C2")
                                                      )[, lab := paste("<", .SD[, end]), by=values]
 
                                 enr_ranges <- ranges
@@ -472,7 +481,7 @@ color_cell <- function(timepoint_list,
                             default_ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
                                                          end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
                                                          values = seq(1:5),
-                                                         colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "grey50")
+                                                         colors = c("#40486e", "#296982", "#3484a3", "#adcdda", "#C2C2C2")
                                                          )[, lab := paste("<", .SD[, end]), by=values]
                             enr_ranges <- default_ranges
                         } else {
@@ -490,7 +499,7 @@ color_cell <- function(timepoint_list,
                             ranges <- data.table(start = c(0, 1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2),
                                                  end = c(1*10^-10, 1*10^-5, 1*10^-4, 5*10^-2, 1),
                                                  values = seq(1:5),
-                                                 colors = c(rev(col), "grey50")
+                                                 colors = c(rev(col), "#C2C2C2")
                                                  )[, lab := paste("<", .SD[, end]), by=values]
 
                             enr_ranges <- ranges

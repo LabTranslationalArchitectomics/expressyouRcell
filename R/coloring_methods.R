@@ -113,7 +113,7 @@ assign_color_by_fdr <- function(genes, plot_data, pictograph, gene_loc_table, co
               legend.text = element_text(size=bs*0.9),
               plot.background = element_rect(fill = "white", linetype = "blank"))
 
-    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs, angle=90)
+    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.3*bs, angle=90)
 
 
     return(list("plot"=p,
@@ -204,7 +204,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
             localization_values$color_grad <- categorical_classes$colors[mapply(f, localization_values[, get(coloring_mode)])]
         } else {
             localization_values$value <- "500"
-            localization_values$color_grad <- "grey50"
+            localization_values$color_grad <- "#C2C2C2"
         }
 
         # localization_values <- localization_values[, `:=` ("value"=categorical_classes[(get(coloring_mode)) > abs(categorical_classes[[class]][, start]) &
@@ -236,7 +236,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
     } else {
         final_dt[, value  := 500
                  ][, value := factor(value)
-                   ][, color_grad := "grey50"]
+                   ][, color_grad := "#C2C2C2"]
     }
 
     final_dt <- final_dt[order(comb)]
@@ -259,13 +259,13 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
 
     na_val <- max(as.numeric(as.character(final_dt$value)), na.rm = TRUE)
     final_dt <- final_dt[is.na(value), value := as.factor(na_val + 1)
-                         ][is.na(color_grad), color_grad := "grey50"]
+                         ][is.na(color_grad), color_grad := "#C2C2C2"]
 
     if (length(levels(plot_data$subcell_struct)) > length(localization_values$subcell_struct)){
-        colors.spe <- c(colors.spe,  "grey50")
+        colors.spe <- c(colors.spe,  "#C2C2C2")
     }
 
-    nogreysquares <- copy(final_dt[color_grad != "grey50"])
+    nogreysquares <- copy(final_dt[color_grad != "#C2C2C2"])
     nogreysquares <- nogreysquares[, value := factor(value, levels = unique(localization_values$value))]
 
     ecmx <- max(final_dt[subcell_struct == "extracellular_region"]$x)-(max(final_dt[subcell_struct == "extracellular_region"]$x)-min(final_dt[subcell_struct == "extracellular_region"]$x))/3
@@ -285,7 +285,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
                            labels = lab.spe,
                            breaks = levels(nogreysquares$value)
                           ) +
-        #guides(color = FALSE) +
+        guides(color = "none") +
         theme_void() +
         theme(legend.title = element_text(size=bs*0.9),
               legend.text = element_text(size=bs*0.9),
@@ -293,7 +293,7 @@ assign_color_by_value <- function(genes, plot_data, pictograph, gene_loc_table, 
 
     p
 
-    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.2*bs, angle=90)
+    p <- p + annotate("text", x=ecmx, y=ecmy, label="ECM", size=0.3*bs, angle=90)
 
 
     return(list("plot"=p,
