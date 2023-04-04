@@ -44,7 +44,7 @@
 #' @param pval_thr A numeric value with the cutoff value to be applied on the \code{pval_col} column.
 #' @param legend A boolean value for choosing to plot the legend or not. Default is false.
 #' @param scaling A  boolean value for choosing whether to scale values by row, or not. Default is false.
-#' @param scale_libsize A  boolean value for choosing whether to scale values by library size (cpm), or not. Default is false.
+#' @param norm_libsize A  boolean value for choosing whether to scale values by library size (cpm), or not. Default is false.
 #'
 #' @return A list containing four data structures. The first is the localization_values \code{data.table}, with six
 #'   columns, which reports for each subcellular component: i) its name, ii) the numeric value computed during the
@@ -75,9 +75,10 @@ color_cell <- function(timepoint_list,
                        thr=NULL,
                        pval_col=NULL,
                        pval_thr=NULL,
+                       absolute=FALSE,
                        legend=FALSE,
                        scaling=FALSE,
-                       scale_libsize=FALSE){
+                       norm_libsize=FALSE){
 
     if (suppressWarnings(!all(lapply(timepoint_list, function(x) inherits(x, "data.table"))))){
         dt <- lapply(timepoint_list, function(x) inherits(x, "data.table"))
@@ -165,7 +166,8 @@ color_cell <- function(timepoint_list,
                             }
 
 
-                        } else {
+                        }
+                        else {
                             # random colors are chosen for each category in group_by column
                             if (is.null(colors)){
                                 all_grouping_vars <- as.character(unique(unlist(lapply(timepoint_list, function(x) unique(x[, get(group_by)])))))
@@ -203,7 +205,11 @@ color_cell <- function(timepoint_list,
                         timepoint_list <- scaled_tp_list
                     }
 
-                    if (scale_libsize==TRUE){
+                    if (absolute==TRUE){
+                        timepoint_list <- lapply(timepoint_list, function(x) x[, eval(col_name) := abs(get(col_name))])
+                    }
+
+                    if (norm_libsize==TRUE){
                         tobescaled_allcols <- list.cbind(lapply(timepoint_list, function(x) x[, get(col_name)]))
                         tobescaled_allcols <- data.frame(tobescaled_allcols)
                         rownames(tobescaled_allcols) <- timepoint_list[[1]]$gene_symbol

@@ -133,10 +133,12 @@ plot_cell(coords_dt = "neuron")
 ```
 
 ## color_cell
-The main function is called ```color_cell``` and needs at least three mandatory input parameters.
+The main function is called ```color_cell``` and needs at least four mandatory input parameters.
 * A list of one or multiple ```data.table```s, each must have at least a column named ```external_gene_name``` with gene symbols.
 * A name of the chosen cellular map, or in alternative, a vector with multiple names of cellular types. For each cellular names, the package will load the corresponding  ```data.table```, which is necessary to draw the cellular map. The ```data.table``` structures contains ```x``` and ```y``` coordinates, subcellular structure labels and associated default colors.
 * The gene localization mapping table. This is the ```data.table``` storing for each gene its subcellular localization according to the cellular component gene ontology. As explained above, this table can be either provided by the user or created through the dedicated ```map_gene_localization``` function.
+* A character vector which allows to identify whether gene expression data or results from differential analyses are given 
+as input (i.e.,  ```gexp```, or ```diffanalysis```).
 
 Other optional parameters are available to further personlize the output or to handle heterogeneous input sources.
 * The ```legend``` parameter allows the user to choose whether the legend should be also displayed;
