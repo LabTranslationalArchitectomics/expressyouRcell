@@ -252,6 +252,8 @@ map_gene_localization <- function(gene_set, organism){
 
     entrez <- mapIds(get(OrgDb_chosen), annotation_gene_names, 'ENTREZID', 'SYMBOL')
 
+    histones <- annotation_gene_names[!annotation_gene_names %in% ensembl_entrez$SYMBOL][annotation_gene_names[!annotation_gene_names %in% ensembl_entrez$SYMBOL] %like% "Hist"]
+
     cc_complete <- as.data.table(as.data.frame(enrichGO(gene = ensembl_entrez[,2],
                                                         OrgDb=OrgDb_chosen,
                                                         ont = "CC",
@@ -265,6 +267,12 @@ map_gene_localization <- function(gene_set, organism){
     cc_complete_dt <- cc_complete[, .(geneID = unlist(tstrsplit(geneID, "\\/", type.convert = TRUE))), by = c("ID", "Description")]
     cc_complete_dt <- cc_complete_dt[, Description := stringr::str_replace(Description, "\\ ", "\\_")]
     setnames(cc_complete_dt, old = c("geneID", "Description"), new=c("gene_symbol", "subcell_struct"))
+
+    histones_dt <- data.table(ID=rep("GO:0005694", length(histones)),
+                              gene_symbol=histones,
+                              subcell_struct=rep("chromosome", length(histones)))
+    cc_complete_dt <- rbind(cc_complete_dt,histones_dt)
+
     return(cc_complete_dt)
 }
 
